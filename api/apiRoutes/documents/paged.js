@@ -1,0 +1,92 @@
+const { Router } = require('express');
+const router = Router();
+const fs = require('fs');
+const path = require('path');
+
+/**
+ * @openapi
+ * /api/v2/documents/page/{page}?limit={limit}&userId={userId}:
+ *   get:
+ *     name: Get Page Of Documents
+ *     security:
+ *       - bearerAuth: []
+ *     description: Get a page of documents
+ *     tags: [Documents]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         default: 1
+ *         required: true
+ *         description: The page number
+ *       - in: path
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         default: 10
+ *         required: true
+ *         description: The page limit
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: false
+ *         allowEmptyValue: true
+ *         description: The archive with userId
+ *     responses:
+ *       200:
+ *         description: Returns the page of documents
+ *       500:
+ *         description: Failure returns the message, reason and error code
+ */
+router.get('/:page', async (request, response) => {
+  const page = request.params.page;
+  const limit = request.query.limit || 10;
+
+  try {
+    if (!fs.existsSync(path.join(process.cwd(), 'documents'))) {
+      fs.mkdirSync(path.join(process.cwd(), 'documents'));
+    }
+
+    const documents = fs
+      .readdirSync(path.join(process.cwd(), 'documents'), {
+        withFileTypes: true,
+      })
+      .map((document) => {
+        let documentname = document.name;
+        const documentnamesplit = documentname.split('.');
+        documentname = documentname.replace(documentnamesplit[0] + '.', '');
+
+        return request.query.userId !== (undefined || null || '')
+          ? documentnamesplit[0] === request.query.userId
+            ? {
+                name: documentname,
+                isFile: document.isFile(),
+              }
+            : undefined
+          : {
+              name: documentname,
+              _userId: documentnamesplit[0],
+              isFile: document.isFile(),
+            };
+      });
+    const documentsData = documents.filter(
+      (_, index) => index >= page * limit - 10 && index < page * limit
+    );
+    const totalDocuments = documents.length;
+    const totalPages = Math.ceil(totalDocuments / limit);
+
+    return response
+      .status(200)
+      .json({ data: documentsData, totalDocuments, totalPages });
+  } catch (error) {
+    return response
+      .status(500)
+      .json({ message: 'Failed to retrieve paged documents.', reason: error });
+  }
+});
+
+module.exports = router;

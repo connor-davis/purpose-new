@@ -1,0 +1,72 @@
+const { Router } = require('express');
+const router = Router();
+const HarvestModel = require('../../models/harvest');
+
+/**
+ * @openapi
+ * /api/v2/harvests/page/{page}?limit={limit}&userId={userId}:
+ *   get:
+ *     name: Get Page Of Harvests
+ *     security:
+ *       - bearerAuth: []
+ *     description: Get a page of harvests
+ *     tags: [Harvests]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         default: 1
+ *         required: true
+ *         description: The page number
+ *       - in: path
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         default: 10
+ *         required: true
+ *         description: The page limit
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: false
+ *         allowEmptyValue: true
+ *         description: The harvest with userId
+ *     responses:
+ *       200:
+ *         description: Returns the page of harvests
+ *       500:
+ *         description: Failure returns the message, reason and error code
+ */
+router.get('/:page', async (request, response) => {
+  const page = request.params.page;
+  const limit = request.query.limit || 10;
+
+  try {
+    const harvests = await HarvestModel.find(
+      !request.query.userId ? {} : { _userId: { $eq: request.query.userId } }
+    )
+      .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
+      .limit(limit);
+    const harvestsData = harvests.map((harvest) => harvest.toJSON());
+    const totalHarvests = await HarvestModel.countDocuments(
+      !request.query.userId ? {} : { _userId: { $eq: request.query.userId } }
+    );
+    const totalPages = Math.ceil(totalHarvests / limit);
+
+    return response
+      .status(200)
+      .json({ data: harvestsData, totalHarvests, totalPages });
+  } catch (error) {
+    return response.status(500).json({
+      message: 'Failed to retrieve paged harvests.',
+      reason: error,
+      
+    });
+  }
+});
+
+module.exports = router;
