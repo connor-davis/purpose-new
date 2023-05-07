@@ -71,5 +71,6 @@ router.use('/documents', require('./documents'));
 router.use('/archives', require('./archive'));
 router.use('/files', require('./files'));
 router.use('/announcements', require('./announcements'));
+router.use('/surveys', require('./surveys'));
 
 module.exports = router;
