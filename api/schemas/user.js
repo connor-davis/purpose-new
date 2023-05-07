@@ -99,7 +99,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  youTubeChannelUrl: {
+  youtubeChannelUrl: {
     type: String,
     required: false,
   },

@@ -52,7 +52,7 @@ router.post('/', upload.array('upfiles'), async (request, response) => {
       filenames.push(newname);
     });
 
-    return response.status(200).send(filenames);
+    return response.status(200).json({filenames});
   } catch (error) {
     return response
       .status(500)

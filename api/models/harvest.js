@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
 const HarvestSchema = require("../schemas/harvest");
 
-module.exports = mongoose.model("Harvest", HarvestSchema);
+const HarvestModel = mongoose.model("Harvest", HarvestSchema)
+
+module.exports = HarvestModel;

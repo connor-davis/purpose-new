@@ -2,6 +2,8 @@ const { Router } = require('express');
 const router = Router();
 const fs = require('fs');
 const path = require('path');
+const passport = require('passport');
+const adminRoute = require('../../utils/adminRoute');
 
 /**
  * @openapi
@@ -20,90 +22,38 @@ const path = require('path');
  *       500:
  *         description: Failure returns the message, reason and error code
  */
-router.get('/', async (request, response) => {
-  try {
-    if (!fs.existsSync(path.join(process.cwd(), 'archives'))) {
-      fs.mkdirSync(path.join(process.cwd(), 'archives'));
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  async (request, response) => {
+    try {
+      if (!fs.existsSync(path.join(process.cwd(), 'archives'))) {
+        fs.mkdirSync(path.join(process.cwd(), 'archives'));
+      }
+
+      const archives = fs
+        .readdirSync(path.join(process.cwd(), 'archives'), {
+          withFileTypes: true,
+        })
+        .map((archive) => {
+          console.log(archive);
+
+          let archivename = archive.name;
+
+          return {
+            name: archivename,
+            isFile: archive.isFile(),
+          };
+        });
+
+      return response.status(200).json(archives);
+    } catch (error) {
+      return response
+        .status(500)
+        .json({ message: 'Failed to retrieve archives.', reason: error });
     }
-
-    const archives = fs
-      .readdirSync(path.join(process.cwd(), 'archives'), {
-        withFileTypes: true,
-      })
-      .map((archive) => {
-        let archivename = archive.name;
-        const archivenamesplit = archivename.split('.');
-        archivename = archivename.replace(archivenamesplit[0] + '.', '');
-
-        return {
-          name: archivename,
-          _userId: archivenamesplit[0],
-          isFile: archive.isFile(),
-        };
-      });
-
-    return response.status(200).json(archives);
-  } catch (error) {
-    return response
-      .status(500)
-      .json({ message: 'Failed to retrieve archives.', reason: error });
   }
-});
-
-/**
- * @openapi
- * /api/v2/archives/{id}:
- *   get:
- *     name: Get All
- *     security:
- *       - bearerAuth: []
- *     description: Get all archives
- *     tags: [Archives]
- *     produces:
- *       - application/json
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The archives user id
- *     responses:
- *       200:
- *         description: Returns all the archives
- *       500:
- *         description: Failure returns the message, reason and error code
- */
-router.get('/:id', async (request, response) => {
-  try {
-    if (!fs.existsSync(path.join(process.cwd(), 'archives'))) {
-      fs.mkdirSync(path.join(process.cwd(), 'archives'));
-    }
-
-    const archives = fs
-      .readdirSync(path.join(process.cwd(), 'archives'), {
-        withFileTypes: true,
-      })
-      .map((archive) => {
-        let archivename = archive.name;
-        const archivenamesplit = archivename.split('.');
-        archivename = archivename.replace(archivenamesplit[0] + '.', '');
-
-        return archivenamesplit[0] === request.params.id
-          ? {
-              name: archivename,
-              isFile: archive.isFile(),
-            }
-          : undefined;
-      });
-
-    return response.status(200).json(archives);
-  } catch (error) {
-    return response
-      .status(500)
-      .json({ message: 'Failed to retrieve archives.', reason: error });
-  }
-});
+);
 
 /**
  * @openapi
@@ -156,7 +106,20 @@ router.get('/view/:filename', async (request, response) => {
   }
 });
 
-router.use('/page', require('./paged'));
-router.use('/upload', require('./upload'));
+router.use(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  require('./delete')
+);
+router.use(
+  '/page',
+  passport.authenticate('jwt', { session: false }),
+  require('./paged')
+);
+router.use(
+  '/upload',
+  passport.authenticate('jwt', { session: false }),
+  require('./upload')
+);
 
 module.exports = router;

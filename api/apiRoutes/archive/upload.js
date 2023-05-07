@@ -3,6 +3,7 @@ const router = Router();
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const adminRoute = require('../../utils/adminRoute');
 const upload = multer({ dest: path.join(process.cwd(), 'temp', 'archives') });
 
 /**
@@ -33,26 +34,34 @@ const upload = multer({ dest: path.join(process.cwd(), 'temp', 'archives') });
  *       500:
  *         description: Failure returns the message, reason and error code
  */
-router.post('/', upload.array('upfiles'), async (request, response) => {
-  try {
-    if (!fs.existsSync(path.join(process.cwd(), 'archives')))
-      fs.mkdirSync(path.join(process.cwd(), 'archives'));
+router.post(
+  '/',
+  adminRoute,
+  upload.array('upfiles'),
+  async (request, response) => {
+    try {
+      if (!fs.existsSync(path.join(process.cwd(), 'archives')))
+        fs.mkdirSync(path.join(process.cwd(), 'archives'));
 
-    request.files.forEach((file) => {
-      const fileData = fs.readFileSync(file.path);
-      const newname = request.user._id + '.' + file.originalname;
+      request.files.forEach((file) => {
+        const fileData = fs.readFileSync(file.path);
+        const newname = file.originalname;
 
-      fs.writeFileSync(path.join(process.cwd(), 'archives', newname), fileData);
+        fs.writeFileSync(
+          path.join(process.cwd(), 'archives', newname),
+          fileData
+        );
 
-      fs.unlinkSync(file.path);
-    });
+        fs.unlinkSync(file.path);
+      });
 
-    return response.status(200).send('Ok');
-  } catch (error) {
-    return response
-      .status(500)
-      .json({ message: 'Failed to upload the archive.', reason: error });
+      return response.status(200).send('Ok');
+    } catch (error) {
+      return response
+        .status(500)
+        .json({ message: 'Failed to upload the archive.', reason: error });
+    }
   }
-});
+);
 
 module.exports = router;

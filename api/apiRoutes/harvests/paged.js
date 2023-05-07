@@ -51,7 +51,14 @@ router.get('/:page', async (request, response) => {
     )
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
       .limit(limit);
-    const harvestsData = harvests.map((harvest) => harvest.toJSON());
+    const harvestsData = harvests
+      .map((harvest) => harvest.toJSON())
+      .sort((a, b) => {
+        if (new Date(a.date) > new Date(b.date)) return -1;
+        if (new Date(a.date) < new Date(b.date)) return 1;
+
+        return 0;
+      });
     const totalHarvests = await HarvestModel.countDocuments(
       !request.query.userId ? {} : { _userId: { $eq: request.query.userId } }
     );
@@ -64,7 +71,6 @@ router.get('/:page', async (request, response) => {
     return response.status(500).json({
       message: 'Failed to retrieve paged harvests.',
       reason: error,
-      
     });
   }
 });

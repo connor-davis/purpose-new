@@ -21,17 +21,26 @@ const HarvestModel = require('../../models/harvest');
  */
 router.get('/', async (request, response) => {
   try {
-    const harvests = await HarvestModel.find(request.user.userType !== "admin" ? {} : { _userId: { $eq: request.user._id } });
-    const harvestsData = harvests.map((harvest) => harvest.toJSON());
+    const harvests = await HarvestModel.find(
+      request.user.userType !== 'admin'
+        ? {}
+        : { _userId: { $eq: request.user._id } }
+    );
+    const harvestsData = harvests
+      .map((harvest) => harvest.toJSON())
+      .sort((a, b) => {
+        if (new Date(a.date) > new Date(b.date)) return -1;
+        if (new Date(a.date) < new Date(b.date)) return 1;
+
+        return 0;
+      });
 
     return response.status(200).json(harvestsData);
   } catch (error) {
-    return response
-      .status(500)
-      .json({
-        message: 'Failed to retrieve harvests.',
-        reason: error,
-      });
+    return response.status(500).json({
+      message: 'Failed to retrieve harvests.',
+      reason: error,
+    });
   }
 });
 
@@ -66,14 +75,14 @@ router.get('/:id', async (request, response) => {
 
   try {
     const harvest = await HarvestModel.findOne({ _id: { $eq: id } });
-    
+
     if (!harvest)
       return response
         .status(404)
         .json({ message: 'Harvest not found.', error: 'harvest-not-found' });
     else {
-        const harvestData = harvest.toJSON()
-        return response.status(200).json(harvestData);
+      const harvestData = harvest.toJSON();
+      return response.status(200).json(harvestData);
     }
   } catch (error) {
     return response.status(500).json({
@@ -84,8 +93,8 @@ router.get('/:id', async (request, response) => {
 });
 
 router.use('/page', require('./paged'));
-router.use("/", require("./create"));
-router.use("/", require("./edit"));
-router.use("/", require("./delete"));
+router.use('/', require('./create'));
+router.use('/', require('./edit'));
+router.use('/', require('./delete'));
 
 module.exports = router;

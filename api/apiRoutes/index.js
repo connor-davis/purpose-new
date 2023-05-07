@@ -1,6 +1,6 @@
-const { Router } = require("express");
+const { Router } = require('express');
 const router = Router();
-const passport = require("passport");
+const passport = require('passport');
 
 /**
  * @openapi
@@ -33,16 +33,43 @@ const passport = require("passport");
  *     description: Api archives routes.
  *   - name: Files
  *     description: Api files routes.
+ *   - name: Announcements
+ *     description: Api announcements routes.
  */
-router.use("/authentication", require("./authentication"));
-router.use("/users", passport.authenticate("jwt", {session: false}), require("./users"));
-router.use("/sales", passport.authenticate("jwt", {session: false}), require("./sales"));
-router.use("/products", passport.authenticate("jwt", {session: false}), require("./products"));
-router.use("/produce", passport.authenticate("jwt", {session: false}), require("./produce"));
-router.use("/harvests", passport.authenticate("jwt", {session: false}), require("./harvests"));
-router.use("/analytics", passport.authenticate("jwt", {session: false}), require("./analytics"));
-router.use("/documents", passport.authenticate("jwt", {session: false}), require("./documents"));
-router.use("/archives", passport.authenticate("jwt", {session: false}), require("./archive"));
-router.use("/files", passport.authenticate("jwt", {session: false}), require("./files"));
+router.use('/authentication', require('./authentication'));
+router.use(
+  '/users',
+  passport.authenticate('jwt', { session: false }),
+  require('./users')
+);
+router.use(
+  '/sales',
+  passport.authenticate('jwt', { session: false }),
+  require('./sales')
+);
+router.use(
+  '/products',
+  passport.authenticate('jwt', { session: false }),
+  require('./products')
+);
+router.use(
+  '/produce',
+  passport.authenticate('jwt', { session: false }),
+  require('./produce')
+);
+router.use(
+  '/harvests',
+  passport.authenticate('jwt', { session: false }),
+  require('./harvests')
+);
+router.use(
+  '/analytics',
+  passport.authenticate('jwt', { session: false }),
+  require('./analytics')
+);
+router.use('/documents', require('./documents'));
+router.use('/archives', require('./archive'));
+router.use('/files', require('./files'));
+router.use('/announcements', require('./announcements'));
 
 module.exports = router;

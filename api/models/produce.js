@@ -1,4 +1,6 @@
-const mongoose = require("mongoose");
-const ProduceSchema = require("../schemas/produce");
+const mongoose = require('mongoose');
+const ProduceSchema = require('../schemas/produce');
 
-module.exports = mongoose.model("Produce", ProduceSchema);
+const ProduceModel = mongoose.model('Produce', ProduceSchema);
+
+module.exports = ProduceModel;

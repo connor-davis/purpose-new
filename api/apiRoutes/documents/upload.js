@@ -33,8 +33,7 @@ const upload = multer({ dest: path.join(process.cwd(), 'temp', 'documents') });
  *       500:
  *         description: Failure returns the message, reason and error code
  */
-router.post('/', upload.array('upfile'), async (request, response) => {
-  console.log(request.user);
+router.post('/', upload.array('upfiles'), async (request, response) => {
   try {
     if (!fs.existsSync(path.join(process.cwd(), 'documents')))
       fs.mkdirSync(path.join(process.cwd(), 'documents'));

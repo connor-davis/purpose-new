@@ -10,7 +10,7 @@ router.get('/totalUsers', async (request, response) => {
   try {
     const usersCount = await UserModel.countDocuments();
 
-    return response.status(200).send(usersCount);
+    return response.status(200).json({ usersCount });
   } catch (error) {
     return response
       .status(500)
@@ -20,39 +20,52 @@ router.get('/totalUsers', async (request, response) => {
 
 router.get('/usersAges', async (request, response) => {
   try {
-    const zeroToNineteen = [];
-    const twentyToTwentyNine = [];
-    const thirtyToThirtyNine = [];
-    const fortyToFortyNine = [];
-    const fiftyToFiftyNine = [];
-    const sixtyToSixtyNine = [];
-    const seventyToSeventyNine = [];
-    const eightyToEightyNine = [];
-    const ninetyToNinetyNine = [];
-
-    const users = await UserModel.find({ userType: { $ne: 'admin' } });
-
-    users.map((user) => {
-      if (user.age > 0 && user.age < 20) zeroToNineteen.push(user);
-      if (user.age >= 20 && user.age < 30) twentyToTwentyNine.push(user);
-      if (user.age >= 30 && user.age < 40) thirtyToThirtyNine.push(user);
-      if (user.age >= 40 && user.age < 50) fortyToFortyNine.push(user);
-      if (user.age >= 50 && user.age < 60) fiftyToFiftyNine.push(user);
-      if (user.age >= 60 && user.age < 70) sixtyToSixtyNine.push(user);
-      if (user.age >= 70 && user.age < 80) seventyToSeventyNine.push(user);
-      if (user.age >= 80 && user.age < 90) eightyToEightyNine.push(user);
-      if (user.age >= 90 && user.age < 100) ninetyToNinetyNine.push(user);
+    const zeroToNineteen = await UserModel.countDocuments({
+      userType: { $ne: 'admin' },
+      age: { $gt: 0, $lt: 20 },
+    });
+    const twentyToTwentyNine = await UserModel.countDocuments({
+      userType: { $ne: 'admin' },
+      age: { $gte: 20, $lt: 30 },
+    });
+    const thirtyToThirtyNine = await UserModel.countDocuments({
+      userType: { $ne: 'admin' },
+      age: { $gte: 30, $lt: 40 },
+    });
+    const fourtyToFourtyNine = await UserModel.countDocuments({
+      userType: { $ne: 'admin' },
+      age: { $gte: 40, $lt: 50 },
+    });
+    const fiftyToFiftyNine = await UserModel.countDocuments({
+      userType: { $ne: 'admin' },
+      age: { $gte: 50, $lt: 60 },
+    });
+    const sixtyToSixtyNine = await UserModel.countDocuments({
+      userType: { $ne: 'admin' },
+      age: { $gte: 60, $lt: 70 },
+    });
+    const seventyToSeventyNine = await UserModel.countDocuments({
+      userType: { $ne: 'admin' },
+      age: { $gte: 70, $lt: 80 },
+    });
+    const eightyToEightNine = await UserModel.countDocuments({
+      userType: { $ne: 'admin' },
+      age: { $gte: 80, $lt: 90 },
+    });
+    const ninetyToNinetyNine = await UserModel.countDocuments({
+      userType: { $ne: 'admin' },
+      age: { $gte: 90, $lt: 100 },
     });
 
     return response.status(200).json({
       zeroToNineteen,
       twentyToTwentyNine,
       thirtyToThirtyNine,
-      fortyToFortyNine,
+      fourtyToFourtyNine,
       fiftyToFiftyNine,
       sixtyToSixtyNine,
       seventyToSeventyNine,
-      eightyToEightyNine,
+      eightyToEightNine,
       ninetyToNinetyNine,
     });
   } catch (error) {
@@ -64,11 +77,27 @@ router.get('/usersAges', async (request, response) => {
 
 router.get('/userTypes', async (request, response) => {
   try {
-    const users = await UserModel.find({ userType: { $ne: 'admin' } });
+    const users = await UserModel.find({
+      userType: { $nin: ['admin', null, undefined] },
+    });
 
-    const userTypes = users.map((user) => user.userType);
+    const userTypes = users.map((user) => {
+      return user.toJSON().userType;
+    });
+    const typesDeDuplicated = [...new Set(userTypes)];
 
-    return response.status(200).json(userTypes);
+    const typesCounted = [];
+
+    for (let index in typesDeDuplicated) {
+      typesCounted.push({
+        userType: typesDeDuplicated[index],
+        count: await UserModel.countDocuments({
+          userType: { $eq: typesDeDuplicated[index] },
+        }),
+      });
+    }
+
+    return response.status(200).json(typesCounted);
   } catch (error) {
     return response
       .status(500)
@@ -78,9 +107,9 @@ router.get('/userTypes', async (request, response) => {
 
 router.get('/totalSales', async (request, response) => {
   try {
-    const salesCount = await SaleModel.countDocuments();
+    const totalSales = await SaleModel.countDocuments();
 
-    return response.status(200).send(salesCount);
+    return response.status(200).json({ totalSales });
   } catch (error) {
     return response
       .status(500)
@@ -88,13 +117,11 @@ router.get('/totalSales', async (request, response) => {
   }
 });
 
-// router.get('/latestSales', async (request, response) => {});
-
 router.get('/totalHarvests', async (request, response) => {
   try {
     const totalHarvests = await HarvestModel.countDocuments();
 
-    return response.status(200).send(totalHarvests);
+    return response.status(200).json({ totalHarvests });
   } catch (error) {
     return response
       .status(500)
@@ -106,7 +133,7 @@ router.get('/totalProducts', async (request, response) => {
   try {
     const totalProducts = await ProductModel.countDocuments();
 
-    return response.status(200).send(totalProducts);
+    return response.status(200).json({ totalProducts });
   } catch (error) {
     return response
       .status(500)
@@ -118,7 +145,7 @@ router.get('/totalProduce', async (request, response) => {
   try {
     const totalProduce = await ProduceModel.countDocuments();
 
-    return response.status(200).send(totalProduce);
+    return response.status(200).json({ totalProduce });
   } catch (error) {
     return response
       .status(500)

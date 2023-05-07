@@ -32,7 +32,7 @@ const UserModel = require("../../models/user");
  */
 router.put("/", async (request, response) => {
     const body = request.body;
-    
+
     try {
         await UserModel.updateOne({ _id: { $eq: body._id }}, body);
 

@@ -60,22 +60,22 @@ router.get('/:page', async (request, response) => {
         const documentnamesplit = documentname.split('.');
         documentname = documentname.replace(documentnamesplit[0] + '.', '');
 
-        return request.query.userId !== (undefined || null || '')
-          ? documentnamesplit[0] === request.query.userId
-            ? {
-                name: documentname,
-                isFile: document.isFile(),
-              }
-            : undefined
-          : {
-              name: documentname,
-              _userId: documentnamesplit[0],
-              isFile: document.isFile(),
-            };
+        return {
+          name: documentname,
+          _userId: documentnamesplit[0],
+          isFile: document.isFile(),
+        };
+      })
+      .filter((documentData) => {
+        if (request.query.userId) {
+          if (documentData._userId === request.query.userId) return true;
+          else return false;
+        } else return true;
       });
-    const documentsData = documents.filter(
-      (_, index) => index >= page * limit - 10 && index < page * limit
-    );
+    const documentsData = documents.filter((_, index) => {
+      if (index < page * limit && index >= page * limit - limit) return true;
+      else return false;
+    });
     const totalDocuments = documents.length;
     const totalPages = Math.ceil(totalDocuments / limit);
 

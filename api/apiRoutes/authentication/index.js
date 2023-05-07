@@ -92,7 +92,7 @@ router.post('/login', async (request, response) => {
 
         return response.status(200).json({
           message: 'Successfully logged in.',
-          data: {
+          user: {
             ...data,
             password: undefined,
           },
@@ -148,12 +148,18 @@ router.post('/login', async (request, response) => {
 router.post('/register', async (request, response) => {
   const { body } = request;
 
+  if (!body.agreedToTerms)
+    return response.status(200).json({
+      message: 'You need to agree to terms before creating an account.',
+      error: 'failed-to-agree-to-terms',
+    });
+
   try {
     const privateKey = fs.readFileSync('certs/privateKey.pem', {
       encoding: 'utf-8',
     });
 
-    const data = {
+    const tdata = {
       email: body.email,
       password: bcrypt.hashSync(body.password, 2048),
       agreedToTerms: body.agreedToTerms,
@@ -161,13 +167,13 @@ router.post('/register', async (request, response) => {
 
     const token = jwt.sign(
       {
-        sub: data.email,
+        sub: tdata.email,
       },
       privateKey,
       { expiresIn: '1d', algorithm: 'RS256' }
     );
 
-    const found = await UserModel.findOne({ email: data.email });
+    const found = await UserModel.findOne({ email: tdata.email });
 
     if (found)
       return response.status(500).json({
@@ -175,9 +181,9 @@ router.post('/register', async (request, response) => {
       });
     else {
       const newUser = new UserModel({
-        email: data.email,
-        password: data.password,
-        agreedToTerms: data.agreedToTerms,
+        email: tdata.email,
+        password: tdata.password,
+        agreedToTerms: tdata.agreedToTerms,
         completedProfile: false,
       });
 
@@ -187,7 +193,7 @@ router.post('/register', async (request, response) => {
 
       response.status(200).json({
         message: 'Successfully registered new user.',
-        data: {
+        user: {
           ...data,
           password: undefined,
         },
@@ -195,6 +201,8 @@ router.post('/register', async (request, response) => {
       });
     }
   } catch (error) {
+    console.log(error);
+
     return response.status(500).json({
       message: 'Error while registering a new user.',
       reason: error,

@@ -6,15 +6,11 @@ const SaleSchema = new mongoose.Schema({
     required: true,
   },
   date: {
-    type: Number,
+    type: String,
     required: true,
   },
-  product: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-  },
-  numberSold: {
-    type: Number,
+  products: {
+    type: Array, // Array<mongoose.Schema.Types.ObjectId>
     required: true,
   },
   profit: {

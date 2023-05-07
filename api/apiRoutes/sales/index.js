@@ -21,18 +21,26 @@ const SaleModel = require('../../models/sale');
  */
 router.get('/', async (request, response) => {
   try {
-    const sales = await SaleModel.find(request.user.userType !== "admin" ? {} : { _userId: { $eq: request.user._id } });
-    const salesData = sales.map((sale) => sale.toJSON());
+    const sales = await SaleModel.find(
+      request.user.userType !== 'admin'
+        ? {}
+        : { _userId: { $eq: request.user._id } }
+    );
+    const salesData = sales
+      .map((sale) => sale.toJSON())
+      .sort((a, b) => {
+        if (new Date(a.date) > new Date(b.date)) return -1;
+        if (new Date(a.date) < new Date(b.date)) return 1;
+
+        return 0;
+      });
 
     return response.status(200).json(salesData);
   } catch (error) {
-    return response
-      .status(500)
-      .json({
-        message: 'Failed to retrieve sales.',
-        reason: error,
-        
-      });
+    return response.status(500).json({
+      message: 'Failed to retrieve sales.',
+      reason: error,
+    });
   }
 });
 
@@ -67,27 +75,26 @@ router.get('/:id', async (request, response) => {
 
   try {
     const sale = await SaleModel.findOne({ _id: { $eq: id } });
-    
+
     if (!sale)
       return response
         .status(404)
         .json({ message: 'Sale not found.', error: 'sale-not-found' });
     else {
-        const saleData = sale.toJSON()
-        return response.status(200).json(saleData);
+      const saleData = sale.toJSON();
+      return response.status(200).json(saleData);
     }
   } catch (error) {
     return response.status(500).json({
       message: 'Failed to retrieve the sale.',
       reason: error,
-      
     });
   }
 });
 
 router.use('/page', require('./paged'));
-router.use("/", require("./create"));
-router.use("/", require("./edit"));
-router.use("/", require("./delete"));
+router.use('/', require('./create'));
+router.use('/', require('./edit'));
+router.use('/', require('./delete'));
 
 module.exports = router;

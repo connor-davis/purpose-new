@@ -2,6 +2,7 @@ const { Router } = require('express');
 const router = Router();
 const fs = require('fs');
 const path = require('path');
+const passport = require('passport');
 
 /**
  * @openapi
@@ -20,35 +21,39 @@ const path = require('path');
  *       500:
  *         description: Failure returns the message, reason and error code
  */
-router.get('/', async (request, response) => {
-  try {
-    if (!fs.existsSync(path.join(process.cwd(), 'documents'))) {
-      fs.mkdirSync(path.join(process.cwd(), 'documents'));
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  async (request, response) => {
+    try {
+      if (!fs.existsSync(path.join(process.cwd(), 'documents'))) {
+        fs.mkdirSync(path.join(process.cwd(), 'documents'));
+      }
+
+      const documents = fs
+        .readdirSync(path.join(process.cwd(), 'documents'), {
+          withFileTypes: true,
+        })
+        .map((document) => {
+          let documentname = document.name;
+          const documentnamesplit = documentname.split('.');
+          documentname = documentname.replace(documentnamesplit[0] + '.', '');
+
+          return {
+            name: documentname,
+            _userId: documentnamesplit[0],
+            isFile: document.isFile(),
+          };
+        });
+
+      return response.status(200).json(documents);
+    } catch (error) {
+      return response
+        .status(500)
+        .json({ message: 'Failed to retrieve documents.', reason: error });
     }
-
-    const documents = fs
-      .readdirSync(path.join(process.cwd(), 'documents'), {
-        withFileTypes: true,
-      })
-      .map((document) => {
-        let documentname = document.name;
-        const documentnamesplit = documentname.split('.');
-        documentname = documentname.replace(documentnamesplit[0] + '.', '');
-
-        return {
-          name: documentname,
-          _userId: documentnamesplit[0],
-          isFile: document.isFile(),
-        };
-      });
-
-    return response.status(200).json(documents);
-  } catch (error) {
-    return response
-      .status(500)
-      .json({ message: 'Failed to retrieve documents.', reason: error });
   }
-});
+);
 
 /**
  * @openapi
@@ -74,36 +79,40 @@ router.get('/', async (request, response) => {
  *       500:
  *         description: Failure returns the message, reason and error code
  */
-router.get('/:id', async (request, response) => {
-  try {
-    if (!fs.existsSync(path.join(process.cwd(), 'documents'))) {
-      fs.mkdirSync(path.join(process.cwd(), 'documents'));
+router.get(
+  '/:id',
+  passport.authenticate('jwt', { session: false }),
+  async (request, response) => {
+    try {
+      if (!fs.existsSync(path.join(process.cwd(), 'documents'))) {
+        fs.mkdirSync(path.join(process.cwd(), 'documents'));
+      }
+
+      const documents = fs
+        .readdirSync(path.join(process.cwd(), 'documents'), {
+          withFileTypes: true,
+        })
+        .filter((document) => {
+          let documentname = document.name;
+          const documentnamesplit = documentname.split('.');
+          documentname = documentname.replace(documentnamesplit[0] + '.', '');
+
+          return documentnamesplit[0] === request.params.id
+            ? {
+                name: document.name.replace(request.params.id + '.', ''),
+                isFile: document.isFile(),
+              }
+            : undefined;
+        });
+
+      return response.status(200).json(documents);
+    } catch (error) {
+      return response
+        .status(500)
+        .json({ message: 'Failed to retrieve documents.', reason: error });
     }
-
-    const documents = fs
-      .readdirSync(path.join(process.cwd(), 'documents'), {
-        withFileTypes: true,
-      })
-      .filter((document) => {
-        let documentname = document.name;
-        const documentnamesplit = documentname.split('.');
-        documentname = documentname.replace(documentnamesplit[0] + '.', '');
-
-        return documentnamesplit[0] === request.params.id
-          ? {
-              name: document.name.replace(request.params.id + '.', ''),
-              isFile: document.isFile(),
-            }
-          : undefined;
-      });
-
-    return response.status(200).json(documents);
-  } catch (error) {
-    return response
-      .status(500)
-      .json({ message: 'Failed to retrieve documents.', reason: error });
   }
-});
+);
 
 /**
  * @openapi
@@ -136,13 +145,17 @@ router.get('/view/:filename', async (request, response) => {
     }
 
     if (
-      !fs.existsSync(path.join(process.cwd(), 'documents', request.params.filename))
+      !fs.existsSync(
+        path.join(process.cwd(), 'documents', request.params.filename)
+      )
     )
       return response.status(404).json({ message: 'Document not found.' });
     else {
       return response
         .status(200)
-        .sendFile(path.join(process.cwd(), 'documents', request.params.filename));
+        .sendFile(
+          path.join(process.cwd(), 'documents', request.params.filename)
+        );
     }
   } catch (error) {
     return response.status(500).json({
@@ -152,7 +165,20 @@ router.get('/view/:filename', async (request, response) => {
   }
 });
 
-router.use('/page', require('./paged'));
-router.use('/upload', require('./upload'));
+router.use(
+  '/page',
+  passport.authenticate('jwt', { session: false }),
+  require('./paged')
+);
+router.use(
+  '/upload',
+  passport.authenticate('jwt', { session: false }),
+  require('./upload')
+);
+router.use(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  require('./delete')
+);
 
 module.exports = router;

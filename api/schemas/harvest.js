@@ -5,20 +5,12 @@ const HarvestSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  yield: {
-    type: Number,
-    required: true,
-  },
-  weight: {
-    type: Number,
-    required: true,
-  },
   date: {
-    type: Number,
+    type: String,
     required: true,
   },
   produce: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Array, // Array<mongoose.Schema.Types.ObjectId>
     required: true,
   },
 });

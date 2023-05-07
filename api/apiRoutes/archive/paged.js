@@ -57,25 +57,16 @@ router.get('/:page', async (request, response) => {
       })
       .map((archive) => {
         let archivename = archive.name;
-        const archivenamesplit = archivename.split('.');
-        archivename = archivename.replace(archivenamesplit[0] + '.', '');
 
-        return request.query.userId !== (undefined || null || '')
-          ? archivenamesplit[0] === request.query.userid
-            ? {
-                name: archivename,
-                isFile: archive.isFile(),
-              }
-            : undefined
-          : {
-              name: archivename,
-              _userId: archivenamesplit[0],
-              isFile: archive.isFile(),
-            };
+        return {
+          name: archivename,
+          isFile: archive.isFile(),
+        };
       });
-    const archivesData = archives.filter(
-      (_, index) => index >= page * limit - 10 && index < page * limit
-    );
+    const archivesData = archives.filter((_, index) => {
+      if (index < page * limit && index >= page * limit - limit) return true;
+      else return false;
+    });
     const totalArchives = archives.length;
     const totalPages = Math.ceil(totalArchives / limit);
 
