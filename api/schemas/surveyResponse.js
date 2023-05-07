@@ -9,8 +9,14 @@ const SurveyResponseSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
+  date: {
+    type: String,
+    required: true,
+  },
   answers: {
     type: Array,
     required: true,
   },
 });
+
+module.exports = SurveyResponseSchema;

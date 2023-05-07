@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
-const SurveySchema = require('../schemas/survey');
+const SurveyResponseSchema = require('../schemas/surveyResponse');
 
-const SurveyResponseModel = mongoose.model('SurveyResponse', SurveySchema);
+const SurveyResponseModel = mongoose.model(
+  'SurveyResponse',
+  SurveyResponseSchema
+);
 
 module.exports = SurveyResponseModel;
