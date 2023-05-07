@@ -10,8 +10,13 @@ const SurveySchema = new mongoose.Schema({
     required: true,
   },
   surveyQuestions: {
-    type: String,
+    type: Array,
     required: true,
+  },
+  surveyResponses: {
+    type: Array,
+    required: false,
+    default: [],
   },
   surveyUserType: {
     type: String,
