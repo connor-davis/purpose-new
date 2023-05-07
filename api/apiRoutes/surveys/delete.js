@@ -4,13 +4,13 @@ const SurveyModel = require('../../models/survey');
 
 /**
  * @openapi
- * /api/v2/announcements/{id}:
+ * /api/v2/surveys/{id}:
  *   delete:
- *     name: Delete Announcement With Id
+ *     name: Delete Survey With Id
  *     security:
  *       - bearerAuth: []
- *     description: Delete an announcement with the id
- *     tags: [Announcements]
+ *     description: Delete an survey with the id
+ *     tags: [Surveys]
  *     produces:
  *       - application/json
  *     parameters:
@@ -19,10 +19,10 @@ const SurveyModel = require('../../models/survey');
  *         schema:
  *           type: string
  *         required: true
- *         description: The announcements id
+ *         description: The surveys id
  *     responses:
  *       200:
- *         description: The announcement was deleted successfully
+ *         description: The survey was deleted successfully
  *       500:
  *         description: Failure returns the message, reason and error code
  */
@@ -32,15 +32,12 @@ router.delete('/:id', async (request, response) => {
   try {
     await SurveyModel.deleteOne({ _id: { $eq: id } });
 
-    return response.status(200).send("Ok");
+    return response.status(200).send('Ok');
   } catch (error) {
-    return response
-      .status(500)
-      .json({
-        message: 'Failed to delete announcement.',
-        reason: error,
-        
-      });
+    return response.status(500).json({
+      message: 'Failed to delete survey.',
+      reason: error,
+    });
   }
 });
 

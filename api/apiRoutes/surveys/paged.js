@@ -1,16 +1,17 @@
 const { Router } = require('express');
 const router = Router();
 const AnnouncementModal = require('../../models/announcement');
+const SurveyModel = require('../../models/survey');
 
 /**
  * @openapi
- * /api/v2/announcements/page/{page}?limit={limit}:
+ * /api/v2/surveys/page/{page}?limit={limit}:
  *   get:
- *     name: Get Page Of Announcements
+ *     name: Get Page Of Surveys
  *     security:
  *       - bearerAuth: []
- *     description: Get a page of announcements
- *     tags: [Announcements]
+ *     description: Get a page of surveys
+ *     tags: [Surveys]
  *     produces:
  *       - application/json
  *     parameters:
@@ -30,7 +31,7 @@ const AnnouncementModal = require('../../models/announcement');
  *         description: The page limit
  *     responses:
  *       200:
- *         description: Returns the page of announcements
+ *         description: Returns the page of surveys
  *       500:
  *         description: Failure returns the message, reason and error code
  */
@@ -39,28 +40,26 @@ router.get('/:page', async (request, response) => {
   const limit = request.query.limit || 10;
 
   try {
-    const announcements = await AnnouncementModal.find({})
+    const surveys = await SurveyModel.find({})
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
       .limit(limit);
-    const announcementsData = announcements
-      .map((announcement) => announcement.toJSON())
+    const surveysData = surveys
+      .map((survey) => survey.toJSON())
       .sort((a, b) => {
-        if (new Date(a.announcementDate) > new Date(b.announcementDate))
-          return -1;
-        if (new Date(a.announcementDate) < new Date(b.announcementDate))
-          return 1;
+        if (new Date(a.surveyDate) > new Date(b.surveyDate)) return -1;
+        if (new Date(a.surveyDate) < new Date(b.surveyDate)) return 1;
 
         return 0;
       });
-    const totalAnnouncements = await AnnouncementModal.countDocuments();
-    const totalPages = Math.ceil(totalAnnouncements / limit);
+    const totalSurveys = await SurveyModel.countDocuments();
+    const totalPages = Math.ceil(totalSurveys / limit);
 
     return response
       .status(200)
-      .json({ data: announcementsData, totalAnnouncements, totalPages });
+      .json({ data: surveysData, totalSurveys, totalPages });
   } catch (error) {
     return response.status(500).json({
-      message: 'Failed to retrieve paged announcements.',
+      message: 'Failed to retrieve paged surveys.',
       reason: error,
     });
   }

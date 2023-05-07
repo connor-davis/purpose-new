@@ -2,42 +2,41 @@ const { Router } = require('express');
 const router = Router();
 const AnnouncementModal = require('../../models/announcement');
 const passport = require('passport');
+const SurveyModel = require('../../models/survey');
 
 /**
  * @openapi
- * /api/v2/announcements:
+ * /api/v2/surveys:
  *   get:
  *     name: Get All
  *     security:
  *       - bearerAuth: []
- *     description: Get all announcements
- *     tags: [Announcements]
+ *     description: Get all surveys
+ *     tags: [Surveys]
  *     produces:
  *       - application/json
  *     responses:
  *       200:
- *         description: Returns all the announcements
+ *         description: Returns all the surveys
  *       500:
  *         description: Failure returns the message, reason and error code
  */
 router.get('/', async (request, response) => {
   try {
-    const announcements = await AnnouncementModal.find();
-    const announcementsData = announcements
-      .map((announcement) => announcement.toJSON())
+    const surveys = await AnnouncementModal.find();
+    const surveysData = surveys
+      .map((survey) => survey.toJSON())
       .sort((a, b) => {
-        if (new Date(a.announcementDate) > new Date(b.announcementDate))
-          return -1;
-        if (new Date(a.announcementDate) < new Date(b.announcementDate))
-          return 1;
+        if (new Date(a.surveyDate) > new Date(b.surveyDate)) return -1;
+        if (new Date(a.surveyDate) < new Date(b.surveyDate)) return 1;
 
         return 0;
       });
 
-    return response.status(200).json(announcementsData);
+    return response.status(200).json(surveysData);
   } catch (error) {
     return response.status(500).json({
-      message: 'Failed to retrieve announcements.',
+      message: 'Failed to retrieve surveys.',
       reason: error,
     });
   }
@@ -45,13 +44,13 @@ router.get('/', async (request, response) => {
 
 /**
  * @openapi
- * /api/v2/announcements/{id}:
+ * /api/v2/surveys/{id}:
  *   get:
  *     name: Get With Id
  *     security:
  *       - bearerAuth: []
- *     description: Get an announcement with its id
- *     tags: [Announcements]
+ *     description: Get an survey with its id
+ *     tags: [Surveys]
  *     produces:
  *       - application/json
  *     parameters:
@@ -60,12 +59,12 @@ router.get('/', async (request, response) => {
  *         schema:
  *           type: string
  *         required: true
- *         description: The announcements id
+ *         description: The surveys id
  *     responses:
  *       200:
- *         description: Returns the announcement with the id
+ *         description: Returns the survey with the id
  *       404:
- *         description: Announcement not found.
+ *         description: Survey not found.
  *       500:
  *         description: Failure returns the message, reason and error code
  */
@@ -73,20 +72,20 @@ router.get('/:id', async (request, response) => {
   const id = request.params.id;
 
   try {
-    const announcement = await AnnouncementModal.findOne({ _id: { $eq: id } });
+    const survey = await SurveyModel.findOne({ _id: { $eq: id } });
 
-    if (!announcement)
+    if (!survey)
       return response.status(404).json({
-        message: 'Announcement not found.',
-        error: 'announcement-not-found',
+        message: 'Survey not found.',
+        error: 'survey-not-found',
       });
     else {
-      const announcementData = announcement.toJSON();
-      return response.status(200).json(announcementData);
+      const surveyData = survey.toJSON();
+      return response.status(200).json(surveyData);
     }
   } catch (error) {
     return response.status(500).json({
-      message: 'Failed to retrieve the announcement.',
+      message: 'Failed to retrieve the survey.',
       reason: error,
     });
   }
