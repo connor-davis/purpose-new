@@ -1,4 +1,29 @@
+import { onMount } from "solid-js";
+import useState from "../../../hooks/state";
+
 const ViewAnnouncementModal = ({ data = {}, closed = () => {} }) => {
+  const [user, setUser] = useState("user");
+  const [appMetadata, setAppMetadata] = useState("metadata");
+
+  onMount(() => {
+    setTimeout(() => {
+      if (user.data.userType !== "admin") {
+        if (!appMetadata.viewedAnnouncements)
+          setAppMetadata({
+            viewedAnnouncements: [...new Set([data._id])],
+          });
+        else
+          setAppMetadata({
+            viewedAnnouncements: [
+              ...new Set([...appMetadata.viewedAnnouncements, data._id]),
+            ],
+          });
+
+        console.log([...appMetadata.viewedAnnouncements]);
+      }
+    }, 100);
+  });
+
   return (
     <div class="absolute bg-neutral-900 bg-opacity-50 left-0 top-0 right-0 bottom-0 flex flex-col items-center justify-center animate-fade-in">
       <div class="flex flex-col w-full md:w-1/4 space-y-3 bg-neutral-900 border-l border-t border-r border-b border-neutral-700 rounded p-2">

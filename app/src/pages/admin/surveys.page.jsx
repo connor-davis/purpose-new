@@ -68,10 +68,7 @@ const AdminSurveysPage = () => {
 
       {viewingSurvey() && (
         <AdminViewSurveyModal
-          data={{
-            surveyDate: viewingSurvey().surveyDate,
-            surveyTitle: viewingSurvey().surveyTitle,
-          }}
+          data={viewingSurvey()}
           closed={() => {
             setViewingSurvey(undefined);
           }}
