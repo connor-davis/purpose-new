@@ -352,7 +352,10 @@ const Navbar = () => {
               user.data.userType &&
               user.data.userType !== "admin" && (
                 <div
-                  onClick={() => navigate("/profile")}
+                  onClick={() => {
+                    setNavbarShown(!navbarShown());
+                    navigate("/profile");
+                  }}
                   class="flex items-center space-x-2 w-full h-auto px-3 py-2 text-white border-l border-t border-r border-b border-neutral-900 bg-neutral-800 hover:bg-neutral-700 hover:bg-opacity-50 transition-all duration-300 ease-in-out rounded cursor-pointer"
                 >
                   <svg
