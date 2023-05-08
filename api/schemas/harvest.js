@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
 const HarvestSchema = new mongoose.Schema({
-  _userId: {
-    type: String,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
   },
   date: {
@@ -16,3 +17,9 @@ const HarvestSchema = new mongoose.Schema({
 });
 
 module.exports = HarvestSchema;
+
+/**
+ * const productUser = await UserModel.findOne({
+      _id: { $eq: product.user },
+    });
+ */

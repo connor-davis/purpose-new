@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const SurveyResponseSchema = new mongoose.Schema({
-  _userId: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },

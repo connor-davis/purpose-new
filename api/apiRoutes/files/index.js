@@ -41,7 +41,7 @@ router.get(
 
           return {
             name: filename,
-            _userId: filenamesplit[0],
+            user: filenamesplit[0],
             isFile: file.isFile(),
           };
         });

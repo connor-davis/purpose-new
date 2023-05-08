@@ -1,9 +1,8 @@
 const { Router } = require('express');
-const adminRoute = require('../utils/adminRoute');
+const adminRoute = require('../../utils/adminRoute');
+const { exportUsers } = require('../../utils/export');
 const router = Router();
 
-router.get('/', adminRoute, async (request, response) => {
-  response.status(200).send('Ok');
-});
+router.get('/', adminRoute, exportUsers);
 
 module.exports = router;

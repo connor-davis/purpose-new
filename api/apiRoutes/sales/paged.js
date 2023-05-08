@@ -47,7 +47,7 @@ router.get('/:page', async (request, response) => {
 
   try {
     const sales = await SaleModel.find(
-      !request.query.userId ? {} : { _userId: { $eq: request.query.userId } }
+      !request.query.userId ? {} : { user: { $eq: request.query.userId } }
     )
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
       .limit(limit);
@@ -60,7 +60,7 @@ router.get('/:page', async (request, response) => {
         return 0;
       });
     const totalSales = await SaleModel.countDocuments(
-      !request.query.userId ? {} : { _userId: { $eq: request.query.userId } }
+      !request.query.userId ? {} : { user: { $eq: request.query.userId } }
     );
     const totalPages = Math.ceil(totalSales / limit);
 

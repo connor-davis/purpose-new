@@ -62,13 +62,13 @@ router.get('/:page', async (request, response) => {
 
         return {
           name: documentname,
-          _userId: documentnamesplit[0],
+          user: documentnamesplit[0],
           isFile: document.isFile(),
         };
       })
       .filter((documentData) => {
         if (request.query.userId) {
-          if (documentData._userId === request.query.userId) return true;
+          if (documentData.user === request.query.userId) return true;
           else return false;
         } else return true;
       });

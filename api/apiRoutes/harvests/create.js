@@ -33,7 +33,7 @@ router.post('/', async (request, response) => {
   try {
     const newHarvest = new HarvestModel({
       ...body,
-      _userId: request.user._id
+      user: request.user._id
     });
 
     await newHarvest.save();

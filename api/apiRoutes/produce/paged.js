@@ -47,13 +47,13 @@ router.get('/:page', async (request, response) => {
 
   try {
     const produce = await ProduceModel.find(
-      !request.query.userId ? {} : { _userId: { $eq: request.query.userId } }
+      !request.query.userId ? {} : { user: { $eq: request.query.userId } }
     )
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
       .limit(limit);
     const produceData = produce.map((produce) => produce.toJSON());
     const totalProduce = await ProduceModel.countDocuments(
-      !request.query.userId ? {} : { _userId: { $eq: request.query.userId } }
+      !request.query.userId ? {} : { user: { $eq: request.query.userId } }
     );
     const totalPages = Math.ceil(totalProduce / limit);
 

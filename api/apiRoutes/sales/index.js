@@ -24,7 +24,7 @@ router.get('/', async (request, response) => {
     const sales = await SaleModel.find(
       request.user.userType !== 'admin'
         ? {}
-        : { _userId: { $eq: request.user._id } }
+        : { user: { $eq: request.user._id } }
     );
     const salesData = sales
       .map((sale) => sale.toJSON())

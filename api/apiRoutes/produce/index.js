@@ -21,7 +21,7 @@ const ProduceModel = require('../../models/produce');
  */
 router.get('/', async (request, response) => {
   try {
-    const produce = await ProduceModel.find(request.user.userType !== "admin" ? {} : { _userId: { $eq: request.user._id } });
+    const produce = await ProduceModel.find(request.user.userType !== "admin" ? {} : { user: { $eq: request.user._id } });
     const produceData = produce.map((produce) => produce.toJSON());
 
     return response.status(200).json(produceData);

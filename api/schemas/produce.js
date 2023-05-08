@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
 const ProduceSchema = new mongoose.Schema({
-  _userId: {
-    type: String,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
   },
   image: {

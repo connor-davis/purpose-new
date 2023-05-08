@@ -33,7 +33,7 @@ router.post('/', async (request, response) => {
   try {
     const newSale = new SaleModel({
       ...body,
-      _userId: request.user._id
+      user: request.user._id
     });
 
     await newSale.save();

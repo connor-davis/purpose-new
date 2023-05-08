@@ -119,9 +119,7 @@ client.then(async () => {
       chalk.hex('#c7e057').bold(tokens.method(req, res)),
       chalk.hex('#ffffff').bold(tokens.status(req, res)),
       chalk.hex('#262626').bold(tokens.url(req, res)),
-      chalk
-        .hex('#c7e057')
-        .bold(tokens['response-time'](req, res) + ' ms'),
+      chalk.hex('#c7e057').bold(tokens['response-time'](req, res) + ' ms'),
     ].join('|');
   });
 
@@ -133,6 +131,7 @@ client.then(async () => {
         'https://purpose.lone-wolf.software',
         'http://localhost:3000',
       ],
+      exposedHeaders: ['Content-Disposition'],
     })
   );
   app.use(compression());

@@ -24,7 +24,7 @@ router.get('/', async (request, response) => {
     const harvests = await HarvestModel.find(
       request.user.userType !== 'admin'
         ? {}
-        : { _userId: { $eq: request.user._id } }
+        : { user: { $eq: request.user._id } }
     );
     const harvestsData = harvests
       .map((harvest) => harvest.toJSON())
