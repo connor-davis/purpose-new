@@ -43,7 +43,9 @@ const UserProfileModal = ({ data = {}, closed = () => {} }) => {
               {data.userType === "other" && (
                 <>
                   <div class="text-lg font-medium">Business Description</div>
-                  <div class="break-words">{data.businessDescription || "None"}</div>
+                  <div class="break-words">
+                    {data.businessDescription || "None"}
+                  </div>
                 </>
               )}
               {data.userType === "ecd" && (
@@ -71,7 +73,8 @@ const UserProfileModal = ({ data = {}, closed = () => {} }) => {
             </div>
           </div>
           <iframe
-            class="w-full h-64"
+            id="map-frame"
+            class="w-full h-64 rounded z-10 bg-neutral-200 animate-pulse"
             style="border:0"
             loading="lazy"
             allowfullscreen
@@ -80,6 +83,11 @@ const UserProfileModal = ({ data = {}, closed = () => {} }) => {
               `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8
     &q=` + data.location
             }
+            onLoad={() => {
+              document
+                .getElementById("map-frame")
+                .classList.remove("animate-pulse");
+            }}
           ></iframe>
         </div>
       </div>
