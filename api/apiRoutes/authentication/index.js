@@ -170,6 +170,8 @@ router.post('/resetPassword/final/:uniqueCode', async (request, response) => {
       { password: bcrypt.hashSync(body.password, 2048) }
     );
 
+    fs.unlinkSync(path.join(process.cwd(), 'temp', uniqueCode + '.pwrs'));
+
     return response.status(200).send('Ok');
   } catch (error) {
     return response.status(500).json({
