@@ -20,13 +20,11 @@ const UserProfile = ({ userId, darkBg = false }) => {
   });
 
   const fetchUser = async () => {
-    console.log(user);
-
     const response = await axios.get(apiUrl + "users/" + userId, {
       headers: { Authorization: "Bearer " + user.token },
     });
 
-    if (!response.data.error) {
+    if (response.data) {
       setUserProfile(response.data);
       setLoading(false);
     }

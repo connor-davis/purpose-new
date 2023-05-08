@@ -2,7 +2,6 @@ import axios from "axios";
 import { For, createSignal, onMount } from "solid-js";
 import apiUrl from "../../apiUrl";
 import useState from "../../hooks/state";
-import UploadDocumentsModal from "../../components/modals/uploadDocuments.modal";
 import Pager from "../../components/pager";
 import UserProfile from "../../components/userProfile";
 
@@ -84,14 +83,14 @@ const AdminDocumentsPage = () => {
 
                 <div class="flex items-center space-x-2">
                   <div class="hidden group-hover:flex">
-                    <UserProfile userId={document._userId} darkBg={true} />
+                    <UserProfile userId={document.user} darkBg={true} />
                   </div>
                   <a
                     class="hidden group-hover:flex group-hover:animate-fade-in p-2 rounded-full items-center justify-center hover:bg-lime-200 cursor-pointer w-8 h-8"
                     href={
                       apiUrl +
                       "documents/view/" +
-                      document._userId +
+                      document.user +
                       "." +
                       document.name
                     }
@@ -119,7 +118,7 @@ const AdminDocumentsPage = () => {
                   </a>
                   <div
                     onClick={() =>
-                      deleteDocument(document._userId + "." + document.name)
+                      deleteDocument(document.user + "." + document.name)
                     }
                     class="hidden group-hover:flex group-hover:animate-fade-in p-2 rounded-full hover:bg-red-200 cursor-pointer"
                   >
