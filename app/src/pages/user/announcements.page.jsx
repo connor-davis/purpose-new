@@ -80,7 +80,7 @@ const AnnouncementsPage = () => {
         <div class="flex items-center justify-between animate-fade-in">
           <div class="cookie text-2xl">Announcements</div>
         </div>
-        <div class="flex flex-col w-full h-full space-y-2 overflow-y-auto">
+        <div class="flex flex-col w-full h-full space-y-2 overflow-y-auto overflow-x-auto">
           <For
             each={announcements()}
             fallback={() =>

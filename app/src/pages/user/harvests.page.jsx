@@ -3,7 +3,6 @@ import { createSignal, onMount } from "solid-js";
 import apiUrl from "../../apiUrl";
 import Pager from "../../components/pager";
 import useState from "../../hooks/state";
-import AddSaleModal from "../../components/modals/sales/add";
 import AddHarvestModal from "../../components/modals/harvests/add";
 
 const HarvestsPage = () => {
@@ -87,7 +86,7 @@ const HarvestsPage = () => {
             <div class="bg-neutral-200 animate-pulse w-full h-10"></div>
           </div>
         ) : harvests().length > 0 ? (
-          <div class="flex flex-col w-full h-full overflow-y-auto">
+          <div class="flex flex-col w-full h-full overflow-y-auto overflow-x-auto">
             <table class="table-auto bg-white border-l border-t border-r border-neutral-200 text-black">
               <thead>
                 <tr class="p-3 border-b border-neutral-200 bg-neutral-900 text-white select-none">
@@ -100,11 +99,11 @@ const HarvestsPage = () => {
                 <For each={harvests()}>
                   {(harvest) => (
                     <tr class="hover:bg-neutral-100 border-b border-neutral-200 group">
-                      <td class="flex items-center space-x-2 p-3">
+                      <td class="flex items-center space-x-2 p-3 whitespace-nowrap">
                         {harvest.date}
                       </td>
-                      <td class="p-3">{harvest.produce.length}</td>
-                      <td class="p-1">
+                      <td class="p-3 whitespace-nowrap">{harvest.produce.length}</td>
+                      <td class="p-1 whitespace-nowrap">
                         <div class="flex w-24 h-full items-center space-x-2">
                           {/* <div
                             onClick={() => setViewingHarvest(harvest._id)}

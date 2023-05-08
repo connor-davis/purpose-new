@@ -75,7 +75,7 @@ const DocumentsPage = () => {
             </div>
           </div>
         </div>
-        <div class="flex flex-col w-full h-full space-y-2 overflow-y-auto">
+        <div class="flex flex-col w-full h-full space-y-2 overflow-y-auto overflow-x-auto">
           <For
             each={documents()}
             fallback={() =>

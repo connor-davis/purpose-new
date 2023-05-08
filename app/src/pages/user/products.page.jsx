@@ -87,7 +87,7 @@ const ProductsPage = () => {
             <div class="bg-neutral-200 animate-pulse w-full h-10"></div>
           </div>
         ) : products().length > 0 ? (
-          <div class="flex flex-col w-full h-full overflow-y-auto">
+          <div class="flex flex-col w-full h-full overflow-y-auto overflow-x-auto">
             <table class="table-auto bg-white border-l border-t border-r border-neutral-200 text-black">
               <thead>
                 <tr class="p-3 border-b border-neutral-200 bg-neutral-900 text-white select-none">
@@ -113,16 +113,16 @@ const ProductsPage = () => {
                       )}
 
                       <td class="flex items-center space-x-2 p-3">
-                        <div class="flex items-center h-9">
+                        <div class="flex items-center h-9 w-auto overflow-hid">
                           <img
                             src={apiUrl + "files/view/" + product.image}
-                            class="w-10 h-10 rounded"
+                            class="w-10 min-w-[40px] h-10 rounded"
                           />
                         </div>
-                        <div class="flex items-center h-9">{product.name}</div>
+                        <div class="flex items-center h-9 whitespace-nowrap">{product.name}</div>
                       </td>
-                      <td class="p-3">R {product.cost}</td>
-                      <td class="p-3">R {product.price}</td>
+                      <td class="p-3 whitespace-nowrap">R {product.cost}</td>
+                      <td class="p-3 whitespace-nowrap">R {product.price}</td>
                       <td class="p-3">
                         <div class="flex w-24 h-full items-center space-x-2">
                           <div
