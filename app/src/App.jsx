@@ -3,14 +3,12 @@ import Navbar from "./components/navbar";
 import Sidebar from "./components/sidebar";
 import useState from "./hooks/state";
 import FourOFourPage from "./pages/404/404";
-
 import AdminDashboardPage from "./pages/admin/dashboard.page";
 import AdminDocumentsPage from "./pages/admin/documents.page";
 import AdminArchivesPage from "./pages/admin/archives.page";
 import AdminSurveysPage from "./pages/admin/surveys.page";
 import AdminAnnouncementsPage from "./pages/admin/announcements.page";
 import AdminUsersPage from "./pages/admin/users.page";
-
 import LoginPage from "./pages/authentication/login.page";
 import RegisterPage from "./pages/authentication/register.page";
 import AnnouncementsPage from "./pages/user/announcements.page";
@@ -28,6 +26,7 @@ import { createSignal, onMount } from "solid-js";
 import axios from "axios";
 import apiUrl from "./apiUrl";
 import AdminExportPage from "./pages/admin/export.page";
+import ForgotPasswordPage from "./pages/authentication/forgotPassword.page";
 
 const App = () => {
   const [user, setUser, clear] = useState("user");
@@ -42,16 +41,21 @@ const App = () => {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await axios.get(apiUrl + "users/me", {
-        headers: { Authorization: "Bearer " + user.token },
-      });
+      if (user.data) {
+        const response = await axios.get(apiUrl + "users/me", {
+          headers: { Authorization: "Bearer " + user.token },
+        });
 
-      if (!response.data) {
+        if (!response.data) {
+          setLoading(false);
+          clear();
+        } else {
+          setUser({ authenticated: true, data: response.data });
+          setLoading(false);
+        }
+      } else {
         setLoading(false);
         clear();
-      } else {
-        setUser({ authenticated: true, data: response.data });
-        setLoading(false);
       }
     } catch {
       setLoading(false);
@@ -96,6 +100,9 @@ const App = () => {
               {!user.authenticated && <Route path="/" element={LoginPage} />}
               {!user.authenticated && (
                 <Route path="/create-account" element={RegisterPage} />
+              )}
+              {!user.authenticated && (
+                <Route path="/forgot-password" element={ForgotPasswordPage} />
               )}
 
               {user.authenticated && user.data.userType === "admin" && (

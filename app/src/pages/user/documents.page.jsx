@@ -101,7 +101,7 @@ const DocumentsPage = () => {
                     href={
                       apiUrl +
                       "documents/view/" +
-                      document._userId +
+                      document.user +
                       "." +
                       document.name
                     }
@@ -129,7 +129,7 @@ const DocumentsPage = () => {
                   </a>
                   <div
                     onClick={() =>
-                      deleteDocument(document._userId + "." + document.name)
+                      deleteDocument(document.user + "." + document.name)
                     }
                     class="hidden group-hover:flex group-hover:animate-fade-in p-2 rounded-full hover:bg-red-200 cursor-pointer"
                   >

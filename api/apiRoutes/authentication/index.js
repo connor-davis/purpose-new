@@ -4,7 +4,9 @@ const passport = require('passport');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
+const path = require("path");
 const UserModel = require('../../models/user');
+const adminRoute = require('../../utils/adminRoute');
 
 /**
  * @openapi
@@ -30,6 +32,152 @@ router.get(
     response.status(200).send('Authorized');
   }
 );
+
+/**
+ * @openapi
+ * /api/v2/authentication/resetPassword/getCode/{userId}:
+ *   get:
+ *     name: Reset Password
+ *     security:
+ *       - bearerAuth: []
+ *     description: Reset the user with the ids password
+ *     tags: [Authentication]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The unique code for password reset
+ *     responses:
+ *       200:
+ *         description: Returns the unique code the user needs to change their password.
+ *       500:
+ *         description: Failure returns the message, reason and error code
+ */
+router.get(
+  '/resetPassword/getCode/:userId',
+  passport.authenticate('jwt', { session: false }),
+  adminRoute,
+  async (request, response) => {
+    const userId = request.params.userId;
+
+    try {
+      const uniqueCode = Math.random().toString().substring(2, 6);
+
+      if (!fs.existsSync(path.join(process.cwd(), 'temp')))
+        fs.mkdirSync(path.join(process.cwd(), 'temp'));
+
+      fs.writeFileSync(
+        path.join(process.cwd(), 'temp', uniqueCode + '.pwrs'),
+        userId
+      );
+
+      return response.status(200).json({ userId, uniqueCode });
+    } catch (error) {
+      return response.status(500).json({
+        message: 'Failed to create unique password reset code for user.',
+        reason: error,
+      });
+    }
+  }
+);
+
+/**
+ * @openapi
+ * /api/v2/authentication/resetPassword/codeVerification/{uniqueCode}:
+ *   get:
+ *     name: Reset Password Verification
+ *     security:
+ *       - bearerAuth: []
+ *     description: Reset the user with the ids password verification
+ *     tags: [Authentication]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: uniqueCode
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The unique code for password reset
+ *     responses:
+ *       200:
+ *         description: Returns the unique code the user needs to change their password.
+ *       500:
+ *         description: Failure returns the message, reason and error code
+ */
+router.get(
+  '/resetPassword/codeVerification/:uniqueCode',
+  async (request, response) => {
+    const uniqueCode = request.params.uniqueCode;
+
+    try {
+      if (
+        !fs.existsSync(path.join(process.cwd(), 'temp', uniqueCode + '.pwrs'))
+      )
+        return response.status(401).send('Unauthorized');
+      else return response.status(200).send('Ok');
+    } catch (error) {
+      return response.status(500).json({
+        message: 'Failed to create unique password reset code for user.',
+        reason: error,
+      });
+    }
+  }
+);
+
+/**
+ * @openapi
+ * /api/v2/authentication/resetPassword/final/{uniqueCode}:
+ *   get:
+ *     name: Reset Password Verification
+ *     security:
+ *       - bearerAuth: []
+ *     description: Reset the user with the ids password verification
+ *     tags: [Authentication]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: uniqueCode
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The unique code for password reset
+ *     responses:
+ *       200:
+ *         description: Returns the unique code the user needs to change their password.
+ *       500:
+ *         description: Failure returns the message, reason and error code
+ */
+router.post('/resetPassword/final/:uniqueCode', async (request, response) => {
+  const uniqueCode = request.params.uniqueCode;
+  const body = request.body;
+
+  try {
+    if (!fs.existsSync(path.join(process.cwd(), 'temp', uniqueCode + '.pwrs')))
+      return response.status(401).send('Unauthorized');
+
+    const userId = fs.readFileSync(
+      path.join(process.cwd(), 'temp', uniqueCode + '.pwrs')
+    );
+
+    await UserModel.updateOne(
+      { _id: { $eq: userId } },
+      { password: bcrypt.hashSync(body.password, 2048) }
+    );
+
+    return response.status(200).send('Ok');
+  } catch (error) {
+    return response.status(500).json({
+      message: 'Failed to create unique password reset code for user.',
+      reason: error,
+    });
+  }
+});
 
 /**
  * @openapi

@@ -4,6 +4,9 @@ const passport = require('passport');
 const UserModel = require('../../models/user');
 const userFormatter = require('../../utils/userFormatter');
 const adminRoute = require('../../utils/adminRoute');
+const fs = require('fs');
+const path = require('path');
+const bcrypt = require('bcrypt');
 
 /**
  * @openapi
@@ -22,19 +25,24 @@ const adminRoute = require('../../utils/adminRoute');
  *       500:
  *         description: Failure returns the message, reason and error code
  */
-router.get('/', adminRoute, async (request, response) => {
-  try {
-    const users = await UserModel.find({ userType: { $ne: 'admin' } });
-    const usersData = users.map((user) => userFormatter(user.toJSON()));
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  adminRoute,
+  async (request, response) => {
+    try {
+      const users = await UserModel.find({ userType: { $ne: 'admin' } });
+      const usersData = users.map((user) => userFormatter(user.toJSON()));
 
-    return response.status(200).json(usersData);
-  } catch (error) {
-    return response.status(500).json({
-      message: 'Failed to retrieve users.',
-      reason: error,
-    });
+      return response.status(200).json(usersData);
+    } catch (error) {
+      return response.status(500).json({
+        message: 'Failed to retrieve users.',
+        reason: error,
+      });
+    }
   }
-});
+);
 
 /**
  * @openapi
@@ -55,27 +63,31 @@ router.get('/', adminRoute, async (request, response) => {
  *       500:
  *         description: Failure returns the message, reason and error code
  */
-router.get('/me', async (request, response) => {
-  const email = request.user.email;
-  
-  try {
-    const user = await UserModel.findOne({ email: { $eq: email } });
+router.get(
+  '/me',
+  passport.authenticate('jwt', { session: false }),
+  async (request, response) => {
+    const email = request.user.email;
 
-    if (!user)
-      return response
-        .status(404)
-        .json({ message: 'User not found.', error: 'user-not-found' });
-    else {
-      const userData = userFormatter(user.toJSON());
-      return response.status(200).json(userData);
+    try {
+      const user = await UserModel.findOne({ email: { $eq: email } });
+
+      if (!user)
+        return response
+          .status(404)
+          .json({ message: 'User not found.', error: 'user-not-found' });
+      else {
+        const userData = userFormatter(user.toJSON());
+        return response.status(200).json(userData);
+      }
+    } catch (error) {
+      return response.status(500).json({
+        message: 'Failed to retrieve the user.',
+        reason: error,
+      });
     }
-  } catch (error) {
-    return response.status(500).json({
-      message: 'Failed to retrieve the user.',
-      reason: error,
-    });
   }
-});
+);
 
 /**
  * @openapi
@@ -103,34 +115,55 @@ router.get('/me', async (request, response) => {
  *       500:
  *         description: Failure returns the message, reason and error code
  */
-router.get('/:userId', async (request, response) => {
-  const userId = request.params.userId;
+router.get(
+  '/:userId',
+  passport.authenticate('jwt', { session: false }),
+  adminRoute,
+  async (request, response) => {
+    const userId = request.params.userId;
 
-  try {
-    const user = await UserModel.findOne({
-      _id: { $eq: userId },
-      userType: { $ne: 'admin' },
-    });
+    try {
+      const user = await UserModel.findOne({
+        _id: { $eq: userId },
+        userType: { $ne: 'admin' },
+      });
 
-    if (!user)
-      return response
-        .status(404)
-        .json({ message: 'User not found.', error: 'user-not-found' });
-    else {
-      const userData = userFormatter(user.toJSON());
-      return response.status(200).json(userData);
+      if (!user)
+        return response
+          .status(404)
+          .json({ message: 'User not found.', error: 'user-not-found' });
+      else {
+        const userData = userFormatter(user.toJSON());
+        return response.status(200).json(userData);
+      }
+    } catch (error) {
+      return response.status(500).json({
+        message: 'Failed to retrieve the user.',
+        reason: error,
+      });
     }
-  } catch (error) {
-    return response.status(500).json({
-      message: 'Failed to retrieve the user.',
-      reason: error,
-    });
   }
-});
+);
 
-router.use('/page', require('./paged'));
-router.use('/', require('./create'));
-router.use('/', require('./edit'));
-router.use('/', require('./delete'));
+router.use(
+  '/page',
+  passport.authenticate('jwt', { session: false }),
+  require('./paged')
+);
+router.use(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  require('./create')
+);
+router.use(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  require('./edit')
+);
+router.use(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  require('./delete')
+);
 
 module.exports = router;

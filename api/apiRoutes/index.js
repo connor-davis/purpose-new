@@ -37,11 +37,7 @@ const passport = require('passport');
  *     description: Api announcements routes.
  */
 router.use('/authentication', require('./authentication'));
-router.use(
-  '/users',
-  passport.authenticate('jwt', { session: false }),
-  require('./users')
-);
+router.use('/users', require('./users'));
 router.use(
   '/sales',
   passport.authenticate('jwt', { session: false }),

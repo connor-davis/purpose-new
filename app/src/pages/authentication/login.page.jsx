@@ -17,6 +17,9 @@ const LoginPage = () => {
   const [password, setPassword] = createSignal(undefined);
 
   const login = async () => {
+    setSuccessMessage(undefined);
+    setErrorMessage(undefined);
+
     const response = await axios.post(apiUrl + "authentication/login", {
       email: email(),
       password: password(),
@@ -25,7 +28,12 @@ const LoginPage = () => {
     if (response.data.error) return setErrorMessage(response.data.message);
     else {
       setTimeout(
-        () => setUser({ data: response.data.user, token: response.data.token, authenticated: true }),
+        () =>
+          setUser({
+            data: response.data.user,
+            token: response.data.token,
+            authenticated: true,
+          }),
         1500
       );
 
@@ -42,9 +50,7 @@ const LoginPage = () => {
           {successMessage() && (
             <div class="text-lime-500">{successMessage()}</div>
           )}
-          {errorMessage() && (
-            <div class="text-2xl text-red-500">{errorMessage()}</div>
-          )}
+          {errorMessage() && <div class="text-red-500">{errorMessage()}</div>}
         </div>
         <div class="flex flex-col items-center justify-center space-y-3 w-full">
           <div class="flex flex-col items-center justify-center space-y-2 w-full">
@@ -74,7 +80,10 @@ const LoginPage = () => {
             >
               Login
             </div>
-            <div class="flex items-center justify-center w-full text-neutral-600 hover:text-lime-400 transition-all duration-300 ease-in-out cursor-pointer">
+            <div
+              onClick={() => navigate("/forgot-password")}
+              class="flex items-center justify-center w-full text-neutral-600 hover:text-lime-400 transition-all duration-300 ease-in-out cursor-pointer"
+            >
               Forgot password
             </div>
           </div>

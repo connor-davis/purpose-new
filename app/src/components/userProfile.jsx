@@ -3,6 +3,7 @@ import { createSignal, onMount } from "solid-js";
 import apiUrl from "../apiUrl";
 import useState from "../hooks/state";
 import { createStore } from "solid-js/store";
+import UserProfileModal from "./modals/userProfile.modal";
 
 const UserProfile = ({ userId, darkBg = false }) => {
   const [user, setUser] = useState("user");
@@ -12,6 +13,8 @@ const UserProfile = ({ userId, darkBg = false }) => {
   );
 
   const [loading, setLoading] = createSignal(true);
+
+  const [showProfile, setShowProfile] = createSignal(false);
 
   onMount(() => {
     setTimeout(() => {
@@ -31,17 +34,23 @@ const UserProfile = ({ userId, darkBg = false }) => {
   };
 
   return (
-    <div class="w-auto">
+    <>
       {loading() ? (
         <div
-          class={`flex items-center justify-center animate-pulse w-5 h-5 rounded-full`}
+          class={`flex items-center justify-center animate-pulse w-full h-full rounded p-5 bg-neutral-200`}
         ></div>
       ) : (
-        <div class="relative">
+        <>
+          {showProfile() && (
+            <UserProfileModal
+              data={userProfile}
+              closed={() => setShowProfile(false)}
+            />
+          )}
           <div class="cursor-pointer rounded p-1 hover:bg-neutral-200">
             {userProfile.image ? (
               <div
-                onClick={() => alert("Clicked on user profile")}
+                onClick={() => setShowProfile(true)}
                 class="flex items-center space-x-2"
               >
                 <img
@@ -54,10 +63,9 @@ const UserProfile = ({ userId, darkBg = false }) => {
               <div class="h-7">{userProfile.businessName}</div>
             )}
           </div>
-          <div></div>
-        </div>
+        </>
       )}
-    </div>
+    </>
   );
 };
 

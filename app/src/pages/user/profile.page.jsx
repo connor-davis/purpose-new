@@ -305,6 +305,16 @@ const ProfilePage = () => {
         areaCode: location.areaCode === "" ? null : location.areaCode,
         province: location.province === "" ? null : location.province,
         country: location.country === "" ? null : location.country,
+        location:
+          location.streetAddress +
+          ", " +
+          location.city +
+          ", " +
+          location.areaCode +
+          ", " +
+          location.province +
+          ", " +
+          location.country,
       },
       { headers: { Authorization: "Bearer " + user.token } }
     );
