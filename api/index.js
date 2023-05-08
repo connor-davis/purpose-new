@@ -17,6 +17,7 @@ const morgan = require('morgan');
 const logger = require('./utils/logger');
 const passport = require('passport');
 const session = require('express-session');
+const basicAuth = require('express-basic-auth');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
@@ -159,6 +160,10 @@ client.then(async () => {
   app.use('/api/v2', apiRoutes);
   app.use(
     '/api/v2/docs',
+    basicAuth({
+      users: { admin: process.env.ROOT_PASSWORD },
+      challenge: true,
+    }),
     swaggerUi.serve,
     swaggerUi.setup(openapiSpecification)
   );
