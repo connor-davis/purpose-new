@@ -27,6 +27,7 @@ import SurveysPage from "./pages/user/surveys.page";
 import { createSignal, onMount } from "solid-js";
 import axios from "axios";
 import apiUrl from "./apiUrl";
+import AdminExportPage from "./pages/admin/export.page";
 
 const App = () => {
   const [user, setUser, clear] = useState("user");
@@ -35,19 +36,28 @@ const App = () => {
 
   onMount(() => {
     setTimeout(() => {
-      // checkAuthStatus();
-      setLoading(false);
+      checkAuthStatus();
     }, 100);
   });
 
-  // const checkAuthStatus = async () => {
-  //   const response = await axios.get(apiUrl + "users/me", {
-  //     headers: { Authorization: "Bearer " + user.token },
-  //   });
+  const checkAuthStatus = async () => {
+    try {
+      const response = await axios.get(apiUrl + "users/me", {
+        headers: { Authorization: "Bearer " + user.token },
+      });
 
-  //   setUser({ authenticated: true, data: response.data });
-  //   setLoading(false);
-  // };
+      if (!response.data) {
+        setLoading(false);
+        clear();
+      } else {
+        setUser({ authenticated: true, data: response.data });
+        setLoading(false);
+      }
+    } catch {
+      setLoading(false);
+      clear();
+    }
+  };
 
   return (
     <div class="flex flex-col w-screen h-screen text-black dark:text-white bg-neutral-900 select-none app-bg">
@@ -105,6 +115,9 @@ const App = () => {
               )}
               {user.authenticated && user.data.userType === "admin" && (
                 <Route path="/surveys" element={AdminSurveysPage} />
+              )}
+              {user.authenticated && user.data.userType === "admin" && (
+                <Route path="/export" element={AdminExportPage} />
               )}
 
               {user.authenticated &&

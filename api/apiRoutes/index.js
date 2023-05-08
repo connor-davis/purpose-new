@@ -82,4 +82,35 @@ router.use(
   require('./surveys')
 );
 
+router.use(
+  '/export/all',
+  passport.authenticate('jwt', { session: false }),
+  require('./export')
+);
+router.use(
+  '/export/users',
+  passport.authenticate('jwt', { session: false }),
+  require('./users/export')
+);
+router.use(
+  '/export/products',
+  passport.authenticate('jwt', { session: false }),
+  require('./products/export')
+);
+router.use(
+  '/export/produce',
+  passport.authenticate('jwt', { session: false }),
+  require('./produce/export')
+);
+router.use(
+  '/export/sales',
+  passport.authenticate('jwt', { session: false }),
+  require('./sales/export')
+);
+router.use(
+  '/export/harvests',
+  passport.authenticate('jwt', { session: false }),
+  require('./harvests/export')
+);
+
 module.exports = router;
