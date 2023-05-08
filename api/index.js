@@ -129,7 +129,9 @@ client.then(async () => {
     cors({
       origin: [
         'https://purpose360.co.za',
-        'https://purpose.lone-wolf.software',
+        'https://purposev2.web.app',
+        'https://purposev2.firebaseapp.com',
+        'https://demo.purpose360.co.za',
         'http://localhost:3000',
       ],
       exposedHeaders: ['Content-Disposition'],
