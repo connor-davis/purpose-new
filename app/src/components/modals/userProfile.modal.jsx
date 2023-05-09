@@ -27,10 +27,22 @@ const UserProfileModal = ({ data = {}, closed = () => {} }) => {
           </div>
         </div>
         <div class="flex flex-col items-center space-y-3 bg-white text-black rounded p-3">
-          <img
-            src={apiUrl + "files/view/" + data.image}
-            class="w-32 h-32 rounded-full"
-          />
+          {
+            data && data.image ? (
+              <img
+                src={apiUrl + "files/view/" + data.image}
+                class="w-32 h-32 rounded-full"
+              />
+            ) : (
+              data.firstName &&
+              data.lastName && (
+                <div class="flex flex-col items-center justify-center w-32 h-32 rounded-full bg-lime-200 cookie text-4xl">
+                  {data.firstName.split("")[0]}{" "}
+                  {data.lastName.split("")[0]}
+                </div>
+              )
+            )
+          }
           <div class="text-2xl font-bold">
             {data.firstName} {data.lastName}
           </div>
