@@ -39,6 +39,8 @@ router.get('/:userId', async (request, response) => {
 
     const userFound = await UserModel.findOne({ _id: { $eq: userId } });
 
+    console.log(userId);
+
     if (!userFound)
       return response
         .status(404)
