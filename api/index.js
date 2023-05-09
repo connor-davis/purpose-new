@@ -33,7 +33,10 @@ const app = express();
 const secure_port = process.env.HTTP_SECURE_PORT || 443;
 const port = process.env.HTTP_PORT || 80;
 const devmode = process.env.DEV_MODE === 'true';
-const client = mongoose.connect(process.env.MONGO_URL);
+const client = mongoose.connect(process.env.MONGO_URL, {
+  autoIndex: false,
+  autoCreate: false,
+});
 const http = require('http').createServer(app);
 let https;
 const io = require('socket.io')(http, {
