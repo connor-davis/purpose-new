@@ -3,7 +3,7 @@ const router = Router();
 const bcrypt = require('bcrypt');
 const UserModel = require('../../models/user');
 const userFormatter = require('../../utils/userFormatter');
-const jwt = require("jsonwebtoken")
+const jwt = require('jsonwebtoken');
 
 /**
  * @openapi
@@ -32,14 +32,14 @@ const jwt = require("jsonwebtoken")
 router.get('/:userId', async (request, response) => {
   const userId = request.params.userId;
 
+  console.log(userId);
+
   try {
     let privateKey = fs.readFileSync(process.cwd() + '/certs/privateKey.pem', {
       encoding: 'utf-8',
     });
 
     const userFound = await UserModel.findOne({ _id: { $eq: userId } });
-
-    console.log(userId);
 
     if (!userFound)
       return response
