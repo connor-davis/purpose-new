@@ -1,6 +1,11 @@
+import { onMount } from "solid-js";
 import apiUrl from "../../apiUrl";
 
 const UserProfileModal = ({ data = {}, closed = () => {} }) => {
+  onMount(() => {
+    console.log(data);
+  });
+
   return (
     <div class="absolute bg-neutral-900 bg-opacity-50 left-0 top-0 right-0 bottom-0 flex flex-col items-center justify-center animate-fade-in">
       <div class="flex flex-col w-full md:w-1/4 space-y-3 bg-neutral-900 border-l border-t border-r border-b border-neutral-700 rounded p-2">
@@ -27,31 +32,28 @@ const UserProfileModal = ({ data = {}, closed = () => {} }) => {
           </div>
         </div>
         <div class="flex flex-col items-center space-y-3 bg-white text-black rounded p-3">
-          {
-            data && data.image ? (
-              <img
-                src={apiUrl + "files/view/" + data.image}
-                class="w-32 h-32 rounded-full"
-              />
-            ) : (
-              data.firstName &&
-              data.lastName && (
-                <div class="flex flex-col items-center justify-center w-32 h-32 rounded-full bg-lime-200 cookie text-4xl">
-                  {data.firstName.split("")[0]}{" "}
-                  {data.lastName.split("")[0]}
-                </div>
-              )
+          {data && data.image ? (
+            <img
+              src={apiUrl + "files/view/" + data.image}
+              class="w-32 h-32 rounded-full"
+            />
+          ) : (
+            data.firstName &&
+            data.lastName && (
+              <div class="flex flex-col items-center justify-center w-32 h-32 rounded-full bg-lime-200 cookie text-4xl font-bold">
+                {data.firstName.split("")[0].toUpperCase()} {data.lastName.split("")[0].toUpperCase()}
+              </div>
             )
-          }
+          )}
           <div class="text-2xl font-bold">
             {data.firstName} {data.lastName}
           </div>
           <div class="flex w-full space-x-2 justify-between">
             <div class="flex flex-col space-y-2 w-full">
               <div class="text-lg font-medium">Business Name</div>
-              <div>{data.businessName}</div>
+              <div>{data.businessName || "None"}</div>
               <div class="text-lg font-medium">Business Type</div>
-              <div>{data.userType}</div>
+              <div>{data.userType || "None"}</div>
               {data.userType === "other" && (
                 <>
                   <div class="text-lg font-medium">Business Description</div>
@@ -70,18 +72,18 @@ const UserProfileModal = ({ data = {}, closed = () => {} }) => {
                 </>
               )}
               <div class="text-lg font-medium">Number Of Employees</div>
-              <div>{data.businessNumberOfEmployees}</div>
+              <div>{data.businessNumberOfEmployees || 0}</div>
             </div>
             <div class="w-[1px] h-full bg-neutral-300"></div>
             <div class="flex flex-col space-y-2 w-full">
               <div class="text-lg font-medium">Email</div>
-              <div>{data.email}</div>
+              <div>{data.email || "None"}</div>
               <div class="text-lg font-medium">Age</div>
-              <div>{data.age}</div>
+              <div>{data.age || "None"}</div>
               <div class="text-lg font-medium">Ethnicity</div>
-              <div>{data.ethnicity}</div>
+              <div>{data.ethnicity || "None"}</div>
               <div class="text-lg font-medium">Gender</div>
-              <div>{data.gender}</div>
+              <div>{data.gender || "None"}</div>
             </div>
           </div>
           <iframe
