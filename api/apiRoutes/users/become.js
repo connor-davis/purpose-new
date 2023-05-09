@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const UserModel = require('../../models/user');
 const userFormatter = require('../../utils/userFormatter');
 const jwt = require('jsonwebtoken');
+const fs = require("fs");
+const path = require("path");
 
 /**
  * @openapi
