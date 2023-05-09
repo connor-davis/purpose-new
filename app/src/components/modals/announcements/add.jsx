@@ -39,7 +39,7 @@ const AddAnnouncementModal = ({ added = () => {}, closed = () => {} }) => {
 
   return (
     <div class="absolute m-3 md:m-0 bg-neutral-900 bg-opacity-50 left-0 top-0 right-0 bottom-0 flex flex-col items-center justify-center animate-fade-in">
-      <div class="flex flex-col w-full md:w-1/4 space-y-3 bg-neutral-900 border-l border-t border-r border-b border-neutral-700 rounded p-2">
+      <div class="flex flex-col w-full md:w-3/5 h-full overflow-y-auto  space-y-3 bg-neutral-900 border-l border-t border-r border-b border-neutral-700 rounded p-2">
         <div class="flex items-center justify-between w-full">
           <div class="cookie text-white text-2xl">Add Announcement</div>
           <div

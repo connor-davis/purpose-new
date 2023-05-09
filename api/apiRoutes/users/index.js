@@ -165,5 +165,11 @@ router.use(
   passport.authenticate('jwt', { session: false }),
   require('./delete')
 );
+router.use(
+  '/become',
+  passport.authenticate('jwt', { session: false }),
+  adminRoute,
+  require('./become')
+);
 
 module.exports = router;

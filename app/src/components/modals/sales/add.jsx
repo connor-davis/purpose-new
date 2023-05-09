@@ -62,7 +62,7 @@ const AddSaleModal = ({ added = () => {}, closed = () => {} }) => {
         />
       )}
 
-      <div class="flex flex-col w-full md:w-96 space-y-3 bg-neutral-900 border-l border-t border-r border-b border-neutral-700 rounded p-2">
+      <div class="flex flex-col w-full md:w-3/5 h-full overflow-y-auto  space-y-3 bg-neutral-900 border-l border-t border-r border-b border-neutral-700 rounded p-2">
         <div class="flex items-center justify-between w-full">
           <div class="cookie text-white text-2xl">Add Sale</div>
           <div
