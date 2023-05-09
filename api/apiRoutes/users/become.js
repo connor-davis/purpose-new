@@ -37,7 +37,7 @@ router.get('/:userId', async (request, response) => {
       encoding: 'utf-8',
     });
 
-    const userFound = await UserModel.findOne({ email: body.email });
+    const userFound = await UserModel.findOne({ _id: { $eq: userId } });
 
     if (!userFound)
       return response
