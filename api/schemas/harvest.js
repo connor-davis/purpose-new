@@ -1,20 +1,23 @@
 const mongoose = require('mongoose');
 
-const HarvestSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+const HarvestSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    date: {
+      type: String,
+      required: true,
+    },
+    produce: {
+      type: Array, // Array<mongoose.Schema.Types.ObjectId>
+      required: true,
+    },
   },
-  date: {
-    type: String,
-    required: true,
-  },
-  produce: {
-    type: Array, // Array<mongoose.Schema.Types.ObjectId>
-    required: true,
-  },
-});
+  { timestamps: true }
+);
 
 module.exports = HarvestSchema;
 
