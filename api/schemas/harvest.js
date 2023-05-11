@@ -11,10 +11,13 @@ const HarvestSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    produce: {
-      type: Array, // Array<mongoose.Schema.Types.ObjectId>
-      required: true,
-    },
+    produce: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Produce",
+        required: true,
+      },
+    ],
   },
   { timestamps: true }
 );

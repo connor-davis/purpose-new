@@ -11,10 +11,13 @@ const SaleSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    products: {
-      type: Array, // Array<mongoose.Schema.Types.ObjectId>
-      required: true,
-    },
+    products: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+        required: true,
+      },
+    ],
     profit: {
       type: Number,
       required: true,
