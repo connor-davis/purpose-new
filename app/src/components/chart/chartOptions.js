@@ -68,10 +68,11 @@ export const agesOptions = {
   },
   responsive: [
     {
-      breakpoint: 480,
+      breakpoint: 1000,
       options: {
         chart: {
-          width: 200,
+          width: "100%",
+          heigh: "100%",
         },
         legend: {
           position: "bottom",
@@ -154,10 +155,11 @@ export const userTypesOptions = {
   },
   responsive: [
     {
-      breakpoint: 480,
+      breakpoint: 1000,
       options: {
         chart: {
-          width: 200,
+          width: "100%",
+          heigh: "100%",
         },
         legend: {
           position: "bottom",

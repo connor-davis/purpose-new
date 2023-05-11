@@ -138,55 +138,55 @@ const DashboardPage = () => {
 
   return (
     <div class="flex flex-col space-y-3 p-3 w-full h-full overflow-y-auto">
-      <div class="flex space-x-3 w-full h-1/4">
+      <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full md:h-1/4">
         {!loading() ? (
-          <div class="w-1/3 h-full bg-lime-400 rounded-lg p-3">
-            <div class="flex flex-col w-full h-full items-center justify-center">
+          <div class="w-full md:w-1/3 h-full bg-lime-400 rounded-lg p-3">
+            <div class="flex flex-col w-full h-full md:items-center justify-center">
               <div class="flex flex-col">
-                <div class="font-bold w-full text-4xl cookie">Total Profit</div>
-                <div class="font-medium text-xl">R {totalProfit()}</div>
+                <div class="font-bold w-full text-2xl md:text-4xl cookie">Total Profit</div>
+                <div class="font-medium md:text-xl">R {totalProfit()}</div>
               </div>
             </div>
           </div>
         ) : (
-          <div class="w-1/3 h-full bg-white rounded-lg p-3">
+          <div class="w-full md:w-1/3 h-full bg-white rounded-lg p-3">
             <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
           </div>
         )}
         {!loading() ? (
-          <div class="w-1/3 h-full bg-lime-400 rounded-lg p-3">
-            <div class="flex flex-col w-full h-full items-center justify-center">
+          <div class="w-full md:w-1/3 h-full bg-lime-400 rounded-lg p-3">
+            <div class="flex flex-col w-full h-full md:items-center justify-center">
               <div class="flex flex-col">
-                <div class="font-bold w-full text-4xl cookie">
+                <div class="font-bold w-full text-2xl md:text-4xl cookie">
                   Total Expenses
                 </div>
-                <div class="font-medium text-xl">R {totalExpenses()}</div>
+                <div class="font-medium md:text-xl">R {totalExpenses()}</div>
               </div>
             </div>
           </div>
         ) : (
-          <div class="w-1/3 h-full bg-white rounded-lg p-3">
+          <div class="w-full md:w-1/3 h-full bg-white rounded-lg p-3">
             <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
           </div>
         )}
         {!loading() ? (
-          <div class="w-1/3 h-full bg-lime-400 rounded-lg p-3">
-            <div class="flex flex-col w-full h-full items-center justify-center">
+          <div class="w-full md:w-1/3 h-full bg-lime-400 rounded-lg p-3">
+            <div class="flex flex-col w-full h-full md:items-center justify-center">
               <div class="flex flex-col">
-                <div class="font-bold w-full text-4xl cookie">Total Sales</div>
-                <div class="font-medium text-xl">R {totalSales()}</div>
+                <div class="font-bold w-full text-2xl md:text-4xl cookie">Total Sales</div>
+                <div class="font-medium md:text-xl">R {totalSales()}</div>
               </div>
             </div>
           </div>
         ) : (
-          <div class="w-1/3 h-full bg-white rounded-lg p-3">
+          <div class="w-full md:w-1/3 h-full bg-white rounded-lg p-3">
             <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
           </div>
         )}
       </div>
       <div class="flex flex-col space-y-3 w-full h-full">
-        <div class="flex space-x-3 w-full h-1/2">
-          <div class="w-full h-full bg-white rounded-lg p-3">
+        <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full md:h-1/2">
+          <div class="w-full h-[300px] md:h-full bg-white rounded-lg p-3">
             {!loading() ? (
               profit().length > 1 &&
               expenses().length > 1 &&
@@ -218,7 +218,7 @@ const DashboardPage = () => {
               <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
             )}
           </div>
-          <div class="w-full h-full bg-white rounded-lg p-3">
+          <div class="w-full h-[300px] md:h-full bg-white rounded-lg p-3">
             {!loading() ? (
               latestSales().length > 0 ? (
                 <div class="flex flex-col w-full h-full overflow-y-auto overflow-x-auto">
@@ -266,8 +266,8 @@ const DashboardPage = () => {
             )}
           </div>
         </div>
-        <div class="flex space-x-3 w-full h-1/2">
-          <div class="w-full h-full bg-white rounded-lg p-3">
+        <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full md:h-1/2">
+          <div class="w-full h-[300px] md:h-full bg-white rounded-lg p-3">
             {!loading() ? (
               monthlyHarvests().length > 0 ? (
                 <Chart
@@ -293,7 +293,7 @@ const DashboardPage = () => {
               <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
             )}
           </div>
-          <div class="w-full h-full bg-white rounded-lg p-3">
+          <div class="w-full h-[300px] md:h-full bg-white rounded-lg p-3">
             {!loading() ? (
               latestHarvests().length > 0 ? (
                 <div class="flex flex-col w-full h-full overflow-y-auto overflow-x-auto">
