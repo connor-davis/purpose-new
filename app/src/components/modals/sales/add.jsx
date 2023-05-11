@@ -14,7 +14,7 @@ const AddSaleModal = ({ added = () => {}, closed = () => {} }) => {
   const [errorMessage, setErrorMessage] = createSignal(undefined);
 
   const [metadata, setMetadata] = createStore({}, { name: "metadata-object" });
-  const [date, setDate] = createSignal(format(new Date(), "dd/MM/yyyy"));
+  const [date, setDate] = createSignal(format(Date.now(), "dd/MM/yyyy"));
   const [products, setProducts] = createStore([], { name: "products-list" });
   const [profit, setProfit] = createSignal(undefined);
 
@@ -36,7 +36,7 @@ const AddSaleModal = ({ added = () => {}, closed = () => {} }) => {
       setSuccessMessage("Successfully created sale.");
 
       setTimeout(() => {
-        setDate(format(new Date(), "dd/MM/yyyy"));
+        setDate(format(Date.now(), "dd/MM/yyyy"));
         setProducts([]);
         setProfit(undefined);
 

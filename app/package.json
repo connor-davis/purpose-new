@@ -20,6 +20,7 @@
     "@melodev/solid-datepicker": "^0.1.15",
     "@solidjs/router": "^0.8.2",
     "@tailwindcss/typography": "^0.5.9",
+    "apexcharts": "^3.40.0",
     "axios": "^1.4.0",
     "check-password-strength": "^2.0.7",
     "date-fns": "^2.30.0",

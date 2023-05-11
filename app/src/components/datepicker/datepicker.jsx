@@ -4,49 +4,47 @@ import { For, createSignal, onMount } from "solid-js";
 const DatePicker = ({ dateChanged = (newDate) => {} }) => {
   const [datePickerShown, setDatePickerShown] = createSignal(false);
 
-  const [date, setDate] = createSignal(format(new Date(), "dd/MM/yyyy"));
-  const [currentDay, setCurrentDay] = createSignal(
-    format(new Date(date()), "dd")
-  );
+  const [date, setDate] = createSignal(format(Date.now(), "dd/MM/yyyy"));
+  const [currentDay, setCurrentDay] = createSignal(format(Date.now(), "dd"));
   const [days, setDays] = createSignal(
     Array.from(
-      { length: getDaysInMonth(new Date(date())) },
+      { length: getDaysInMonth(Date.now()) },
       (value, index) => index + 1
     )
   );
-  const [month, setMonth] = createSignal(format(new Date(date()), "MMMM"));
-  const [year, setYear] = createSignal(format(new Date(date()), "yyyy"));
+  const [month, setMonth] = createSignal(format(Date.now(), "MMMM"));
+  const [year, setYear] = createSignal(format(Date.now(), "yyyy"));
 
   onMount(() => {});
 
   const updateDate = (dateValue) => {
-    setDate(format(parse(dateValue, "dd/MM/yyyy", new Date()), "dd/MM/yyyy"));
+    setDate(format(parse(dateValue, "dd/MM/yyyy", Date.now()), "dd/MM/yyyy"));
 
-    if (currentDay() > getDaysInMonth(parse(date(), "dd/MM/yyyy", new Date())))
-      setCurrentDay(getDaysInMonth(parse(date(), "dd/MM/yyyy", new Date())));
+    if (currentDay() > getDaysInMonth(parse(date(), "dd/MM/yyyy", Date.now())))
+      setCurrentDay(getDaysInMonth(parse(date(), "dd/MM/yyyy", Date.now())));
 
-    setMonth(format(parse(date(), "dd/MM/yyyy", new Date()), "MMMM"));
+    setMonth(format(parse(date(), "dd/MM/yyyy", Date.now()), "MMMM"));
     setDays(
       Array.from(
-        { length: getDaysInMonth(parse(date(), "dd/MM/yyyy", new Date())) },
+        { length: getDaysInMonth(parse(date(), "dd/MM/yyyy", Date.now())) },
         (value, index) => index + 1
       )
     );
-    setYear(format(parse(date(), "dd/MM/yyyy", new Date()), "yyyy"));
+    setYear(format(parse(date(), "dd/MM/yyyy", Date.now()), "yyyy"));
 
-    dateChanged(format(parse(date(), "dd/MM/yyyy", new Date()), "dd/MM/yyyy"));
+    dateChanged(format(parse(date(), "dd/MM/yyyy", Date.now()), "dd/MM/yyyy"));
 
-    setDate(format(parse(date(), "dd/MM/yyyy", new Date()), "dd/MM/yyyy"));
+    setDate(format(parse(date(), "dd/MM/yyyy", Date.now()), "dd/MM/yyyy"));
   };
 
   const increase = () => {
-    const newDate = addMonths(parse(date(), "dd/MM/yyyy", new Date()), 1);
+    const newDate = addMonths(parse(date(), "dd/MM/yyyy", Date.now()), 1);
 
     updateDate(format(new Date(newDate), "dd/MM/yyyy"));
   };
 
   const decrease = () => {
-    const newDate = subMonths(parse(date(), "dd/MM/yyyy", new Date()), 1);
+    const newDate = subMonths(parse(date(), "dd/MM/yyyy", Date.now()), 1);
 
     updateDate(format(new Date(newDate), "dd/MM/yyyy"));
   };
