@@ -21,8 +21,6 @@ const passport = require('passport');
  *     description: Api users routes.
  *   - name: Products
  *     description: Api products routes.
- *   - name: Produce
- *     description: Api produce routes.
  *   - name: Harvests
  *     description: Api harvests routes.
  *   - name: Sales
@@ -87,11 +85,6 @@ router.use(
   '/export/products',
   passport.authenticate('jwt', { session: false }),
   require('./products/export')
-);
-router.use(
-  '/export/produce',
-  passport.authenticate('jwt', { session: false }),
-  require('./produce/export')
 );
 router.use(
   '/export/sales',

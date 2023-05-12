@@ -94,14 +94,14 @@ export const agesOptions = {
   ],
 };
 
-export const monthlyHarvestsOptions = {
+export const monthsHarvestsOptions = {
   series: [
     {
       data: [31, 40, 28, 51, 42, 109, 100, 0, 0, 0, 0, 0],
     },
   ],
   title: {
-    text: "Monthly Harvests",
+    text: "Months Harvests",
     style: {
       fontSize: "26px",
     },
@@ -110,7 +110,7 @@ export const monthlyHarvestsOptions = {
     height: "100%",
     type: "area",
   },
-  colors: ["#a3e635"],
+  colors: ["#a3e635", "#dc2626", "#171717"],
   dataLabels: {
     enabled: false,
   },
@@ -120,18 +120,25 @@ export const monthlyHarvestsOptions = {
   xaxis: {
     type: "category",
     categories: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
+      "Beans",
+      "Beetroot",
+      "Peppers",
+      "Broccoli",
+      "Cabbage",
+      "Carrots",
+      "Cauliflower",
+      "Corn",
+      "Garlic",
+      "Pepper",
+      "Lettuce",
+      "Onion",
+      "Spring onion",
+      "Peas",
+      "Potatoes",
+      "Spinach",
+      "Tomatoes",
+      "Chillis",
+      "Other",
     ],
   },
   tooltip: {

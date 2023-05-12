@@ -17,7 +17,6 @@ import CompleteProfilePage from "./pages/user/completeProfile.page";
 import DashboardPage from "./pages/user/dashboard.page";
 import DocumentsPage from "./pages/user/documents.page";
 import HarvestsPage from "./pages/user/harvests.page";
-import ProducePage from "./pages/user/produce.page";
 import ProductsPage from "./pages/user/products.page";
 import ProfilePage from "./pages/user/profile.page";
 import SalesPage from "./pages/user/sales.page";
@@ -179,11 +178,6 @@ const App = () => {
                 user.data.userType !== "admin" &&
                 user.data.completedProfile && (
                   <Route path="/products" element={ProductsPage} />
-                )}
-              {user.authenticated &&
-                user.data.userType !== "admin" &&
-                user.data.completedProfile && (
-                  <Route path="/produce" element={ProducePage} />
                 )}
               {user.authenticated &&
                 user.data.userType !== "admin" &&

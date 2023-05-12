@@ -6,7 +6,6 @@ const { v4 } = require('uuid');
 const UserModel = require('../../models/user');
 const ProductModel = require('../../models/product');
 const SaleModel = require('../../models/sale');
-const ProduceModel = require('../../models/produce');
 const HarvestModel = require('../../models/harvest');
 const exportUsers = require('./users');
 const exportProducts = require('./products');

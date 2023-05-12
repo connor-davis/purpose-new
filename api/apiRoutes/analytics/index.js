@@ -4,7 +4,14 @@ const UserModel = require('../../models/user');
 const SaleModel = require('../../models/sale');
 const ProductModel = require('../../models/product');
 const HarvestModel = require('../../models/harvest');
-const { format, parse, getYear } = require('date-fns');
+const {
+  format,
+  parse,
+  getYear,
+  getMonth,
+  isSameMonth,
+  parseISO,
+} = require('date-fns');
 
 router.get('/totalUsers', async (request, response) => {
   try {
@@ -407,8 +414,9 @@ router.get('/financeTotals/:userId', async (request, response) => {
   }
 });
 
-router.get('/monthlyHarvests/:userId', async (request, response) => {
+router.get('/monthsHarvests/:userId', async (request, response) => {
   const userId = request.params.userId || 'all';
+  const month = request.query.month || format(Date.now(), 'MMMM');
   const year = parseInt(request.query.year) || getYear(Date.now());
   const yearMinusYear = year - 1;
   const yearPlusYear = year + 1;
@@ -422,44 +430,101 @@ router.get('/monthlyHarvests/:userId', async (request, response) => {
         : {}
     );
 
-    let monthlyHarvests = {
-      January: 0,
-      February: 0,
-      March: 0,
-      April: 0,
-      May: 0,
-      June: 0,
-      July: 0,
-      August: 0,
-      September: 0,
-      October: 0,
-      November: 0,
-      December: 0,
+    let produceWeights = {
+      Beans: 0,
+      Beetroot: 0,
+      Peppers: 0,
+      Broccoli: 0,
+      Cabbage: 0,
+      Carrots: 0,
+      Cauliflower: 0,
+      Corn: 0,
+      Garlic: 0,
+      Pepper: 0,
+      Lettuce: 0,
+      Onion: 0,
+      'Spring onion': 0,
+      Peas: 0,
+      Potatoes: 0,
+      Spinach: 0,
+      Tomatoes: 0,
+      Chillis: 0,
+      Other: 0,
+    };
+    let produceYields = {
+      Beans: 0,
+      Beetroot: 0,
+      Peppers: 0,
+      Broccoli: 0,
+      Cabbage: 0,
+      Carrots: 0,
+      Cauliflower: 0,
+      Corn: 0,
+      Garlic: 0,
+      Pepper: 0,
+      Lettuce: 0,
+      Onion: 0,
+      'Spring onion': 0,
+      Peas: 0,
+      Potatoes: 0,
+      Spinach: 0,
+      Tomatoes: 0,
+      Chillis: 0,
+      Other: 0,
+    };
+    let produceCounts = {
+      Beans: 0,
+      Beetroot: 0,
+      Peppers: 0,
+      Broccoli: 0,
+      Cabbage: 0,
+      Carrots: 0,
+      Cauliflower: 0,
+      Corn: 0,
+      Garlic: 0,
+      Pepper: 0,
+      Lettuce: 0,
+      Onion: 0,
+      'Spring onion': 0,
+      Peas: 0,
+      Potatoes: 0,
+      Spinach: 0,
+      Tomatoes: 0,
+      Chillis: 0,
+      Other: 0,
     };
 
     harvests.map((harvest) => {
-      if (year > yearMinusYear && year < yearPlusYear) {
-        const month = format(
-          parse(harvest.date, 'dd/MM/yyyy', Date.now()),
-          'MMMM'
-        );
+      if (
+        month === format(parse(harvest.date, 'dd/MM/yyyy', Date.now()), 'MMMM')
+      )
+        harvest.produce.map((produce) => {
+          if (produceWeights[produce.produceType]) {
+            produceWeights[produce.produceType] =
+              produceWeights[produce.produceType] + parseFloat(produce.weight);
+          } else {
+            produceWeights[produce.produceType] = parseFloat(produce.weight);
+          }
 
-        if (monthlyHarvests[month])
-          monthlyHarvests[month] = monthlyHarvests[month] + 1;
-        else monthlyHarvests[month] = 1;
+          if (produceYields[produce.produceType]) {
+            produceYields[produce.produceType] =
+              produceYields[produce.produceType] + parseFloat(produce.yield);
+          } else {
+            produceYields[produce.produceType] = parseFloat(produce.yield);
+          }
 
-        monthlyHarvests = Object.keys(monthlyHarvests)
-          .sort()
-          .reduce((obj, key) => {
-            obj[key] = monthlyHarvests[key];
-            return obj;
-          }, {});
-
-        return harvest;
-      } else return harvest;
+          if (produceCounts[produce.produceType]) {
+            produceCounts[produce.produceType] =
+              produceCounts[produce.produceType] + 1;
+          } else {
+            produceCounts[produce.produceType] = 1;
+          }
+        });
     });
 
-    return response.status(200).json({ monthlyHarvests });
+    return response
+      .status(200)
+      .json({ produceWeights, produceYields, produceCounts });
   } catch (error) {
     return response
       .status(500)

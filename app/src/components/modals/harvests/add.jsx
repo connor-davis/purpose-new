@@ -3,7 +3,7 @@ import apiUrl from "../../../apiUrl";
 import axios from "axios";
 import useState from "../../../hooks/state";
 import DatePicker from "../../datepicker/datepicker";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { createStore } from "solid-js/store";
 import HarvestProduceModal from "./harvestProduce";
 
@@ -53,10 +53,10 @@ const AddHarvestModal = ({ added = () => {}, closed = () => {} }) => {
     <div class="absolute m-3 md:m-0 bg-neutral-900 bg-opacity-50 left-0 top-0 right-0 bottom-0 flex flex-col items-center justify-center animate-fade-in">
       {showHarvestProduce() && (
         <HarvestProduceModal
-          defaultMetadata={metadata}
-          added={(_produce, _metadata) => {
+          defaultMetadata={{ harvestProduce: [] }}
+          added={(_produce) => {
             setProduce(_produce);
-            setMetadata(_metadata);
+            setMetadata({ harvestProduce: _produce });
             setShowHarvestProduce(false);
           }}
           closed={() => setShowHarvestProduce(false)}

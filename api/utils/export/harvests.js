@@ -1,7 +1,6 @@
 let path = require('path');
 let ExcelJS = require('exceljs');
 let moment = require('moment');
-const UserModel = require('../../models/user');
 const HarvestModel = require('../../models/harvest');
 
 const exportHarvests = async (request, response, next) => {

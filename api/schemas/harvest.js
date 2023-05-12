@@ -13,8 +13,7 @@ const HarvestSchema = new mongoose.Schema(
     },
     produce: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Produce",
+        type: Object,
         required: true,
       },
     ],

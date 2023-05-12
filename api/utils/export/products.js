@@ -2,7 +2,6 @@ let path = require('path');
 let ExcelJS = require('exceljs');
 let moment = require('moment');
 const ProductModel = require('../../models/product');
-const UserModel = require('../../models/user');
 
 const exportProducts = async (request, response, next) => {
   const fileName = request.query.fileName

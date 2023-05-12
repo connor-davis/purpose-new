@@ -3,12 +3,7 @@ let path = require('path');
 let ExcelJS = require('exceljs');
 let moment = require('moment');
 const { v4 } = require('uuid');
-const UserModel = require('../../models/user');
-const userFormatter = require('../userFormatter');
-const ProductModel = require('../../models/product');
 const SaleModel = require('../../models/sale');
-const ProduceModel = require('../../models/produce');
-const HarvestModel = require('../../models/harvest');
 
 const exportSales = async (request, response, next) => {
   const fileName = request.query.fileName

@@ -1,12 +1,14 @@
 import { createSignal, onMount } from "solid-js";
 import Chart from "../../components/chart/chart";
 import {
-  monthlyHarvestsOptions,
   monthlySalesOptions,
+  monthsHarvestsOptions,
 } from "../../components/chart/chartOptions";
 import axios from "axios";
 import apiUrl from "../../apiUrl";
 import useState from "../../hooks/state";
+import { format, getYear } from "date-fns";
+import SelectMenu from "../../components/selectmenu/selectmenu";
 
 const DashboardPage = () => {
   const [user, setUser] = useState("user");
@@ -25,7 +27,10 @@ const DashboardPage = () => {
 
   const [latestSales, setLatestSales] = createSignal([]);
 
-  const [monthlyHarvests, setMonthlyHarvests] = createSignal([]);
+  const [monthsHarvests, setMonthsHarvests] = createSignal([]);
+  const [selectedMonth, setSelectedMonth] = createSignal(
+    format(Date.now(), "MMMM")
+  );
 
   const [latestHarvests, setLatestHarvests] = createSignal([]);
 
@@ -36,7 +41,7 @@ const DashboardPage = () => {
       await loadExpenses();
       await loadSales();
       await loadLatestSales();
-      await loadMonthlyHarvests();
+      await loadMonthsHarvests();
       await loadLatestHarvests();
 
       setLoading(false);
@@ -114,14 +119,30 @@ const DashboardPage = () => {
     } else setLoading(false);
   };
 
-  const loadMonthlyHarvests = async () => {
+  const loadMonthsHarvests = async () => {
     const response = await axios.get(
-      apiUrl + "analytics/monthlyHarvests/" + user.data._id,
+      apiUrl +
+        "analytics/monthsHarvests/" +
+        user.data._id +
+        "?month=" +
+        selectedMonth() +
+        "&year=" +
+        getYear(Date.now()),
       { headers: { Authorization: "Bearer " + user.token } }
     );
 
     if (response.data) {
-      return setMonthlyHarvests(Object.values(response.data.monthlyHarvests));
+      return setMonthsHarvests([
+        { name: "Harvested", data: Object.values(response.data.produceCounts) },
+        {
+          name: "Weight (kg)",
+          data: Object.values(response.data.produceWeights),
+        },
+        {
+          name: "Yield (kg)",
+          data: Object.values(response.data.produceYields),
+        },
+      ]);
     } else setLoading(false);
   };
 
@@ -143,7 +164,9 @@ const DashboardPage = () => {
           <div class="w-full md:w-1/3 h-full bg-lime-400 rounded-lg p-3">
             <div class="flex flex-col w-full h-full md:items-center justify-center">
               <div class="flex flex-col">
-                <div class="font-bold w-full text-2xl md:text-4xl cookie">Total Profit</div>
+                <div class="font-bold w-full text-2xl md:text-4xl cookie">
+                  Total Profit
+                </div>
                 <div class="font-medium md:text-xl">R {totalProfit()}</div>
               </div>
             </div>
@@ -173,7 +196,9 @@ const DashboardPage = () => {
           <div class="w-full md:w-1/3 h-full bg-lime-400 rounded-lg p-3">
             <div class="flex flex-col w-full h-full md:items-center justify-center">
               <div class="flex flex-col">
-                <div class="font-bold w-full text-2xl md:text-4xl cookie">Total Sales</div>
+                <div class="font-bold w-full text-2xl md:text-4xl cookie">
+                  Total Sales
+                </div>
                 <div class="font-medium md:text-xl">R {totalSales()}</div>
               </div>
             </div>
@@ -267,14 +292,42 @@ const DashboardPage = () => {
           </div>
         </div>
         <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full md:h-1/2">
-          <div class="w-full h-[300px] md:h-full bg-white rounded-lg p-3">
+          <div class="w-full h-[300px] md:h-full bg-white rounded-lg p-3 pb-6">
+            {!loading() && (
+              <div class="flex justify-end">
+                <div class="min-w-[200px]">
+                  <SelectMenu
+                    defaultItem={selectedMonth()}
+                    items={[
+                      "January",
+                      "February",
+                      "March",
+                      "April",
+                      "May",
+                      "June",
+                      "July",
+                      "August",
+                      "September",
+                      "October",
+                      "November",
+                      "December",
+                    ]}
+                    selectionChanged={(item) => {
+                      setMonthsHarvests([]);
+                      setSelectedMonth(item);
+                      loadMonthsHarvests();
+                    }}
+                  />
+                </div>
+              </div>
+            )}
             {!loading() ? (
-              monthlyHarvests().length > 0 ? (
+              monthsHarvests().length > 0 ? (
                 <Chart
                   id="monthlyHarvests"
                   options={{
-                    ...monthlyHarvestsOptions,
-                    series: [{ name: "", data: monthlyHarvests() }],
+                    ...monthsHarvestsOptions,
+                    series: monthsHarvests(),
                   }}
                 />
               ) : (
