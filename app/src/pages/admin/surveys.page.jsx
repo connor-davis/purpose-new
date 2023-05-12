@@ -5,11 +5,13 @@ import apiUrl from "../../apiUrl";
 import Pager from "../../components/pager";
 import { AdminViewSurveyModal } from "../../components/modals/surveys/view";
 import AddSurveyModal from "../../components/modals/surveys/add";
+import StandardAlert from "../../components/alerts/standard";
 
 const AdminSurveysPage = () => {
   const [user, setUser] = useState("user");
 
   const [showAdd, setShowAdd] = createSignal(false);
+  const [showDelete, setShowDelete] = createSignal(undefined);
   const [viewingSurvey, setViewingSurvey] = createSignal(undefined);
 
   const [surveys, setSurveys] = createSignal([]);
@@ -72,6 +74,23 @@ const AdminSurveysPage = () => {
           closed={() => {
             setViewingSurvey(undefined);
           }}
+        />
+      )}
+
+      {showDelete() !== undefined && (
+        <StandardAlert
+          content={"Are you sure you want to delete this survey?"}
+          options={[
+            { text: "Yes", type: "success" },
+            { text: "No", type: "error" },
+          ]}
+          optionClicked={(option) => {
+            if (option === "Yes") {
+              deleteSurvey(showDelete()._id);
+              setShowDelete(undefined);
+            } else setShowDelete(undefined);
+          }}
+          closed={() => setShowDelete(undefined)}
         />
       )}
 

@@ -4,6 +4,7 @@ import UserProfile from "../../components/userProfile";
 import useState from "../../hooks/state";
 import axios from "axios";
 import apiUrl from "../../apiUrl";
+import StandardAlert from "../../components/alerts/standard";
 
 const AdminUsersPage = () => {
   const [user, setUser] = useState("user");
@@ -12,6 +13,8 @@ const AdminUsersPage = () => {
   const [currentPage, setCurrentPage] = createSignal(1);
   const [totalPages, setTotalPages] = createSignal(0);
 
+  const [showAuthCode, setShowAuthCode] = createSignal(undefined);
+  const [showDelete, setShowDelete] = createSignal(undefined);
   const [loading, setLoading] = createSignal(true);
 
   onMount(() => {
@@ -54,8 +57,7 @@ const AdminUsersPage = () => {
 
     if (response.data) {
       navigator.clipboard.writeText(response.data.uniqueCode);
-
-      alert("Code Copied: " + response.data.uniqueCode);
+      setShowAuthCode(response.data.uniqueCode);
     } else return;
   };
 
@@ -70,6 +72,33 @@ const AdminUsersPage = () => {
 
   return (
     <div class="flex flex-col w-full h-full p-5">
+      {showAuthCode() !== undefined && (
+        <StandardAlert
+          title={"Auth Code"}
+          content={"The auth code for your user is: " + showAuthCode()}
+          options={[{ text: "Ok", type: "success" }]}
+          optionClicked={() => setShowAuthCode(undefined)}
+          closed={() => setShowAuthCode(undefined)}
+        />
+      )}
+
+      {showDelete() !== undefined && (
+        <StandardAlert
+          content={"Are you sure you want to delete this user?"}
+          options={[
+            { text: "Yes", type: "success" },
+            { text: "No", type: "error" },
+          ]}
+          optionClicked={(option) => {
+            if (option === "Yes") {
+              deleteUser(showDelete()._id);
+              setShowDelete(undefined);
+            } else setShowDelete(undefined);
+          }}
+          closed={() => setShowDelete(undefined)}
+        />
+      )}
+
       <div class="flex flex-col space-y-3 text-black bg-white w-full h-full overflow-hidden rounded p-3">
         <div class="flex items-center justify-between animate-fade-in">
           <div class="cookie text-2xl">Your Users</div>
@@ -130,7 +159,7 @@ const AdminUsersPage = () => {
                     </svg>
                   </div>
                   <div
-                    onClick={() => deleteUser(user._id)}
+                    onClick={() => setShowDelete(user)}
                     class="hidden group-hover:flex group-hover:animate-fade-in rounded-full hover:bg-red-200 cursor-pointer p-2"
                   >
                     <svg

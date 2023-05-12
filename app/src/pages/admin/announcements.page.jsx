@@ -5,11 +5,13 @@ import ViewAnnouncementModal from "../../components/modals/announcements/view";
 import axios from "axios";
 import apiUrl from "../../apiUrl";
 import Pager from "../../components/pager";
+import StandardAlert from "../../components/alerts/standard";
 
 const AdminAnnouncementsPage = () => {
   const [user, setUser] = useState("user");
 
   const [showAdd, setShowAdd] = createSignal(false);
+  const [showDelete, setShowDelete] = createSignal(undefined);
   const [viewingAnnouncement, setViewingAnnouncement] = createSignal(undefined);
 
   const [announcements, setAnnouncements] = createSignal([]);
@@ -79,6 +81,23 @@ const AdminAnnouncementsPage = () => {
         />
       )}
 
+      {showDelete() !== undefined && (
+        <StandardAlert
+          content={"Are you sure you want to delete this announcement?"}
+          options={[
+            { text: "Yes", type: "success" },
+            { text: "No", type: "error" },
+          ]}
+          optionClicked={(option) => {
+            if (option === "Yes") {
+              deleteAnnouncement(showDelete()._id);
+              setShowDelete(undefined);
+            } else setShowDelete(undefined);
+          }}
+          closed={() => setShowDelete(undefined)}
+        />
+      )}
+
       <div class="flex flex-col space-y-3 text-black bg-white w-full h-full overflow-hidden rounded p-3">
         <div class="flex items-center justify-between animate-fade-in">
           <div class="cookie text-2xl">Your Announcements</div>
@@ -143,7 +162,7 @@ const AdminAnnouncementsPage = () => {
                     </svg>
                   </div>
                   <div
-                    onClick={() => deleteAnnouncement(announcement._id)}
+                    onClick={() => setShowDelete(announcement)}
                     class="hidden group-hover:flex group-hover:animate-fade-in p-2 rounded-full hover:bg-red-200 cursor-pointer"
                   >
                     <svg

@@ -4,13 +4,16 @@ import apiUrl from "../../apiUrl";
 import useState from "../../hooks/state";
 import Pager from "../../components/pager";
 import UserProfile from "../../components/userProfile";
+import StandardAlert from "../../components/alerts/standard";
 
 const AdminDocumentsPage = () => {
   const [user, setUser] = useState("user");
-  
+
   const [documents, setDocuments] = createSignal([]);
   const [currentPage, setCurrentPage] = createSignal(1);
   const [totalPages, setTotalPages] = createSignal(0);
+
+  const [showDelete, setShowDelete] = createSignal(undefined);
 
   const [loading, setLoading] = createSignal(true);
 
@@ -55,6 +58,23 @@ const AdminDocumentsPage = () => {
 
   return (
     <div class="flex flex-col w-full h-full p-5">
+      {showDelete() !== undefined && (
+        <StandardAlert
+          content={"Are you sure you want to delete this document?"}
+          options={[
+            { text: "Yes", type: "success" },
+            { text: "No", type: "error" },
+          ]}
+          optionClicked={(option) => {
+            if (option === "Yes") {
+              deleteDocument(showDelete().user + "." + showDelete().name);
+              setShowDelete(undefined);
+            } else setShowDelete(undefined);
+          }}
+          closed={() => setShowDelete(undefined)}
+        />
+      )}
+
       <div class="flex flex-col space-y-3 text-black bg-white w-full h-full overflow-hidden rounded p-3">
         <div class="flex items-center justify-between">
           <div class="cookie text-2xl">Documents</div>
@@ -117,9 +137,7 @@ const AdminDocumentsPage = () => {
                     </svg>
                   </a>
                   <div
-                    onClick={() =>
-                      deleteDocument(document.user + "." + document.name)
-                    }
+                    onClick={() => setShowDelete(document)}
                     class="hidden group-hover:flex group-hover:animate-fade-in p-2 rounded-full hover:bg-red-200 cursor-pointer"
                   >
                     <svg

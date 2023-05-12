@@ -4,6 +4,7 @@ import apiUrl from "../../apiUrl";
 import Pager from "../../components/pager";
 import useState from "../../hooks/state";
 import UploadArchivesModal from "../../components/modals/uploadArchives.modal";
+import StandardAlert from "../../components/alerts/standard";
 
 const AdminArchivesPage = () => {
   const [user, setUser] = useState("user");
@@ -12,6 +13,7 @@ const AdminArchivesPage = () => {
   const [totalPages, setTotalPages] = createSignal(0);
 
   const [showUpload, setShowUpload] = createSignal(false);
+  const [showDelete, setShowDelete] = createSignal(undefined);
   const [loading, setLoading] = createSignal(true);
 
   onMount(() => {
@@ -60,6 +62,23 @@ const AdminArchivesPage = () => {
         <UploadArchivesModal
           uploaded={() => fetchArchives()}
           closed={() => setShowUpload(false)}
+        />
+      )}
+
+      {showDelete() !== undefined && (
+        <StandardAlert
+          content={"Are you sure you want to delete this archive?"}
+          options={[
+            { text: "Yes", type: "success" },
+            { text: "No", type: "error" },
+          ]}
+          optionClicked={(option) => {
+            if (option === "Yes") {
+              deleteArchive(showDelete().name);
+              setShowDelete(undefined);
+            } else setShowDelete(undefined);
+          }}
+          closed={() => setShowDelete(undefined)}
         />
       )}
 
@@ -122,7 +141,7 @@ const AdminArchivesPage = () => {
                     </svg>
                   </a>
                   <div
-                    onClick={() => deleteArchive(archive.name)}
+                    onClick={() => setShowDelete(archive)}
                     class="hidden group-hover:flex group-hover:animate-fade-in p-2 rounded-full hover:bg-red-200 cursor-pointer"
                   >
                     <svg
