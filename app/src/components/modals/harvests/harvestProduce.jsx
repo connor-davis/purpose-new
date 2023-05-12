@@ -174,6 +174,26 @@ const HarvestProduceModal = ({
                       </div>
                       <input
                         class="px-3 min-w-[140px] py-2 w-full bg-neutral-200 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+                        value={produceItem.count}
+                        onChange={(event) => {
+                          setProduce(
+                            [...produce()].map(
+                              (produceItem, produceItemIndex) => {
+                                if (produceItemIndex === index())
+                                  return {
+                                    ...produceItem,
+                                    count: event.target.value,
+                                  };
+                                else return produceItem;
+                              }
+                            )
+                          );
+                        }}
+                        type="number"
+                        placeholder="Number"
+                      />
+                      <input
+                        class="px-3 min-w-[140px] py-2 w-full bg-neutral-200 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
                         value={produceItem.weight}
                         onChange={(event) => {
                           setProduce(

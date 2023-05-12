@@ -515,9 +515,9 @@ router.get('/monthsHarvests/:userId', async (request, response) => {
 
           if (produceCounts[produce.produceType]) {
             produceCounts[produce.produceType] =
-              produceCounts[produce.produceType] + 1;
+              produceCounts[produce.produceType] + parseFloat(produce.count);
           } else {
-            produceCounts[produce.produceType] = 1;
+            produceCounts[produce.produceType] = parseFloat(produce.count);
           }
         });
     });
