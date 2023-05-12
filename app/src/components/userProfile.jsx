@@ -30,8 +30,6 @@ const UserProfile = ({ userId, darkBg = false }) => {
     if (response.data) {
       setUserProfile(response.data);
       setLoading(false);
-
-      console.log(userProfile);
     }
   };
 

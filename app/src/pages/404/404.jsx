@@ -1,7 +1,8 @@
 import { useNavigate } from "@solidjs/router";
-import { onMount } from "solid-js";
+import useState from "../../hooks/state";
 
 const FourOFourPage = () => {
+  const [user, setUser] = useState("user");
   const navigate = useNavigate();
 
   return (

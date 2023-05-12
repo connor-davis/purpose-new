@@ -1,4 +1,4 @@
-import { Route, Routes } from "@solidjs/router";
+import { Route, Routes, useNavigate } from "@solidjs/router";
 import Navbar from "./components/navbar";
 import Sidebar from "./components/sidebar";
 import useState from "./hooks/state";
@@ -29,18 +29,29 @@ import AdminExportPage from "./pages/admin/export.page";
 import ForgotPasswordPage from "./pages/authentication/forgotPassword.page";
 
 const App = () => {
+  const navigate = useNavigate("/");
+  const location = {
+    pathname:
+      window.location.href.split("/")[
+        window.location.href.split("/").length - 1
+      ],
+  };
   const [user, setUser, clear] = useState("user");
 
   const [loading, setLoading] = createSignal(true);
 
   onMount(() => {
+    console.log(location);
+
     setTimeout(() => {
       checkAuthStatus();
-    }, 100);
+    }, 2000);
   });
 
   const checkAuthStatus = async () => {
     try {
+      console.log(location);
+
       if (user.data) {
         const response = await axios.get(apiUrl + "users/me", {
           headers: { Authorization: "Bearer " + user.token },
@@ -49,6 +60,15 @@ const App = () => {
         if (!response.data) {
           setLoading(false);
           clear();
+
+          if (
+            location.pathname !== "" ||
+            location.pathname !== "create-account" ||
+            location.pathname !== "forgot-password"
+          ) {
+            setUser({ authenticated: false });
+            navigate("/");
+          }
         } else {
           setUser({ authenticated: true, data: response.data });
           setLoading(false);
@@ -56,10 +76,28 @@ const App = () => {
       } else {
         setLoading(false);
         clear();
+
+        if (
+          location.pathname !== "" ||
+          location.pathname !== "create-account" ||
+          location.pathname !== "forgot-password"
+        ) {
+          setUser({ authenticated: false });
+          navigate("/");
+        }
       }
     } catch {
       setLoading(false);
       clear();
+
+      if (
+        location.pathname !== "" ||
+        location.pathname !== "create-account" ||
+        location.pathname !== "forgot-password"
+      ) {
+        setUser({ authenticated: false });
+        navigate("/");
+      }
     }
   };
 
