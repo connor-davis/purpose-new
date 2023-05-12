@@ -142,46 +142,6 @@ const exportAllData = async (request, response, next) => {
     color: { argb: '#FFFFFF' },
   };
 
-  let produceSheet = workbook.addWorksheet('Produce', {
-    headerFooter: { firstHeader: 'Name' },
-  });
-
-  const produceColumns = [
-    { header: 'Name', key: 'name' },
-    { header: 'Price (R)', key: 'price' },
-    { header: 'User', key: 'user' },
-  ];
-
-  produceSheet.columns = produceColumns;
-
-  produceSheet.getRow(1).fill = {
-    type: 'pattern',
-    pattern: 'solid',
-    fgColor: { argb: '#171717' },
-    bgColor: { argb: '#171717' },
-  };
-  produceSheet.getRow(1).border = {
-    left: {
-      style: 'dotted',
-      color: { argb: '#404040' },
-    },
-    top: {
-      style: 'dotted',
-      color: { argb: '#404040' },
-    },
-    right: {
-      style: 'dotted',
-      color: { argb: '#404040' },
-    },
-    bottom: {
-      style: 'dotted',
-      color: { argb: '#404040' },
-    },
-  };
-  produceSheet.getRow(1).font = {
-    color: { argb: '#FFFFFF' },
-  };
-
   let salesSheet = workbook.addWorksheet('Sales', {
     headerFooter: { firstHeader: 'Date' },
   });
@@ -282,18 +242,6 @@ const exportAllData = async (request, response, next) => {
     })
   );
 
-  // Produce
-
-  const produce = await ProduceModel.find().populate('user', 'email');
-
-  produce.forEach((produce) =>
-    produceSheet.addRow({
-      name: produce.name,
-      price: produce.price,
-      user: produce.user.email,
-    })
-  );
-
   // Sales
 
   const sales = await SaleModel.find().populate('user', 'email');
@@ -325,11 +273,6 @@ const exportAllData = async (request, response, next) => {
   });
 
   productsSheet.columns.forEach((column) => {
-    const lengths = column.values.map((v) => v.toString().length);
-    column.width = Math.max(...lengths.filter((v) => typeof v === 'number'));
-  });
-
-  produceSheet.columns.forEach((column) => {
     const lengths = column.values.map((v) => v.toString().length);
     column.width = Math.max(...lengths.filter((v) => typeof v === 'number'));
   });
