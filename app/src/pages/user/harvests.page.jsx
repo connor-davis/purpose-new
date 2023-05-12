@@ -4,11 +4,13 @@ import apiUrl from "../../apiUrl";
 import Pager from "../../components/pager";
 import useState from "../../hooks/state";
 import AddHarvestModal from "../../components/modals/harvests/add";
+import StandardAlert from "../../components/alerts/standard";
 
 const HarvestsPage = () => {
   const [user, setUser] = useState("user");
 
   const [showAdd, setShowAdd] = createSignal(false);
+  const [showDelete, setShowDelete] = createSignal(undefined);
   const [viewingHarvest, setViewingHarvest] = createSignal(undefined);
 
   const [harvests, setHarvests] = createSignal([]);
@@ -66,6 +68,23 @@ const HarvestsPage = () => {
         />
       )}
 
+      {showDelete() !== undefined && (
+        <StandardAlert
+          content={"Are you sure you want to delete this harvest?"}
+          options={[
+            { text: "Yes", type: "success" },
+            { text: "No", type: "error" },
+          ]}
+          optionClicked={(option) => {
+            if (option === "Yes") {
+              deleteHarvest(showDelete()._id);
+              setShowDelete(undefined);
+            } else setShowDelete(undefined);
+          }}
+          closed={() => setShowDelete(undefined)}
+        />
+      )}
+
       <div class="flex flex-col space-y-3 text-black bg-white w-full h-full overflow-hidden rounded p-3">
         <div class="flex items-center justify-between animate-fade-in">
           <div class="cookie text-2xl">Your Harvests</div>
@@ -102,7 +121,9 @@ const HarvestsPage = () => {
                       <td class="flex items-center space-x-2 p-3 whitespace-nowrap">
                         {harvest.date}
                       </td>
-                      <td class="p-3 whitespace-nowrap">{harvest.produce.length}</td>
+                      <td class="p-3 whitespace-nowrap">
+                        {harvest.produce.length}
+                      </td>
                       <td class="p-1 whitespace-nowrap">
                         <div class="flex w-24 h-full items-center space-x-2">
                           {/* <div
@@ -130,7 +151,7 @@ const HarvestsPage = () => {
                             </svg>
                           </div> */}
                           <div
-                            onClick={() => deleteHarvest(harvest._id)}
+                            onClick={() => setShowDelete(harvest)}
                             class="hidden group-hover:flex group-hover:flex-col items-center justify-center group-hover:animate-fade-in p-2 rounded-full hover:bg-red-200 cursor-pointer"
                           >
                             <svg

@@ -5,11 +5,13 @@ import Pager from "../../components/pager";
 import useState from "../../hooks/state";
 import AddProduceModal from "../../components/modals/produce/add";
 import EditProduceModal from "../../components/modals/produce/edit";
+import StandardAlert from "../../components/alerts/standard";
 
 const ProductsPage = () => {
   const [user, setUser] = useState("user");
 
   const [showAdd, setShowAdd] = createSignal(false);
+  const [showDelete, setShowDelete] = createSignal(undefined);
   const [editingProduce, setEditingProduce] = createSignal(undefined);
 
   const [produce, setProducts] = createSignal([]);
@@ -47,7 +49,7 @@ const ProductsPage = () => {
     }, 100);
   };
 
-  const deleteProduct = async (id) => {
+  const deleteProduce = async (id) => {
     const response = await axios.delete(apiUrl + "produce/" + id, {
       headers: { Authorization: "Bearer " + user.token },
     });
@@ -64,6 +66,23 @@ const ProductsPage = () => {
         <AddProduceModal
           added={() => fetchProduce()}
           closed={() => setShowAdd(false)}
+        />
+      )}
+
+      {showDelete() !== undefined && (
+        <StandardAlert
+          content={"Are you sure you want to delete this produce?"}
+          options={[
+            { text: "Yes", type: "success" },
+            { text: "No", type: "error" },
+          ]}
+          optionClicked={(option) => {
+            if (option === "Yes") {
+              deleteProduce(showDelete()._id);
+              setShowDelete(undefined);
+            } else setShowDelete(undefined);
+          }}
+          closed={() => setShowDelete(undefined)}
         />
       )}
 
@@ -148,7 +167,7 @@ const ProductsPage = () => {
                             </svg>
                           </div>
                           <div
-                            onClick={() => deleteProduct(produceItem._id)}
+                            onClick={() => setShowDelete(produceItem)}
                             class="hidden group-hover:flex group-hover:animate-fade-in p-2 w-8 rounded-full hover:bg-red-200 cursor-pointer"
                           >
                             <svg

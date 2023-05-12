@@ -4,6 +4,7 @@ import apiUrl from "../../apiUrl";
 import UploadDocumentsModal from "../../components/modals/uploadDocuments.modal";
 import Pager from "../../components/pager";
 import useState from "../../hooks/state";
+import StandardAlert from "../../components/alerts/standard";
 
 const DocumentsPage = () => {
   const [user, setUser] = useState("user");
@@ -12,6 +13,7 @@ const DocumentsPage = () => {
   const [totalPages, setTotalPages] = createSignal(0);
 
   const [showUpload, setShowUpload] = createSignal(false);
+  const [showDelete, setShowDelete] = createSignal(undefined);
   const [loading, setLoading] = createSignal(true);
 
   onMount(() => {
@@ -60,6 +62,25 @@ const DocumentsPage = () => {
         <UploadDocumentsModal
           uploaded={() => fetchDocuments()}
           closed={() => setShowUpload(false)}
+        />
+      )}
+
+      {showDelete() !== undefined && (
+        <StandardAlert
+          content={"Are you sure you want to delete this document?"}
+          options={[
+            { text: "Yes", type: "success" },
+            { text: "No", type: "error" },
+          ]}
+          optionClicked={(option) => {
+            if (option === "Yes") {
+              deleteDocument(
+                showDelete().user + "." + showDelete().name
+              );
+              setShowDelete(undefined);
+            } else setShowDelete(undefined);
+          }}
+          closed={() => setShowDelete(undefined)}
         />
       )}
 
@@ -128,9 +149,7 @@ const DocumentsPage = () => {
                     </svg>
                   </a>
                   <div
-                    onClick={() =>
-                      deleteDocument(document.user + "." + document.name)
-                    }
+                    onClick={() => setShowDelete(document)}
                     class="hidden group-hover:flex group-hover:animate-fade-in p-2 rounded-full hover:bg-red-200 cursor-pointer"
                   >
                     <svg

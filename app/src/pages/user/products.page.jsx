@@ -5,11 +5,13 @@ import AddProductModal from "../../components/modals/products/add";
 import EditProductModal from "../../components/modals/products/edit";
 import Pager from "../../components/pager";
 import useState from "../../hooks/state";
+import StandardAlert from "../../components/alerts/standard";
 
 const ProductsPage = () => {
   const [user, setUser] = useState("user");
 
   const [showAdd, setShowAdd] = createSignal(false);
+  const [showDelete, setShowDelete] = createSignal(undefined);
   const [editingProduct, setEditingProduct] = createSignal(undefined);
 
   const [products, setProducts] = createSignal([]);
@@ -67,6 +69,23 @@ const ProductsPage = () => {
         />
       )}
 
+      {showDelete() !== undefined && (
+        <StandardAlert
+          content={"Are you sure you want to delete this product?"}
+          options={[
+            { text: "Yes", type: "success" },
+            { text: "No", type: "error" },
+          ]}
+          optionClicked={(option) => {
+            if (option === "Yes") {
+              deleteProduct(showDelete()._id);
+              setShowDelete(undefined);
+            } else setShowDelete(undefined);
+          }}
+          closed={() => setShowDelete(undefined)}
+        />
+      )}
+
       <div class="flex flex-col space-y-3 text-black bg-white w-full h-full overflow-hidden rounded p-3">
         <div class="flex items-center justify-between animate-fade-in">
           <div class="cookie text-2xl">Your Products</div>
@@ -119,7 +138,9 @@ const ProductsPage = () => {
                             class="w-10 min-w-[40px] h-10 rounded"
                           />
                         </div>
-                        <div class="flex items-center h-9 whitespace-nowrap">{product.name}</div>
+                        <div class="flex items-center h-9 whitespace-nowrap">
+                          {product.name}
+                        </div>
                       </td>
                       <td class="p-3 whitespace-nowrap">R {product.cost}</td>
                       <td class="p-3 whitespace-nowrap">R {product.price}</td>
@@ -145,7 +166,7 @@ const ProductsPage = () => {
                             </svg>
                           </div>
                           <div
-                            onClick={() => deleteProduct(product._id)}
+                            onClick={() => setShowDelete(product)}
                             class="hidden group-hover:flex group-hover:animate-fade-in p-2 w-8 rounded-full hover:bg-red-200 cursor-pointer"
                           >
                             <svg

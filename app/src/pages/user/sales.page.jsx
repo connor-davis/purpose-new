@@ -4,11 +4,13 @@ import apiUrl from "../../apiUrl";
 import Pager from "../../components/pager";
 import useState from "../../hooks/state";
 import AddSaleModal from "../../components/modals/sales/add";
+import StandardAlert from "../../components/alerts/standard";
 
 const SalesPage = () => {
   const [user, setUser] = useState("user");
 
   const [showAdd, setShowAdd] = createSignal(false);
+  const [showDelete, setShowDelete] = createSignal(undefined);
   const [viewingSale, setViewingSale] = createSignal(undefined);
 
   const [sales, setSales] = createSignal([]);
@@ -66,6 +68,23 @@ const SalesPage = () => {
         />
       )}
 
+      {showDelete() !== undefined && (
+        <StandardAlert
+          content={"Are you sure you want to delete this sale?"}
+          options={[
+            { text: "Yes", type: "success" },
+            { text: "No", type: "error" },
+          ]}
+          optionClicked={(option) => {
+            if (option === "Yes") {
+              deleteSale(showDelete()._id);
+              setShowDelete(undefined);
+            } else setShowDelete(undefined);
+          }}
+          closed={() => setShowDelete(undefined)}
+        />
+      )}
+
       <div class="flex flex-col space-y-3 text-black bg-white w-full h-full overflow-hidden rounded p-3">
         <div class="flex items-center justify-between animate-fade-in">
           <div class="cookie text-2xl">Your Sales</div>
@@ -103,7 +122,9 @@ const SalesPage = () => {
                       <td class="flex items-center space-x-2 p-3 whitespace-nowrap">
                         {sale.date}
                       </td>
-                      <td class="p-3 whitespace-nowrap">{sale.products.length}</td>
+                      <td class="p-3 whitespace-nowrap">
+                        {sale.products.length}
+                      </td>
                       <td class="p-3 whitespace-nowrap">R {sale.profit}</td>
                       <td class="p-1">
                         <div class="flex w-24 h-full items-center space-x-2">
@@ -132,7 +153,7 @@ const SalesPage = () => {
                             </svg>
                           </div> */}
                           <div
-                            onClick={() => deleteSale(sale._id)}
+                            onClick={() => setShowDelete(sale)}
                             class="hidden group-hover:flex group-hover:flex-col items-center justify-center group-hover:animate-fade-in p-2 rounded-full hover:bg-red-200 cursor-pointer"
                           >
                             <svg
