@@ -10,7 +10,6 @@ const ProduceModel = require('../../models/produce');
 const HarvestModel = require('../../models/harvest');
 const exportUsers = require('./users');
 const exportProducts = require('./products');
-const exportProduce = require('./produce');
 const exportSales = require('./sales');
 const exportHarvests = require('./harvests');
 
@@ -365,7 +364,6 @@ module.exports = {
   exportAllData,
   exportUsers,
   exportProducts,
-  exportProduce,
   exportSales,
   exportHarvests,
 };

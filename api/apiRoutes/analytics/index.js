@@ -4,9 +4,7 @@ const UserModel = require('../../models/user');
 const SaleModel = require('../../models/sale');
 const ProductModel = require('../../models/product');
 const HarvestModel = require('../../models/harvest');
-const ProduceModel = require('../../models/produce');
-const moment = require('moment');
-const { format, parse, getYear, getMonth } = require('date-fns');
+const { format, parse, getYear } = require('date-fns');
 
 router.get('/totalUsers', async (request, response) => {
   try {
@@ -163,18 +161,6 @@ router.get('/totalProducts', async (request, response) => {
     return response
       .status(500)
       .json({ message: 'Failed to retrieve total products.', reason: error });
-  }
-});
-
-router.get('/totalProduce', async (request, response) => {
-  try {
-    const totalProduce = await ProduceModel.countDocuments();
-
-    return response.status(200).json({ totalProduce });
-  } catch (error) {
-    return response
-      .status(500)
-      .json({ message: 'Failed to retrieve total produce.', reason: error });
   }
 });
 

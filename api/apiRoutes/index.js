@@ -49,11 +49,6 @@ router.use(
   require('./products')
 );
 router.use(
-  '/produce',
-  passport.authenticate('jwt', { session: false }),
-  require('./produce')
-);
-router.use(
   '/harvests',
   passport.authenticate('jwt', { session: false }),
   require('./harvests')
