@@ -14,7 +14,7 @@ const AddSurveyModal = ({ added = () => {}, closed = () => {} }) => {
 
   const [surveyTitle, setSurveyTitle] = createSignal(undefined);
   const [surveyDate, setSurveyDate] = createSignal(
-    format(new Date(), "dd/MM/yyyy")
+    format(Date.now(), "dd/MM/yyyy")
   );
   const [surveyQuestions, setSurveyQuestions] = createSignal([]);
   const [surveyUserType, setSurveyUserType] = createSignal("all");
@@ -35,7 +35,7 @@ const AddSurveyModal = ({ added = () => {}, closed = () => {} }) => {
     const response = await axios.post(
       apiUrl + "surveys/",
       {
-        surveyDate: format(new Date(), "dd/MM/yyyy"),
+        surveyDate: format(Date.now(), "dd/MM/yyyy"),
         surveyTitle: surveyTitle(),
         surveyQuestions: [...surveyQuestions()],
         surveyUserType: surveyUserType(),
@@ -191,7 +191,13 @@ const AddSurveyModal = ({ added = () => {}, closed = () => {} }) => {
             <div class="">
               Survey Date <span class="text-red-500">*</span>
             </div>
-            <DatePicker dateChanged={(date) => setSurveyDate(date)} />
+            <DatePicker
+              onChange={(date) =>
+                setSurveyDate(
+                  format(parse(date, "dd/MM/yyyy", Date.now()), "dd/MM/yyyy")
+                )
+              }
+            />
             <div class="text-neutral-400">
               What date must the survey be shown?
             </div>
