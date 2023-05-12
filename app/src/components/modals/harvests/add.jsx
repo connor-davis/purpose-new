@@ -20,6 +20,11 @@ const AddHarvestModal = ({ added = () => {}, closed = () => {} }) => {
   const [showHarvestProduce, setShowHarvestProduce] = createSignal(false);
 
   const addHarvest = async () => {
+    if (produce.length === 0)
+      return setErrorMessage(
+        "You need to have at least one produce selected to create a harvest."
+      );
+
     const response = await axios.post(
       apiUrl + "harvests",
       {

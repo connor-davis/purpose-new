@@ -21,6 +21,11 @@ const AddSaleModal = ({ added = () => {}, closed = () => {} }) => {
   const [showSaleProducts, setShowSaleProducts] = createSignal(false);
 
   const addSale = async () => {
+    if (products.length === 0)
+      return setErrorMessage(
+        "You need to have at least one product selected to create a sale."
+      );
+
     const response = await axios.post(
       apiUrl + "sales",
       {
