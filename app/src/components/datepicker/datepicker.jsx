@@ -19,10 +19,10 @@ const DatePicker = ({ onChange = (date) => {} }) => {
   let [today, setToday] = createSignal(startOfToday());
   let [selectedDay, setSelectedDay] = createSignal(today());
   let [currentMonth, setCurrentMonth] = createSignal(
-    format(today(), "MMM-yyyy")
+    format(today(), "MMMM yyyy")
   );
   let [firstDayCurrentMonth, setFirstDayCurrentMonth] = createSignal(
-    parse(currentMonth(), "MMM-yyyy", new Date())
+    parse(currentMonth(), "MMMM yyyy", new Date())
   );
 
   let [days, setDays] = createSignal(
@@ -35,8 +35,8 @@ const DatePicker = ({ onChange = (date) => {} }) => {
   const previousMonth = () => {
     let firstDayPreviousMonth = add(firstDayCurrentMonth(), { months: -1 });
 
-    setCurrentMonth(format(firstDayPreviousMonth, "MMM-yyyy"));
-    setFirstDayCurrentMonth(parse(currentMonth(), "MMM-yyyy", new Date()));
+    setCurrentMonth(format(firstDayPreviousMonth, "MMMM yyyy"));
+    setFirstDayCurrentMonth(parse(currentMonth(), "MMMM yyyy", new Date()));
     setDays(
       eachDayOfInterval({
         start: startOfWeek(firstDayCurrentMonth()),
@@ -48,8 +48,8 @@ const DatePicker = ({ onChange = (date) => {} }) => {
   const nextMonth = () => {
     let firstDayNextMonth = add(firstDayCurrentMonth(), { months: 1 });
 
-    setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
-    setFirstDayCurrentMonth(parse(currentMonth(), "MMM-yyyy", new Date()));
+    setCurrentMonth(format(firstDayNextMonth, "MMMM yyyy"));
+    setFirstDayCurrentMonth(parse(currentMonth(), "MMMM yyyy", new Date()));
     setDays(
       eachDayOfInterval({
         start: startOfWeek(firstDayCurrentMonth()),
