@@ -3,7 +3,7 @@ import apiUrl from "../../../apiUrl";
 import axios from "axios";
 import useState from "../../../hooks/state";
 import DatePicker from "../../datepicker/datepicker";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { createStore } from "solid-js/store";
 import SaleProductsModal from "./saleProducts";
 
@@ -127,7 +127,13 @@ const AddSaleModal = ({ added = () => {}, closed = () => {} }) => {
             <div class="">
               Sale Date <span class="text-red-500">*</span>
             </div>
-            <DatePicker dateChanged={(date) => setDate(date)} />
+            <DatePicker
+              onChange={(date) =>
+                setDate(
+                  format(parse(date, "dd/MM/yyyy", Date.now()), "dd/MM/yyyy")
+                )
+              }
+            />
             <div class="text-neutral-400">What was the date of the sale?</div>
           </div>
           <div class="flex flex-col w-full space-y-1">

@@ -14,7 +14,7 @@ const AddHarvestModal = ({ added = () => {}, closed = () => {} }) => {
   const [errorMessage, setErrorMessage] = createSignal(undefined);
 
   const [metadata, setMetadata] = createStore({}, { name: "metadata-object" });
-  const [date, setDate] = createSignal(format(new Date(), "dd/MM/yyyy"));
+  const [date, setDate] = createSignal(format(Date.now(), "dd/MM/yyyy"));
   const [produce, setProduce] = createStore([], { name: "produce-list" });
 
   const [showHarvestProduce, setShowHarvestProduce] = createSignal(false);
@@ -34,7 +34,7 @@ const AddHarvestModal = ({ added = () => {}, closed = () => {} }) => {
       setSuccessMessage("Successfully created harvest.");
 
       setTimeout(() => {
-        setDate(format(new Date(), "dd/MM/yyyy"));
+        setDate(format(Date.now(), "dd/MM/yyyy"));
         setProduce([]);
 
         setSuccessMessage(undefined);
@@ -125,7 +125,13 @@ const AddHarvestModal = ({ added = () => {}, closed = () => {} }) => {
             <div class="">
               Harvest Date <span class="text-red-500">*</span>
             </div>
-            <DatePicker dateChanged={(date) => setDate(date)} />
+            <DatePicker
+              onChange={(date) =>
+                setDate(
+                  format(parse(date, "dd/MM/yyyy", Date.now()), "dd/MM/yyyy")
+                )
+              }
+            />
             <div class="text-neutral-400">
               What was the date of the harvest?
             </div>
