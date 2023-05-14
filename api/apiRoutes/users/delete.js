@@ -34,8 +34,6 @@ const path = require('path');
 router.delete('/:id', async (request, response) => {
   const id = request.params.id;
 
-  console.log(id);
-
   try {
     const userFound = await UserModel.findOne({ _id: { $eq: id } });
 
@@ -44,17 +42,11 @@ router.delete('/:id', async (request, response) => {
         .status(404)
         .json({ message: 'User not found.', reason: 'user-not-found' });
 
-    
-
     const files = fs.readdirSync(path.join(process.cwd(), 'files'));
     const documents = fs.readdirSync(path.join(process.cwd(), 'documents'));
 
-    console.log(files, documents);
-
-    const filesToDelete = files.map((fpath) => fpath.includes(id));
-    const documentsToDelete = documents.map((fpath) => fpath.includes(id));
-
-    console.log(filesToDelete, documentsToDelete);
+    const filesToDelete = files.map((fpath) => fpath.includes(id) && fpath);
+    const documentsToDelete = documents.map((fpath) => fpath.includes(id) && fpath);
 
     filesToDelete.forEach((fpath) =>
       fs.unlinkSync(path.join(process.cwd(), 'files', fpath))
