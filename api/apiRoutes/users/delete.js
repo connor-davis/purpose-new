@@ -44,15 +44,17 @@ router.delete('/:id', async (request, response) => {
         .status(404)
         .json({ message: 'User not found.', reason: 'user-not-found' });
 
-    await ProductModel.deleteMany({ user: { $eq: userFound._id } });
-    await SaleModel.deleteMany({ user: { $eq: userFound._id } });
-    await HarvestModel.deleteMany({ user: { $eq: userFound._id } });
+    
 
     const files = fs.readdirSync(path.join(process.cwd(), 'files'));
     const documents = fs.readdirSync(path.join(process.cwd(), 'documents'));
 
+    console.log(files, documents);
+
     const filesToDelete = files.map((fpath) => fpath.includes(id));
     const documentsToDelete = documents.map((fpath) => fpath.includes(id));
+
+    console.log(filesToDelete, documentsToDelete);
 
     filesToDelete.forEach((fpath) =>
       fs.unlinkSync(path.join(process.cwd(), 'files', fpath))
@@ -61,6 +63,9 @@ router.delete('/:id', async (request, response) => {
       fs.unlinkSync(path.join(process.cwd(), 'documents', fpath))
     );
 
+    await ProductModel.deleteMany({ user: { $eq: userFound._id } });
+    await SaleModel.deleteMany({ user: { $eq: userFound._id } });
+    await HarvestModel.deleteMany({ user: { $eq: userFound._id } });
     await UserModel.deleteOne({ _id: { $eq: userFound._id } });
 
     return response.status(200).send('Ok');
