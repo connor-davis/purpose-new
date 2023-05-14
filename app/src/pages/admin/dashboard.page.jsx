@@ -51,6 +51,39 @@ const AdminDashboardPage = () => {
     }, 400);
   });
 
+  function sortByMonthName(monthNames, isReverse = false) {
+    const referenceMonthNames = [
+      "jan",
+      "feb",
+      "mar",
+      "apr",
+      "may",
+      "jun",
+      "jul",
+      "aug",
+      "sep",
+      "oct",
+      "nov",
+      "dec",
+    ];
+    const directionFactor = isReverse ? -1 : 1;
+    const comparator = (a, b) => {
+      if (!a && !b) return 0;
+      if (!a && b) return -1 * directionFactor;
+      if (a && !b) return 1 * directionFactor;
+
+      const comparableA = a.toLowerCase().substring(0, 3);
+      const comparableB = b.toLowerCase().substring(0, 3);
+      const comparisonResult =
+        referenceMonthNames.indexOf(comparableA) -
+        referenceMonthNames.indexOf(comparableB);
+      return comparisonResult * directionFactor;
+    };
+    const safeCopyMonthNames = [...monthNames];
+    safeCopyMonthNames.sort(comparator);
+    return safeCopyMonthNames;
+  }
+
   const loadTotalUsers = async () => {
     const response = await axios.get(apiUrl + "analytics/totalUsers", {
       headers: { Authorization: "Bearer " + user.token },
@@ -81,7 +114,14 @@ const AdminDashboardPage = () => {
     });
 
     if (response.data) {
-      setProfit(Object.values(response.data.monthlyProfit));
+      const months = sortByMonthName(Object.keys(response.data.monthlyProfit));
+      const data = [];
+
+      for (let i in months) {
+        data.push(response.data.monthlyProfit[months[i]]);
+      }
+
+      setProfit(data);
 
       return true;
     } else return setLoading(false);
@@ -93,7 +133,16 @@ const AdminDashboardPage = () => {
     });
 
     if (response.data) {
-      setExpenses(Object.values(response.data.monthlyExpenses));
+      const months = sortByMonthName(
+        Object.keys(response.data.monthlyExpenses)
+      );
+      const data = [];
+
+      for (let i in months) {
+        data.push(response.data.monthlyExpenses[months[i]]);
+      }
+
+      setExpenses(data);
 
       return true;
     } else return setLoading(false);
@@ -105,7 +154,14 @@ const AdminDashboardPage = () => {
     });
 
     if (response.data) {
-      setSales(Object.values(response.data.monthlySales));
+      const months = sortByMonthName(Object.keys(response.data.monthlySales));
+      const data = [];
+
+      for (let i in months) {
+        data.push(response.data.monthlySales[months[i]]);
+      }
+
+      setSales(data);
 
       return true;
     } else return setLoading(false);

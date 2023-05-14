@@ -1,6 +1,11 @@
 const { Router } = require('express');
 const router = Router();
 const UserModel = require('../../models/user');
+const ProductModel = require('../../models/product');
+const HarvestModel = require('../../models/harvest');
+const SaleModel = require('../../models/sale');
+const fs = require("fs");
+const path = require("path");
 
 /**
  * @openapi
@@ -30,16 +35,27 @@ router.delete('/:id', async (request, response) => {
   const id = request.params.id;
 
   try {
+    await ProductModel.deleteMany({ user: { $eq: id } });
+    await SaleModel.deleteMany({ user: { $eq: id } });
+    await HarvestModel.deleteMany({ user: { $eq: id } });
+
+    const files = fs.readdirSync(path.join(process.cwd(), "files"));
+    const documents = fs.readdirSync(path.join(process.cwd(), "documents"));
+
+    const filesToDelete = files.map((fpath) => fpath.includes(id));
+    const documentsToDelete = documents.map((fpath) => fpath.includes(id));
+
+    filesToDelete.forEach((fpath) => fs.unlinkSync(path.join(process.cwd(), "files", fpath)));
+    documentsToDelete.forEach((fpath) => fs.unlinkSync(path.join(process.cwd(), "documents", fpath)));
+    
     await UserModel.deleteOne({ _id: { $eq: id } });
 
-    return response.status(200).send("Ok");
+    return response.status(200).send('Ok');
   } catch (error) {
-    return response
-      .status(500)
-      .json({
-        message: 'Failed to delete user.',
-        reason: error,
-      });
+    return response.status(500).json({
+      message: 'Failed to delete user.',
+      reason: error,
+    });
   }
 });
 
