@@ -423,6 +423,7 @@ const CompleteProfilePage = () => {
               <div class="flex w-full">Business Documents</div>
               <div class="flex flex-col p-2 w-full rounded border-l border-t border-r border-b border-neutral-700 bg-neutral-900">
                 <Uploader
+                  location="documents/upload"
                   uploadStarted={() => setUploading(true)}
                   uploaded={() => setUploading(false)}
                 />

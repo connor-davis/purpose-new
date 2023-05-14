@@ -34,6 +34,8 @@ const path = require("path");
 router.delete('/:id', async (request, response) => {
   const id = request.params.id;
 
+  console.log(id);
+
   try {
     await ProductModel.deleteMany({ user: { $eq: id } });
     await SaleModel.deleteMany({ user: { $eq: id } });
