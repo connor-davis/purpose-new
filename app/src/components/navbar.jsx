@@ -3,7 +3,8 @@ import { createSignal } from "solid-js";
 import useState from "../hooks/state";
 
 const Navbar = () => {
-  const [user, setUser] = useState("user");
+  const [user, setUser, clearUser] = useState("user");
+
   const navigate = useNavigate();
 
   const [navbarShown, setNavbarShown] = createSignal(false);
@@ -347,9 +348,38 @@ const Navbar = () => {
                   <span>Profile</span>
                 </div>
               )}
+            {user.previousUser && (
+              <div
+                onClick={() => {
+                  const newUser = JSON.parse(user.previousUser);
+
+                  clearUser();
+                  setUser({ ...newUser, previousUser: false });
+                  setNavbarShown(!navbarShown());
+                }}
+                class="flex items-center space-x-2 w-full h-auto px-3 py-2 text-white border-l border-t border-r border-b border-neutral-900 bg-neutral-800 hover:bg-neutral-700 hover:bg-opacity-50 transition-all duration-300 ease-in-out rounded cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
+                  />
+                </svg>
+
+                <span>Back To Admin</span>
+              </div>
+            )}
             <div
               onClick={() => {
-                setUser({ authenticated: false, data: {}, token: "" });
+                clearUser();
                 setNavbarShown(!navbarShown());
                 navigate("/");
               }}

@@ -6,8 +6,8 @@ import { useNavigate } from "@solidjs/router";
 
 const UserProfileModal = ({ data = {}, closed = () => {} }) => {
   const navigate = useNavigate();
-  
-  const [user, setUser] = useState("user");
+
+  const [user, setUser, clearUser] = useState("user");
 
   const [successMessage, setSuccessMessage] = createSignal(undefined);
   const [errorMessage, setErrorMessage] = createSignal(undefined);
@@ -21,10 +21,19 @@ const UserProfileModal = ({ data = {}, closed = () => {} }) => {
     });
 
     if (response.data.success) {
+      const previousUser = JSON.stringify({
+        authenticated: user.authenticated,
+        data: user.data,
+        token: user.token,
+      });
+
+      clearUser();
+
       setUser({
         authenticated: true,
         data: response.data.data,
         token: response.data.token,
+        previousUser,
       });
 
       setSuccessMessage(response.data.success);
