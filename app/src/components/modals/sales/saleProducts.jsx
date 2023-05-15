@@ -65,7 +65,12 @@ const SaleProductsModal = ({
         _totalProfit += profit;
 
         if (profit > 0)
-          return { _id: product._id, numberSold: productNumberSold };
+          return {
+            _id: product._id,
+            cost: product.cost,
+            price: product.price,
+            numberSold: productNumberSold,
+          };
       })
       .filter((product) => product !== undefined);
 

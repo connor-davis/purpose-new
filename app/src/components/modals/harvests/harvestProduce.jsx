@@ -44,8 +44,6 @@ const HarvestProduceModal = ({
   ];
 
   const updateHarvestProduce = () => {
-    console.log(produce());
-
     added(produce());
   };
 

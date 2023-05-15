@@ -247,7 +247,7 @@ router.get('/monthlyExpenses/:userId', async (request, response) => {
             user: { $eq: userId },
           }
         : {}
-    ).populate('products', ['_id', 'name', 'cost', 'price']);
+    );
 
     let monthlyExpenses = {
       January: 0,
@@ -271,7 +271,7 @@ router.get('/monthlyExpenses/:userId', async (request, response) => {
           'MMMM'
         );
         const expenses = sale.products
-          .map((product) => product.cost)
+          .map((product) => product.cost * product.numberSold)
           .reduce((partial, num) => partial + num, 0);
 
         if (monthlyExpenses[month])
@@ -310,7 +310,7 @@ router.get('/monthlySales/:userId', async (request, response) => {
             user: { $eq: userId },
           }
         : {}
-    ).populate('products', ['_id', 'name', 'cost', 'price']);
+    );
 
     let monthlySales = {
       January: 0,
@@ -334,7 +334,7 @@ router.get('/monthlySales/:userId', async (request, response) => {
           'MMMM'
         );
         const sales = sale.products
-          .map((product) => product.price)
+          .map((product) => product.price * product.numberSold)
           .reduce((partial, num) => partial + num, 0);
 
         if (monthlySales[month])
@@ -373,7 +373,7 @@ router.get('/financeTotals/:userId', async (request, response) => {
             user: { $eq: userId },
           }
         : {}
-    ).populate('products', ['_id', 'name', 'cost', 'price']);
+    ).populate('products', '_id');
 
     const totalProfit = sales
       .map(
@@ -389,7 +389,7 @@ router.get('/financeTotals/:userId', async (request, response) => {
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) > yearMinusYear &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) < yearPlusYear &&
           sale.products
-            .map((product) => product.cost)
+            .map((product) => product.cost * product.numberSold)
             .reduce((partial, num) => partial + num, 0)
       )
       .reduce((partial, num) => partial + num, 0);
@@ -399,7 +399,7 @@ router.get('/financeTotals/:userId', async (request, response) => {
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) > yearMinusYear &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) < yearPlusYear &&
           sale.products
-            .map((product) => product.price)
+            .map((product) => product.price * product.numberSold)
             .reduce((partial, num) => partial + num, 0)
       )
       .reduce((partial, num) => partial + num, 0);
