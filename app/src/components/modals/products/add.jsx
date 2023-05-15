@@ -133,8 +133,7 @@ const AddProductModal = ({ added = () => {}, closed = () => {} }) => {
             const form = event.target;
 
             if (form.reportValidity()) {
-              if (!productImage()) return updateImage();
-              else addProduct();
+              addProduct();
             }
           }}
           class="flex flex-col w-full h-auto space-y-3 bg-neutral-100 rounded p-3"

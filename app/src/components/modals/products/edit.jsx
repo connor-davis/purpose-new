@@ -88,7 +88,7 @@ const EditProductModal = ({
         setProductName(undefined);
         setProductCost(undefined);
         setProductPrice(undefined);
-        
+
         edited();
       }, 1000);
     }
@@ -139,8 +139,7 @@ const EditProductModal = ({
             const form = event.target;
 
             if (form.reportValidity()) {
-              if (!productImage()) return updateImage();
-              else editProduct();
+              editProduct();
             }
           }}
           class="flex flex-col w-full h-auto space-y-3 bg-neutral-100 rounded p-3"
