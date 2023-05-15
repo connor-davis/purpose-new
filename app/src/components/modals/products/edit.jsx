@@ -64,8 +64,6 @@ const EditProductModal = ({
 
     if (data._userId === (null || undefined))
       return setErrorMessage("You need to be authenticated to add a product.");
-    if (data.image === (null || undefined))
-      return setErrorMessage("Please choose an image.");
     if (data.name === (null || undefined))
       return setErrorMessage("Please give your product a name.");
     if (data.cost === (null || undefined))
