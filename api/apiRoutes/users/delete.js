@@ -45,15 +45,27 @@ router.delete('/:id', async (request, response) => {
     const files = fs.readdirSync(path.join(process.cwd(), 'files'));
     const documents = fs.readdirSync(path.join(process.cwd(), 'documents'));
 
-    const filesToDelete = files.map((fpath) => fpath.includes(id) && fpath);
-    const documentsToDelete = documents.map((fpath) => fpath.includes(id) && fpath);
+    if (files.length > 0) {
+      const filesToDelete = files.map((fpath) => fpath.includes(id) && fpath);
 
-    filesToDelete.forEach((fpath) =>
-      fs.unlinkSync(path.join(process.cwd(), 'files', fpath))
-    );
-    documentsToDelete.forEach((fpath) =>
-      fs.unlinkSync(path.join(process.cwd(), 'documents', fpath))
-    );
+      if (filesToDelete.length > 0) {
+        filesToDelete.forEach((fpath) =>
+          fs.unlinkSync(path.join(process.cwd(), 'files', fpath))
+        );
+      }
+    }
+
+    if (documents.length > 0) {
+      const documentsToDelete = documents.map(
+        (fpath) => fpath.includes(id) && fpath
+      );
+
+      if (documentsToDelete.length > 0) {
+        documentsToDelete.forEach((fpath) =>
+          fs.unlinkSync(path.join(process.cwd(), 'documents', fpath))
+        );
+      }
+    }
 
     await ProductModel.deleteMany({ user: { $eq: userFound._id } });
     await SaleModel.deleteMany({ user: { $eq: userFound._id } });
