@@ -538,6 +538,7 @@ router.get('/monthsHarvests/:userId', async (request, response) => {
       .status(200)
       .json({ produceWeights, produceYields, produceCounts });
   } catch (error) {
+    console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve monthly harvests.', reason: error });
