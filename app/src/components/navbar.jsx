@@ -16,7 +16,7 @@ const Navbar = () => {
       {showAddIncome() && (
         <AddIncomeModal closed={() => setShowAddIncome(false)} />
       )}
-      
+
       {!navbarShown() ? (
         <div class="md:hidden flex items-center justify-between px-3 py-3 w-full bg-neutral-900 border-b border-neutral-700">
           <div class="cookie text-2xl text-lime-400">Purpose360</div>
@@ -413,7 +413,7 @@ const Navbar = () => {
               onClick={() => {
                 clearUser();
                 setNavbarShown(!navbarShown());
-                navigate("/");
+                window.location.href = "/";
               }}
               class="flex items-center space-x-2 w-full h-auto px-3 py-2 text-white border-l border-t border-r border-b border-neutral-900 bg-neutral-800 hover:bg-neutral-700 hover:bg-opacity-50 transition-all duration-300 ease-in-out rounded cursor-pointer"
             >
