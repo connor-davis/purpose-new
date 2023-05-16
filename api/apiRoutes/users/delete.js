@@ -51,11 +51,9 @@ router.delete('/:id', async (request, response) => {
     const documents = fs.readdirSync(path.join(process.cwd(), 'documents'));
 
     if (files.length > 0) {
-      const filesToDelete = files.map((fpath) => fpath.includes(id) && fpath);
+      const filesToDelete = files.filter((fpath) => fpath.includes(id));
 
       if (filesToDelete.length > 0) {
-        console.log(filesToDelete);
-
         filesToDelete.forEach((fpath) =>
           fs.unlinkSync(path.join(process.cwd(), 'files', fpath))
         );
@@ -63,13 +61,9 @@ router.delete('/:id', async (request, response) => {
     }
 
     if (documents.length > 0) {
-      const documentsToDelete = documents.map(
-        (fpath) => fpath.includes(id) && fpath
-      );
+      const documentsToDelete = documents.filter((fpath) => fpath.includes(id));
 
       if (documentsToDelete.length > 0) {
-        console.log(documentsToDelete);
-        
         documentsToDelete.forEach((fpath) =>
           fs.unlinkSync(path.join(process.cwd(), 'documents', fpath))
         );
