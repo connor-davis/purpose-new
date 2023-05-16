@@ -4,6 +4,7 @@ import apiUrl from "../../apiUrl";
 import Chart from "../../components/chart/chart";
 import {
   agesOptions,
+  monthlyIncomeOptions,
   monthlySalesOptions,
   monthsHarvestsOptions,
   userTypesOptions,
@@ -26,6 +27,7 @@ const AdminDashboardPage = () => {
   const [profit, setProfit] = createSignal([]);
   const [expenses, setExpenses] = createSignal([]);
   const [sales, setSales] = createSignal([]);
+  const [income, setIncome] = createSignal([]);
 
   const [usersAges, setUsersAges] = createSignal([]);
 
@@ -43,6 +45,7 @@ const AdminDashboardPage = () => {
       await loadProfit();
       await loadExpenses();
       await loadSales();
+      await loadIncome();
       await loadUsersAges();
       await loadMonthsHarvests();
       await loadUserTypes();
@@ -162,6 +165,25 @@ const AdminDashboardPage = () => {
       }
 
       setSales(data);
+
+      return true;
+    } else return setLoading(false);
+  };
+
+  const loadIncome = async () => {
+    const response = await axios.get(apiUrl + "analytics/monthlyIncome/all", {
+      headers: { Authorization: "Bearer " + user.token },
+    });
+
+    if (response.data) {
+      const months = sortByMonthName(Object.keys(response.data.monthlyIncome));
+      const data = [];
+
+      for (let i in months) {
+        data.push(response.data.monthlyIncome[months[i]]);
+      }
+
+      setIncome(data);
 
       return true;
     } else return setLoading(false);
@@ -305,6 +327,34 @@ const AdminDashboardPage = () => {
                   <div class="flex flex-col">
                     <div class="font-bold w-full text-4xl cookie">
                       Monthly Sales
+                    </div>
+                    <div class="font-medium text-xl">
+                      There is no data to display.
+                    </div>
+                  </div>
+                </div>
+              )
+            ) : (
+              <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
+            )}
+          </div>
+          <div class="w-full h-[300px] md:h-full bg-white rounded-lg p-3">
+            {!loading() ? (
+              profit().length > 1 &&
+              expenses().length > 1 &&
+              sales().length > 1 ? (
+                <Chart
+                  id="monthlyIncome"
+                  options={{
+                    ...monthlyIncomeOptions,
+                    series: [{ name: "Income (R)", data: income() }],
+                  }}
+                />
+              ) : (
+                <div class="flex flex-col w-full h-full items-center justify-center">
+                  <div class="flex flex-col">
+                    <div class="font-bold w-full text-4xl cookie">
+                      Monthly Income
                     </div>
                     <div class="font-medium text-xl">
                       There is no data to display.

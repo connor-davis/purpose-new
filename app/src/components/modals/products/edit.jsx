@@ -195,6 +195,7 @@ const EditProductModal = ({
             </div>
             <input
               type="number"
+              step="0.01"
               placeholder="Product Cost"
               value={productCost() || ""}
               onChange={(event) => setProductCost(event.target.value)}
@@ -211,6 +212,7 @@ const EditProductModal = ({
             </div>
             <input
               type="number"
+              step="0.01"
               placeholder="Product Price"
               value={productPrice() || ""}
               onChange={(event) => setProductPrice(event.target.value)}

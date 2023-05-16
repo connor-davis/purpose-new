@@ -34,7 +34,13 @@ const SaleSchema = new mongoose.Schema(
     ],
     profit: {
       type: Number,
-      required: true,
+      required: false,
+      default: undefined
+    },
+    income: {
+      type: Number,
+      required: false,
+      default: undefined,
     },
   },
   { timestamps: true }

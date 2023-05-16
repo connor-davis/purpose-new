@@ -137,7 +137,9 @@ router.get('/userTypes', async (request, response) => {
 
 router.get('/totalSales', async (request, response) => {
   try {
-    const totalSales = await SaleModel.countDocuments();
+    const totalSales = await SaleModel.countDocuments({
+      income: { $eq: undefined },
+    });
 
     return response.status(200).json({ totalSales });
   } catch (error) {
@@ -182,6 +184,7 @@ router.get('/monthlyProfit/:userId', async (request, response) => {
       userId !== 'all'
         ? {
             user: { $eq: userId },
+            income: { $eq: undefined },
           }
         : {}
     );
@@ -209,7 +212,7 @@ router.get('/monthlyProfit/:userId', async (request, response) => {
           parse(sale.date, 'dd/MM/yyyy', Date.now()),
           'MMMM'
         );
-        const profit = sale.profit;
+        const profit = parseFloat(sale.profit);
 
         if (monthlyProfit[month])
           monthlyProfit[month] = monthlyProfit[month] + profit;
@@ -245,6 +248,7 @@ router.get('/monthlyExpenses/:userId', async (request, response) => {
       userId !== 'all'
         ? {
             user: { $eq: userId },
+            income: { $eq: undefined },
           }
         : {}
     );
@@ -273,7 +277,7 @@ router.get('/monthlyExpenses/:userId', async (request, response) => {
           'MMMM'
         );
         const expenses = sale.products
-          .map((product) => product.cost * product.numberSold)
+          .map((product) => parseFloat(product.cost * product.numberSold))
           .reduce((partial, num) => partial + num, 0);
 
         if (monthlyExpenses[month])
@@ -310,6 +314,7 @@ router.get('/monthlySales/:userId', async (request, response) => {
       userId !== 'all'
         ? {
             user: { $eq: userId },
+            income: { $eq: undefined },
           }
         : {}
     );
@@ -338,7 +343,7 @@ router.get('/monthlySales/:userId', async (request, response) => {
           'MMMM'
         );
         const sales = sale.products
-          .map((product) => product.price * product.numberSold)
+          .map((product) => parseFloat(product.price * product.numberSold))
           .reduce((partial, num) => partial + num, 0);
 
         if (monthlySales[month])
@@ -364,6 +369,69 @@ router.get('/monthlySales/:userId', async (request, response) => {
   }
 });
 
+router.get('/monthlyIncome/:userId', async (request, response) => {
+  const userId = request.params.userId || 'all';
+  const year = parseInt(request.query.year) || getYear(Date.now());
+  const yearMinusYear = year - 1;
+  const yearPlusYear = year + 1;
+
+  try {
+    const sales = await SaleModel.find(
+      userId !== 'all'
+        ? {
+            user: { $eq: userId },
+            income: { $ne: undefined },
+          }
+        : {}
+    );
+
+    let monthlyIncome = {
+      January: 0,
+      February: 0,
+      March: 0,
+      April: 0,
+      May: 0,
+      June: 0,
+      July: 0,
+      August: 0,
+      September: 0,
+      October: 0,
+      November: 0,
+      December: 0,
+    };
+
+    sales.map((sale) => {
+      const saleYear = getYear(parse(sale.date, 'dd/MM/yyyy', Date.now()));
+
+      if (saleYear > yearMinusYear && saleYear < yearPlusYear) {
+        const month = format(
+          parse(sale.date, 'dd/MM/yyyy', Date.now()),
+          'MMMM'
+        );
+
+        if (monthlyIncome[month])
+          monthlyIncome[month] = monthlyIncome[month] + parseFloat(sale.income);
+        else monthlyIncome[month] = parseFloat(sale.income);
+
+        monthlyIncome = Object.keys(monthlyIncome)
+          .sort()
+          .reduce((obj, key) => {
+            obj[key] = monthlyIncome[key];
+            return obj;
+          }, {});
+
+        return sale;
+      } else return sale;
+    });
+
+    return response.status(200).json({ monthlyIncome });
+  } catch (error) {
+    return response
+      .status(500)
+      .json({ message: 'Failed to retrieve monthly income.', reason: error });
+  }
+});
+
 router.get('/financeTotals/:userId', async (request, response) => {
   const userId = request.params.userId || 'all';
   const year = parseInt(request.query.year) || getYear(Date.now());
@@ -384,7 +452,7 @@ router.get('/financeTotals/:userId', async (request, response) => {
         (sale) =>
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) > yearMinusYear &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) < yearPlusYear &&
-          sale.profit
+          parseFloat(sale.profit)
       )
       .reduce((partial, num) => partial + num, 0);
     const totalExpenses = sales
@@ -393,7 +461,7 @@ router.get('/financeTotals/:userId', async (request, response) => {
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) > yearMinusYear &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) < yearPlusYear &&
           sale.products
-            .map((product) => product.cost * product.numberSold)
+            .map((product) => parseFloat(product.cost * product.numberSold))
             .reduce((partial, num) => partial + num, 0)
       )
       .reduce((partial, num) => partial + num, 0);
@@ -403,7 +471,7 @@ router.get('/financeTotals/:userId', async (request, response) => {
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) > yearMinusYear &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) < yearPlusYear &&
           sale.products
-            .map((product) => product.price * product.numberSold)
+            .map((product) => parseFloat(product.price * product.numberSold))
             .reduce((partial, num) => partial + num, 0)
       )
       .reduce((partial, num) => partial + num, 0);
@@ -499,7 +567,9 @@ router.get('/monthsHarvests/:userId', async (request, response) => {
     };
 
     harvests.map((harvest) => {
-      const harvestYear = getYear(parse(harvest.date, 'dd/MM/yyyy', Date.now()));
+      const harvestYear = getYear(
+        parse(harvest.date, 'dd/MM/yyyy', Date.now())
+      );
 
       if (harvestYear > yearMinusYear && harvestYear < yearPlusYear) {
         if (

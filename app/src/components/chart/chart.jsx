@@ -11,7 +11,7 @@ const Chart = (props) => {
     chart.render();
   });
 
-  return <div id={props.id}></div>;
+  return <div id={props.id} class="z-0"></div>;
 };
 
 export default Chart;

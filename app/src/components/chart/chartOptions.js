@@ -54,6 +54,54 @@ export const monthlySalesOptions = {
   },
 };
 
+export const monthlyIncomeOptions = {
+  series: [
+    {
+      name: "Income (R)",
+      data: [31, 40, 28, 51, 42, 109, 100, 0, 0, 0, 0, 0],
+    },
+  ],
+  title: {
+    text: "Monthly Income",
+    style: {
+      fontSize: "26px",
+    },
+  },
+  chart: {
+    height: "100%",
+    type: "area",
+  },
+  colors: ["#a3e635", "#dc2626", "#171717"],
+  dataLabels: {
+    enabled: false,
+  },
+  stroke: {
+    curve: "smooth",
+  },
+  xaxis: {
+    type: "category",
+    categories: [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ],
+  },
+  tooltip: {
+    x: {
+      format: "dd/MM/yyyy",
+    },
+  },
+};
+
 export const agesOptions = {
   series: [31, 40, 28, 51, 42, 109, 100, 0, 0, 0],
   title: {
