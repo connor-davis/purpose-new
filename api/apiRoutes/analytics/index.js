@@ -499,11 +499,9 @@ router.get('/monthsHarvests/:userId', async (request, response) => {
     };
 
     harvests.map((harvest) => {
-      const saleYear = getYear(parse(sale.date, 'dd/MM/yyyy', Date.now()));
+      const harvestYear = getYear(parse(harvest.date, 'dd/MM/yyyy', Date.now()));
 
-      console.log(saleYear);
-
-      if (saleYear > yearMinusYear && saleYear < yearPlusYear) {
+      if (harvestYear > yearMinusYear && harvestYear < yearPlusYear) {
         if (
           month ===
           format(parse(harvest.date, 'dd/MM/yyyy', Date.now()), 'MMMM')
