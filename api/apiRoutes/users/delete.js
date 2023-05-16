@@ -54,6 +54,8 @@ router.delete('/:id', async (request, response) => {
       const filesToDelete = files.map((fpath) => fpath.includes(id) && fpath);
 
       if (filesToDelete.length > 0) {
+        console.log(filesToDelete);
+
         filesToDelete.forEach((fpath) =>
           fs.unlinkSync(path.join(process.cwd(), 'files', fpath))
         );
@@ -66,6 +68,8 @@ router.delete('/:id', async (request, response) => {
       );
 
       if (documentsToDelete.length > 0) {
+        console.log(documentsToDelete);
+        
         documentsToDelete.forEach((fpath) =>
           fs.unlinkSync(path.join(process.cwd(), 'documents', fpath))
         );
@@ -80,7 +84,7 @@ router.delete('/:id', async (request, response) => {
     return response.status(200).send('Ok');
   } catch (error) {
     console.log(error);
-    
+
     return response.status(500).json({
       message: 'Failed to delete user.',
       reason: error,
