@@ -42,6 +42,11 @@ router.delete('/:id', async (request, response) => {
         .status(404)
         .json({ message: 'User not found.', reason: 'user-not-found' });
 
+    if (!userFound.completedProfile) {
+      await UserModel.deleteOne({ _id: { $eq: userFound._id } });
+      return response.status(200).send('Ok');
+    }
+
     const files = fs.readdirSync(path.join(process.cwd(), 'files'));
     const documents = fs.readdirSync(path.join(process.cwd(), 'documents'));
 
