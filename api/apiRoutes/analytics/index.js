@@ -400,29 +400,32 @@ router.get('/monthlyIncome/:userId', async (request, response) => {
       December: 0,
     };
 
-    sales.map((sale) => {
-      const saleYear = getYear(parse(sale.date, 'dd/MM/yyyy', Date.now()));
+    sales
+      .filter((sale) => sale.income !== null && sale.income !== undefined)
+      .map((sale) => {
+        const saleYear = getYear(parse(sale.date, 'dd/MM/yyyy', Date.now()));
 
-      if (saleYear > yearMinusYear && saleYear < yearPlusYear) {
-        const month = format(
-          parse(sale.date, 'dd/MM/yyyy', Date.now()),
-          'MMMM'
-        );
+        if (saleYear > yearMinusYear && saleYear < yearPlusYear) {
+          const month = format(
+            parse(sale.date, 'dd/MM/yyyy', Date.now()),
+            'MMMM'
+          );
 
-        if (monthlyIncome[month])
-          monthlyIncome[month] = monthlyIncome[month] + parseFloat(sale.income);
-        else monthlyIncome[month] = parseFloat(sale.income);
+          if (monthlyIncome[month])
+            monthlyIncome[month] =
+              monthlyIncome[month] + parseFloat(sale.income);
+          else monthlyIncome[month] = parseFloat(sale.income);
 
-        monthlyIncome = Object.keys(monthlyIncome)
-          .sort()
-          .reduce((obj, key) => {
-            obj[key] = monthlyIncome[key];
-            return obj;
-          }, {});
+          monthlyIncome = Object.keys(monthlyIncome)
+            .sort()
+            .reduce((obj, key) => {
+              obj[key] = monthlyIncome[key];
+              return obj;
+            }, {});
 
-        return sale;
-      } else return sale;
-    });
+          return sale;
+        } else return sale;
+      });
 
     return response.status(200).json({ monthlyIncome });
   } catch (error) {
