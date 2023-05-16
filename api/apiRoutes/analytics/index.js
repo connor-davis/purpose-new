@@ -202,9 +202,9 @@ router.get('/monthlyProfit/:userId', async (request, response) => {
     };
 
     sales.map((sale) => {
-      const year = getYear(parse(sale.date, 'dd/MM/yyyy', Date.now()));
+      const saleYear = getYear(parse(sale.date, 'dd/MM/yyyy', Date.now()));
 
-      if (year > yearMinusYear && year < yearPlusYear) {
+      if (saleYear > yearMinusYear && saleYear < yearPlusYear) {
         const month = format(
           parse(sale.date, 'dd/MM/yyyy', Date.now()),
           'MMMM'
@@ -265,7 +265,9 @@ router.get('/monthlyExpenses/:userId', async (request, response) => {
     };
 
     sales.map((sale) => {
-      if (year > yearMinusYear && year < yearPlusYear) {
+      const saleYear = getYear(parse(sale.date, 'dd/MM/yyyy', Date.now()));
+
+      if (saleYear > yearMinusYear && saleYear < yearPlusYear) {
         const month = format(
           parse(sale.date, 'dd/MM/yyyy', Date.now()),
           'MMMM'
@@ -328,7 +330,9 @@ router.get('/monthlySales/:userId', async (request, response) => {
     };
 
     sales.map((sale) => {
-      if (year > yearMinusYear && year < yearPlusYear) {
+      const saleYear = getYear(parse(sale.date, 'dd/MM/yyyy', Date.now()));
+
+      if (saleYear > yearMinusYear && saleYear < yearPlusYear) {
         const month = format(
           parse(sale.date, 'dd/MM/yyyy', Date.now()),
           'MMMM'
@@ -495,31 +499,37 @@ router.get('/monthsHarvests/:userId', async (request, response) => {
     };
 
     harvests.map((harvest) => {
-      if (
-        month === format(parse(harvest.date, 'dd/MM/yyyy', Date.now()), 'MMMM')
-      )
-        harvest.produce.map((produce) => {
-          if (produceWeights[produce.produceType]) {
-            produceWeights[produce.produceType] =
-              produceWeights[produce.produceType] + parseFloat(produce.weight);
-          } else {
-            produceWeights[produce.produceType] = parseFloat(produce.weight);
-          }
+      const saleYear = getYear(parse(sale.date, 'dd/MM/yyyy', Date.now()));
 
-          if (produceYields[produce.produceType]) {
-            produceYields[produce.produceType] =
-              produceYields[produce.produceType] + parseFloat(produce.yield);
-          } else {
-            produceYields[produce.produceType] = parseFloat(produce.yield);
-          }
+      if (saleYear > yearMinusYear && saleYear < yearPlusYear) {
+        if (
+          month ===
+          format(parse(harvest.date, 'dd/MM/yyyy', Date.now()), 'MMMM')
+        )
+          harvest.produce.map((produce) => {
+            if (produceWeights[produce.produceType]) {
+              produceWeights[produce.produceType] =
+                produceWeights[produce.produceType] +
+                parseFloat(produce.weight);
+            } else {
+              produceWeights[produce.produceType] = parseFloat(produce.weight);
+            }
 
-          if (produceCounts[produce.produceType]) {
-            produceCounts[produce.produceType] =
-              produceCounts[produce.produceType] + parseFloat(produce.count);
-          } else {
-            produceCounts[produce.produceType] = parseFloat(produce.count);
-          }
-        });
+            if (produceYields[produce.produceType]) {
+              produceYields[produce.produceType] =
+                produceYields[produce.produceType] + parseFloat(produce.yield);
+            } else {
+              produceYields[produce.produceType] = parseFloat(produce.yield);
+            }
+
+            if (produceCounts[produce.produceType]) {
+              produceCounts[produce.produceType] =
+                produceCounts[produce.produceType] + parseFloat(produce.count);
+            } else {
+              produceCounts[produce.produceType] = parseFloat(produce.count);
+            }
+          });
+      }
     });
 
     return response
