@@ -5,11 +5,13 @@ import Pager from "../../components/pager";
 import useState from "../../hooks/state";
 import AddHarvestModal from "../../components/modals/harvests/add";
 import StandardAlert from "../../components/alerts/standard";
+import EditHarvestModal from "../../components/modals/harvests/edit";
 
 const HarvestsPage = () => {
   const [user, setUser] = useState("user");
 
   const [showAdd, setShowAdd] = createSignal(false);
+  const [showEdit, setShowEdit] = createSignal(false);
   const [showDelete, setShowDelete] = createSignal(undefined);
   const [viewingHarvest, setViewingHarvest] = createSignal(undefined);
 
@@ -65,6 +67,17 @@ const HarvestsPage = () => {
         <AddHarvestModal
           added={() => fetchHarvests()}
           closed={() => setShowAdd(false)}
+        />
+      )}
+
+      {showEdit() && (
+        <EditHarvestModal
+          data={showEdit()}
+          edited={() => {
+            setShowEdit(undefined);
+            fetchHarvests();
+          }}
+          closed={() => setShowEdit(undefined)}
         />
       )}
 
@@ -126,8 +139,8 @@ const HarvestsPage = () => {
                       </td>
                       <td class="p-1 whitespace-nowrap">
                         <div class="flex w-24 h-full items-center space-x-2">
-                          {/* <div
-                            onClick={() => setViewingHarvest(harvest._id)}
+                          <div
+                            onClick={() => setShowEdit(harvest)}
                             class="hidden group-hover:flex group-hover:flex-col items-center justify-center group-hover:animate-fade-in p-2 rounded-full hover:bg-lime-200 cursor-pointer"
                           >
                             <svg
@@ -141,15 +154,10 @@ const HarvestsPage = () => {
                               <path
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
-                                d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-                              />
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
                               />
                             </svg>
-                          </div> */}
+                          </div>
                           <div
                             onClick={() => setShowDelete(harvest)}
                             class="hidden group-hover:flex group-hover:flex-col items-center justify-center group-hover:animate-fade-in p-2 rounded-full hover:bg-red-200 cursor-pointer"

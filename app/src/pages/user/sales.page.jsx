@@ -5,11 +5,13 @@ import Pager from "../../components/pager";
 import useState from "../../hooks/state";
 import AddSaleModal from "../../components/modals/sales/add";
 import StandardAlert from "../../components/alerts/standard";
+import EditSaleModal from "../../components/modals/sales/edit";
 
 const SalesPage = () => {
   const [user, setUser] = useState("user");
 
   const [showAdd, setShowAdd] = createSignal(false);
+  const [showEdit, setShowEdit] = createSignal(false);
   const [showDelete, setShowDelete] = createSignal(undefined);
   const [viewingSale, setViewingSale] = createSignal(undefined);
 
@@ -68,6 +70,17 @@ const SalesPage = () => {
         />
       )}
 
+      {showEdit() && (
+        <EditSaleModal
+          data={showEdit()}
+          edited={() => {
+            setShowEdit(undefined);
+            fetchSales();
+          }}
+          closed={() => setShowEdit(undefined)}
+        />
+      )}
+
       {showDelete() !== undefined && (
         <StandardAlert
           content={"Are you sure you want to delete this sale?"}
@@ -122,14 +135,26 @@ const SalesPage = () => {
                       <td class="flex items-center space-x-2 p-3 whitespace-nowrap">
                         {sale.date}
                       </td>
-                      <td class="p-3 whitespace-nowrap">
-                        {sale.products.length}
-                      </td>
-                      <td class="p-3 whitespace-nowrap">R {sale.profit}</td>
+                      {!sale.income && (
+                        <td class="p-3 whitespace-nowrap">
+                          {sale.products.length}
+                        </td>
+                      )}
+                      {!sale.income && (
+                        <td class="p-3 whitespace-nowrap">R {sale.profit}</td>
+                      )}
+                      {sale.income && (
+                        <td class="p-3 whitespace-nowrap">
+                          <strong>Income:</strong>
+                        </td>
+                      )}
+                      {sale.income && (
+                        <td class="p-3 whitespace-nowrap">R {sale.income}</td>
+                      )}
                       <td class="p-1">
                         <div class="flex w-24 h-full items-center space-x-2">
-                          {/* <div
-                            onClick={() => setViewingSale(sale._id)}
+                          <div
+                            onClick={() => setShowEdit(sale)}
                             class="hidden group-hover:flex group-hover:flex-col items-center justify-center group-hover:animate-fade-in p-2 rounded-full hover:bg-lime-200 cursor-pointer"
                           >
                             <svg
@@ -143,15 +168,10 @@ const SalesPage = () => {
                               <path
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
-                                d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-                              />
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
                               />
                             </svg>
-                          </div> */}
+                          </div>
                           <div
                             onClick={() => setShowDelete(sale)}
                             class="hidden group-hover:flex group-hover:flex-col items-center justify-center group-hover:animate-fade-in p-2 rounded-full hover:bg-red-200 cursor-pointer"
