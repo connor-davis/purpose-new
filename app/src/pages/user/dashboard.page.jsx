@@ -21,6 +21,7 @@ const DashboardPage = () => {
   const [totalProfit, setTotalProfit] = createSignal(0);
   const [totalExpenses, setTotalExpenses] = createSignal(0);
   const [totalSales, setTotalSales] = createSignal(0);
+  const [totalIncome, setTotalIncome] = createSignal(0);
 
   const [profit, setProfit] = createSignal([]);
   const [expenses, setExpenses] = createSignal([]);
@@ -94,6 +95,7 @@ const DashboardPage = () => {
       setTotalProfit(response.data.totalProfit);
       setTotalExpenses(response.data.totalExpenses);
       setTotalSales(response.data.totalSales);
+      setTotalIncome(response.data.totalIncome);
 
       return true;
     } else return setLoading(false);

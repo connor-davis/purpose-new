@@ -479,10 +479,19 @@ router.get('/financeTotals/:userId', async (request, response) => {
             .reduce((partial, num) => partial + num, 0)
       )
       .reduce((partial, num) => partial + num, 0);
+    const totalIncome = sales
+      .map(
+        (sale) =>
+          sale.income &&
+          getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) > yearMinusYear &&
+          getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) < yearPlusYear &&
+          parseFloat(sale.income)
+      )
+      .reduce((partial, num) => partial + num, 0);
 
     return response
       .status(200)
-      .json({ totalProfit, totalExpenses, totalSales });
+      .json({ totalProfit, totalExpenses, totalSales, totalIncome });
   } catch (error) {
     return response
       .status(500)
