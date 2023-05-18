@@ -186,7 +186,7 @@ router.get('/monthlyProfit/:userId', async (request, response) => {
             user: { $eq: userId },
             income: { $eq: undefined },
           }
-        : {}
+        : { income: { $eq: undefined } }
     );
 
     let monthlyProfit = {
@@ -250,7 +250,7 @@ router.get('/monthlyExpenses/:userId', async (request, response) => {
             user: { $eq: userId },
             income: { $eq: undefined },
           }
-        : {}
+        : { income: { $eq: undefined } }
     );
 
     let monthlyExpenses = {
@@ -316,7 +316,7 @@ router.get('/monthlySales/:userId', async (request, response) => {
             user: { $eq: userId },
             income: { $eq: undefined },
           }
-        : {}
+        : { income: { $eq: undefined } }
     );
 
     let monthlySales = {
@@ -382,7 +382,7 @@ router.get('/monthlyIncome/:userId', async (request, response) => {
             user: { $eq: userId },
             income: { $ne: undefined },
           }
-        : {}
+        : { income: { $ne: undefined } }
     );
 
     let monthlyIncome = {
@@ -446,8 +446,9 @@ router.get('/financeTotals/:userId', async (request, response) => {
       userId !== 'all'
         ? {
             user: { $eq: userId },
+            income: { $eq: undefined },
           }
-        : {}
+        : { income: { $eq: undefined } }
     ).populate('products', '_id');
 
     const totalProfit = sales
