@@ -240,7 +240,13 @@ const exportAllData = async (request, response, next) => {
 
   // Products
 
-  const products = await ProductModel.find().populate('user', 'email');
+  const products = await ProductModel.find(
+    userId !== 'all'
+      ? {
+          user: { $eq: userId },
+        }
+      : {}
+  ).populate('user', 'email');
 
   products.forEach((product) =>
     productsSheet.addRow({
@@ -253,7 +259,13 @@ const exportAllData = async (request, response, next) => {
 
   // Sales
 
-  const sales = await SaleModel.find().populate('user', 'email');
+  const sales = await SaleModel.find(
+    userId !== 'all'
+      ? {
+          user: { $eq: userId },
+        }
+      : {}
+  ).populate('user', 'email');
 
   sales.forEach(async (sale) =>
     salesSheet.addRow({
@@ -267,7 +279,13 @@ const exportAllData = async (request, response, next) => {
 
   // Harvests
 
-  const harvests = await HarvestModel.find().populate('user', 'email');
+  const harvests = await HarvestModel.find(
+    userId !== 'all'
+      ? {
+          user: { $eq: userId },
+        }
+      : {}
+  ).populate('user', 'email');
 
   harvests.forEach((harvest) =>
     harvestsSheet.addRow({

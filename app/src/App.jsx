@@ -26,6 +26,7 @@ import axios from "axios";
 import apiUrl from "./apiUrl";
 import AdminExportPage from "./pages/admin/export.page";
 import ForgotPasswordPage from "./pages/authentication/forgotPassword.page";
+import ExportPage from "./pages/user/export.page";
 
 const App = () => {
   const navigate = useNavigate("/");
@@ -208,6 +209,11 @@ const App = () => {
                 user.data.userType !== "admin" &&
                 user.data.completedProfile && (
                   <Route path="/surveys" element={SurveysPage} />
+                )}
+              {user.authenticated &&
+                user.data.userType !== "admin" &&
+                user.data.completedProfile && (
+                  <Route path="/export" element={ExportPage} />
                 )}
               {user.authenticated &&
                 user.data.userType !== "admin" &&
