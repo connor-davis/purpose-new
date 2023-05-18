@@ -450,6 +450,10 @@ router.get('/financeTotals/:userId', async (request, response) => {
         : {}
     );
 
+    sales.map((sale) => {
+      console.log(sale.income);
+    });
+
     const totalProfit = sales
       .map(
         (sale) =>
