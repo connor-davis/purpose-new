@@ -3,6 +3,6 @@ const adminRoute = require('../../utils/adminRoute');
 const { exportHarvests } = require('../../utils/export');
 const router = Router();
 
-router.get('/', adminRoute, exportHarvests);
+router.get('/:userId', exportHarvests);
 
 module.exports = router;

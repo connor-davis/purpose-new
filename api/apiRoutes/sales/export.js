@@ -3,6 +3,6 @@ const adminRoute = require('../../utils/adminRoute');
 const { exportSales } = require('../../utils/export');
 const router = Router();
 
-router.get('/', adminRoute, exportSales);
+router.get('/:userId', exportSales);
 
 module.exports = router;
