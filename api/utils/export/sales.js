@@ -6,6 +6,7 @@ const { v4 } = require('uuid');
 const SaleModel = require('../../models/sale');
 
 const exportSales = async (request, response, next) => {
+  const userId = request.params.userId || 'all';
   const fileName = request.query.fileName
     ? request.query.fileName + '.xlsx'
     : 'sales.data.' + moment(Date.now()).format('DD-MM-YYYY') + '.xlsx';
@@ -25,6 +26,7 @@ const exportSales = async (request, response, next) => {
     { header: 'Date', key: 'date' },
     { header: 'Products Sold', key: 'products' },
     { header: 'Profit (R)', key: 'profit' },
+    { header: 'Income (R)', key: 'income' },
     { header: 'User', key: 'user' },
   ];
 
@@ -58,16 +60,20 @@ const exportSales = async (request, response, next) => {
     color: { argb: '#FFFFFF' },
   };
 
-  const sales = await SaleModel.find({ userType: { $ne: 'admin' } }).populate(
-    'user',
-    'email'
-  );
+  const sales = await SaleModel.find(
+    userId !== 'all'
+      ? {
+          user: { $eq: userId },
+        }
+      : {}
+  ).populate('user', 'email');
 
   sales.forEach((sale) => {
     salesSheet.addRow({
       date: sale.date,
-      products: sale.products.length,
-      profit: sale.profit,
+      products: sale.products.length || '',
+      profit: sale.profit || 'Income:',
+      income: sale.income,
       user: sale.user.email,
     });
   });

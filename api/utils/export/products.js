@@ -4,6 +4,7 @@ let moment = require('moment');
 const ProductModel = require('../../models/product');
 
 const exportProducts = async (request, response, next) => {
+  const userId = request.params.userId || 'all';
   const fileName = request.query.fileName
     ? request.query.fileName + '.xlsx'
     : 'products.data.' + moment(Date.now()).format('DD-MM-YYYY') + '.xlsx';
@@ -56,9 +57,13 @@ const exportProducts = async (request, response, next) => {
     color: { argb: '#FFFFFF' },
   };
 
-  const products = await ProductModel.find({
-    userType: { $ne: 'admin' },
-  }).populate('user', 'email');
+  const products = await ProductModel.find(
+    userId !== 'all'
+      ? {
+          user: { $eq: userId },
+        }
+      : {}
+  ).populate('user', 'email');
 
   products.forEach((product) => {
     productsSheet.addRow({

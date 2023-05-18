@@ -4,6 +4,7 @@ let moment = require('moment');
 const HarvestModel = require('../../models/harvest');
 
 const exportHarvests = async (request, response, next) => {
+  const userId = request.params.userId || 'all';
   const fileName = request.query.fileName
     ? request.query.fileName + '.xlsx'
     : 'harvests.data.' + moment(Date.now()).format('DD-MM-YYYY') + '.xlsx';
@@ -55,9 +56,13 @@ const exportHarvests = async (request, response, next) => {
     color: { argb: '#FFFFFF' },
   };
 
-  const harvests = await HarvestModel.find({
-    userType: { $ne: 'admin' },
-  }).populate('user', 'email');
+  const harvests = await HarvestModel.find(
+    userId !== 'all'
+      ? {
+          user: { $eq: userId },
+        }
+      : {}
+  ).populate('user', 'email');
 
   harvests.forEach((harvest) => {
     harvestsSheet.addRow({
