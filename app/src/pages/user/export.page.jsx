@@ -5,7 +5,7 @@ import axios from "axios";
 import apiUrl from "../../apiUrl";
 import { saveAs } from "file-saver";
 
-const AdminExportPage = () => {
+const ExportPage = () => {
   const [user, setUser] = useState("user");
 
   const [successMessage, setSuccessMessage] = createSignal(undefined);
@@ -18,7 +18,7 @@ const AdminExportPage = () => {
     setSuccessMessage(undefined);
     setErrorMessage(undefined);
 
-    let url = apiUrl + "export/" + exportType() + "/all";
+    let url = apiUrl + "export/" + exportType() + "/" + user.data._id;
 
     if (fileName()) url = url + "?fileName=" + fileName();
 
@@ -86,7 +86,6 @@ const AdminExportPage = () => {
                 defaultItem={exportType()}
                 items={[
                   "all",
-                  "users",
                   "products",
                   "sales",
                   "harvests",
@@ -107,4 +106,4 @@ const AdminExportPage = () => {
   );
 };
 
-export default AdminExportPage;
+export default ExportPage;
