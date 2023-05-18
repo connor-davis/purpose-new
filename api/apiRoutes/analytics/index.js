@@ -446,14 +446,14 @@ router.get('/financeTotals/:userId', async (request, response) => {
       userId !== 'all'
         ? {
             user: { $eq: userId },
-            income: { $eq: undefined },
           }
-        : { income: { $eq: undefined } }
-    ).populate('products', '_id');
+        : {}
+    );
 
     const totalProfit = sales
       .map(
         (sale) =>
+          !sale.income &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) > yearMinusYear &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) < yearPlusYear &&
           parseFloat(sale.profit)
@@ -462,6 +462,7 @@ router.get('/financeTotals/:userId', async (request, response) => {
     const totalExpenses = sales
       .map(
         (sale) =>
+          !sale.income &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) > yearMinusYear &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) < yearPlusYear &&
           sale.products
@@ -472,6 +473,7 @@ router.get('/financeTotals/:userId', async (request, response) => {
     const totalSales = sales
       .map(
         (sale) =>
+          !sale.income &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) > yearMinusYear &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) < yearPlusYear &&
           sale.products
