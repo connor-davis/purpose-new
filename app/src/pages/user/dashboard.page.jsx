@@ -244,7 +244,7 @@ const DashboardPage = () => {
     <div class="flex flex-col space-y-3 p-3 w-full h-full overflow-y-auto">
       <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full md:h-1/4">
         {!loading() ? (
-          <div class="w-full md:w-1/3 h-full bg-lime-400 rounded-lg p-3">
+          <div class="w-full md:w-1/4 h-full bg-lime-400 rounded-lg p-3">
             <div class="flex flex-col w-full h-full md:items-center justify-center">
               <div class="flex flex-col">
                 <div class="font-bold w-full text-2xl md:text-4xl cookie">
@@ -255,12 +255,12 @@ const DashboardPage = () => {
             </div>
           </div>
         ) : (
-          <div class="w-full md:w-1/3 h-full bg-white rounded-lg p-3">
+          <div class="w-full md:w-1/4 h-full bg-white rounded-lg p-3">
             <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
           </div>
         )}
         {!loading() ? (
-          <div class="w-full md:w-1/3 h-full bg-lime-400 rounded-lg p-3">
+          <div class="w-full md:w-1/4 h-full bg-lime-400 rounded-lg p-3">
             <div class="flex flex-col w-full h-full md:items-center justify-center">
               <div class="flex flex-col">
                 <div class="font-bold w-full text-2xl md:text-4xl cookie">
@@ -271,12 +271,12 @@ const DashboardPage = () => {
             </div>
           </div>
         ) : (
-          <div class="w-full md:w-1/3 h-full bg-white rounded-lg p-3">
+          <div class="w-full md:w-1/4 h-full bg-white rounded-lg p-3">
             <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
           </div>
         )}
         {!loading() ? (
-          <div class="w-full md:w-1/3 h-full bg-lime-400 rounded-lg p-3">
+          <div class="w-full md:w-1/4 h-full bg-lime-400 rounded-lg p-3">
             <div class="flex flex-col w-full h-full md:items-center justify-center">
               <div class="flex flex-col">
                 <div class="font-bold w-full text-2xl md:text-4xl cookie">
@@ -287,7 +287,23 @@ const DashboardPage = () => {
             </div>
           </div>
         ) : (
-          <div class="w-full md:w-1/3 h-full bg-white rounded-lg p-3">
+          <div class="w-full md:w-1/4 h-full bg-white rounded-lg p-3">
+            <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
+          </div>
+        )}
+        {!loading() ? (
+          <div class="w-full md:w-1/4 h-full bg-lime-400 rounded-lg p-3">
+            <div class="flex flex-col w-full h-full md:items-center justify-center">
+              <div class="flex flex-col">
+                <div class="font-bold w-full text-2xl md:text-4xl cookie">
+                  Total Income
+                </div>
+                <div class="font-medium md:text-xl">R {totalIncome()}</div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div class="w-full md:w-1/4 h-full bg-white rounded-lg p-3">
             <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
           </div>
         )}
