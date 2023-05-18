@@ -495,6 +495,8 @@ router.get('/financeTotals/:userId', async (request, response) => {
       )
       .reduce((partial, num) => partial + num, 0);
 
+    console.log(totalIncome);
+
     return response
       .status(200)
       .json({ totalProfit, totalExpenses, totalSales, totalIncome });
