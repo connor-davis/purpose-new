@@ -450,14 +450,10 @@ router.get('/financeTotals/:userId', async (request, response) => {
         : {}
     );
 
-    sales.map((sale) => {
-      console.log(sale.income);
-    });
-
     const totalProfit = sales
       .map(
         (sale) =>
-          !sale.income &&
+          sale.income == undefined &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) > yearMinusYear &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) < yearPlusYear &&
           parseFloat(sale.profit)
@@ -466,7 +462,7 @@ router.get('/financeTotals/:userId', async (request, response) => {
     const totalExpenses = sales
       .map(
         (sale) =>
-          !sale.income &&
+          sale.income == undefined &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) > yearMinusYear &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) < yearPlusYear &&
           sale.products
@@ -477,7 +473,7 @@ router.get('/financeTotals/:userId', async (request, response) => {
     const totalSales = sales
       .map(
         (sale) =>
-          !sale.income &&
+          sale.income == undefined &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) > yearMinusYear &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) < yearPlusYear &&
           sale.products
@@ -488,7 +484,7 @@ router.get('/financeTotals/:userId', async (request, response) => {
     const totalIncome = sales
       .map(
         (sale) =>
-          sale.income &&
+          sale.income != undefined &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) > yearMinusYear &&
           getYear(parse(sale.date, 'dd/MM/yyyy', Date.now())) < yearPlusYear &&
           parseFloat(sale.income)
