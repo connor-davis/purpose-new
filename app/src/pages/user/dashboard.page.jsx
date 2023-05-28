@@ -3,12 +3,14 @@ import Chart from "../../components/chart/chart";
 import {
   monthlyIncomeOptions,
   monthlySalesOptions,
+  monthlyTrainingOptions,
+  monthlyWasteOptions,
   monthsHarvestsOptions,
 } from "../../components/chart/chartOptions";
 import axios from "axios";
 import apiUrl from "../../apiUrl";
 import useState from "../../hooks/state";
-import { format, getYear } from "date-fns";
+import { format } from "date-fns";
 import SelectMenu from "../../components/selectmenu/selectmenu";
 
 const DashboardPage = () => {
@@ -17,6 +19,31 @@ const DashboardPage = () => {
   const [loading, setLoading] = createSignal(true);
 
   const [totalUsers, setTotalUsers] = createSignal(0);
+
+  const now = new Date().getUTCFullYear();
+  const years = Array(now - (now - 30))
+    .fill("")
+    .map((v, idx) => now - idx);
+  const [selectedYear, setSelectedYear] = createSignal(
+    format(Date.now(), "yyyy")
+  );
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const [selectedMonth, setSelectedMonth] = createSignal(
+    format(Date.now(), "MMMM")
+  );
 
   const [totalProfit, setTotalProfit] = createSignal(0);
   const [totalExpenses, setTotalExpenses] = createSignal(0);
@@ -28,16 +55,18 @@ const DashboardPage = () => {
   const [sales, setSales] = createSignal([]);
   const [income, setIncome] = createSignal([]);
 
+  const [waste, setWaste] = createSignal([]);
+  const [training, setTraining] = createSignal([]);
+
   const [latestSales, setLatestSales] = createSignal([]);
 
   const [monthsHarvests, setMonthsHarvests] = createSignal([]);
-  const [selectedMonth, setSelectedMonth] = createSignal(
-    format(Date.now(), "MMMM")
-  );
 
   const [latestHarvests, setLatestHarvests] = createSignal([]);
 
   onMount(() => {
+    console.log(years);
+
     setTimeout(async () => {
       await loadFinanceTotals();
       await loadProfit();
@@ -47,6 +76,8 @@ const DashboardPage = () => {
       await loadLatestSales();
       await loadMonthsHarvests();
       await loadLatestHarvests();
+      await loadWaste();
+      await loadTraining();
 
       setLoading(false);
     }, 400);
@@ -87,7 +118,11 @@ const DashboardPage = () => {
 
   const loadFinanceTotals = async () => {
     const response = await axios.get(
-      apiUrl + "analytics/financeTotals/" + user.data._id,
+      apiUrl +
+        "analytics/financeTotals/" +
+        user.data._id +
+        "?year=" +
+        selectedYear(),
       { headers: { Authorization: "Bearer " + user.token } }
     );
 
@@ -103,7 +138,11 @@ const DashboardPage = () => {
 
   const loadProfit = async () => {
     const response = await axios.get(
-      apiUrl + "analytics/monthlyProfit/" + user.data._id,
+      apiUrl +
+        "analytics/monthlyProfit/" +
+        user.data._id +
+        "?year=" +
+        selectedYear(),
       {
         headers: { Authorization: "Bearer " + user.token },
       }
@@ -125,7 +164,11 @@ const DashboardPage = () => {
 
   const loadExpenses = async () => {
     const response = await axios.get(
-      apiUrl + "analytics/monthlyExpenses/" + user.data._id,
+      apiUrl +
+        "analytics/monthlyExpenses/" +
+        user.data._id +
+        "?year=" +
+        selectedYear(),
       {
         headers: { Authorization: "Bearer " + user.token },
       }
@@ -149,7 +192,11 @@ const DashboardPage = () => {
 
   const loadSales = async () => {
     const response = await axios.get(
-      apiUrl + "analytics/monthlySales/" + user.data._id,
+      apiUrl +
+        "analytics/monthlySales/" +
+        user.data._id +
+        "?year=" +
+        selectedYear(),
       {
         headers: { Authorization: "Bearer " + user.token },
       }
@@ -171,7 +218,11 @@ const DashboardPage = () => {
 
   const loadIncome = async () => {
     const response = await axios.get(
-      apiUrl + "analytics/monthlyIncome/" + user.data._id,
+      apiUrl +
+        "analytics/monthlyIncome/" +
+        user.data._id +
+        "?year=" +
+        selectedYear(),
       {
         headers: { Authorization: "Bearer " + user.token },
       }
@@ -210,7 +261,7 @@ const DashboardPage = () => {
         "?month=" +
         selectedMonth() +
         "&year=" +
-        getYear(Date.now()),
+        selectedYear(),
       { headers: { Authorization: "Bearer " + user.token } }
     );
 
@@ -229,6 +280,98 @@ const DashboardPage = () => {
     } else setLoading(false);
   };
 
+  const loadWaste = async () => {
+    const response = await axios.get(
+      apiUrl +
+        "analytics/monthlyWaste/" +
+        user.data._id +
+        "?year=" +
+        selectedYear(),
+      { headers: { Authorization: "Bearer " + user.token } }
+    );
+
+    if (response.data) {
+      const months = sortByMonthName(
+        Object.keys(response.data.monthlyFoodWaste)
+      );
+      const foodWasteData = [];
+      const otherWasteData = [];
+
+      for (let i in months) {
+        foodWasteData.push(response.data.monthlyFoodWaste[months[i]]);
+        otherWasteData.push(response.data.monthlyOtherWaste[months[i]]);
+      }
+
+      return setWaste([
+        {
+          name: "Food Waste (kgs)",
+          data: foodWasteData,
+        },
+        {
+          name: "Other Waste (kgs)",
+          data: otherWasteData,
+        },
+      ]);
+    } else setLoading(false);
+  };
+
+  const loadTraining = async () => {
+    const response = await axios.get(
+      apiUrl +
+        "analytics/monthlyTraining/" +
+        user.data._id +
+        "?year=" +
+        selectedYear(),
+      { headers: { Authorization: "Bearer " + user.token } }
+    );
+
+    if (response.data) {
+      const months = sortByMonthName(
+        Object.keys(response.data.monthlyTownshipEconomyTraining)
+      );
+      const townshipEconomyData = [];
+      const ecdBusinessData = [];
+      const ecdItData = [];
+      const agriData = [];
+      const otherData = [];
+
+      for (let i in months) {
+        townshipEconomyData.push(
+          response.data.monthlyTownshipEconomyTraining[months[i]]
+        );
+        ecdBusinessData.push(
+          response.data.monthlyEcdBusinessTraining[months[i]]
+        );
+        ecdItData.push(response.data.monthlyEcdItTraining[months[i]]);
+        agriData.push(response.data.monthlyAgriTraining[months[i]]);
+        otherData.push(response.data.monthlyOtherTraining[months[i]]);
+      }
+
+      return setTraining([
+        {
+          name: "Township Economy",
+          data: townshipEconomyData,
+        },
+        {
+          name: "ECD Business",
+          data: ecdBusinessData,
+        },
+        {
+          name: "ECD IT",
+          data: ecdItData,
+        },
+        {
+          name: "Agri",
+          data: agriData,
+        },
+        {
+          name: "Other",
+          data: otherData,
+        },
+      ]);
+    } else setLoading(false);
+  };
+
   const loadLatestHarvests = async () => {
     const response = await axios.get(
       apiUrl + "analytics/latestHarvests/" + user.data._id,
@@ -242,6 +385,64 @@ const DashboardPage = () => {
 
   return (
     <div class="flex flex-col space-y-3 p-3 w-full h-full overflow-y-auto">
+      <div class="flex items-center justify-end space-x-3">
+        <SelectMenu
+          defaultItem={selectedMonth()}
+          items={months}
+          selectionChanged={async (month) => {
+            setTotalProfit(undefined);
+            setTotalExpenses(undefined);
+            setTotalSales(undefined);
+            setTotalIncome(undefined);
+            setProfit([]);
+            setExpenses([]);
+            setSales([]);
+            setIncome([]);
+            setMonthsHarvests([]);
+            setWaste([]);
+            setTraining([]);
+
+            setSelectedMonth(month);
+
+            await loadFinanceTotals();
+            await loadIncome();
+            await loadProfit();
+            await loadExpenses();
+            await loadSales();
+            await loadMonthsHarvests();
+            await loadWaste();
+            await loadTraining();
+          }}
+        />
+        <SelectMenu
+          defaultItem={selectedYear()}
+          items={years.map((year) => `${year}`)}
+          selectionChanged={async (year) => {
+            setTotalProfit(undefined);
+            setTotalExpenses(undefined);
+            setTotalSales(undefined);
+            setTotalIncome(undefined);
+            setProfit([]);
+            setExpenses([]);
+            setSales([]);
+            setIncome([]);
+            setMonthsHarvests([]);
+            setWaste([]);
+            setTraining([]);
+
+            setSelectedYear(year);
+
+            await loadFinanceTotals();
+            await loadIncome();
+            await loadProfit();
+            await loadExpenses();
+            await loadSales();
+            await loadMonthsHarvests();
+            await loadWaste();
+            await loadTraining();
+          }}
+        />
+      </div>
       <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full md:h-1/4">
         {!loading() ? (
           <div class="w-full md:w-1/4 h-full bg-lime-400 rounded-lg p-3">
@@ -308,9 +509,9 @@ const DashboardPage = () => {
           </div>
         )}
       </div>
-      <div class="flex flex-col space-y-3 w-full h-full">
-        <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full md:h-1/2">
-          <div class="w-full h-[300px] md:h-full bg-white rounded-lg p-3">
+      <div class="flex flex-col space-y-3 w-full">
+        <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full">
+          <div class="w-full h-[300px] bg-white rounded-lg p-3">
             {!loading() ? (
               profit().length > 1 &&
               expenses().length > 1 &&
@@ -342,7 +543,7 @@ const DashboardPage = () => {
               <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
             )}
           </div>
-          <div class="w-full h-[300px] md:h-full bg-white rounded-lg p-3">
+          <div class="w-full h-[300px] bg-white rounded-lg p-3">
             {!loading() ? (
               income().length > 1 ? (
                 <Chart
@@ -368,7 +569,7 @@ const DashboardPage = () => {
               <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
             )}
           </div>
-          <div class="w-full h-[300px] md:h-full bg-white rounded-lg p-3">
+          <div class="w-full h-[300px] bg-white rounded-lg p-3">
             {!loading() ? (
               latestSales().length > 0 ? (
                 <div class="flex flex-col w-full h-full overflow-y-auto overflow-x-auto">
@@ -416,36 +617,8 @@ const DashboardPage = () => {
             )}
           </div>
         </div>
-        <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full md:h-1/2">
-          <div class="w-full h-[300px] md:h-full bg-white rounded-lg p-3 pb-6">
-            {!loading() && (
-              <div class="flex justify-end">
-                <div class="min-w-[200px]">
-                  <SelectMenu
-                    defaultItem={selectedMonth()}
-                    items={[
-                      "January",
-                      "February",
-                      "March",
-                      "April",
-                      "May",
-                      "June",
-                      "July",
-                      "August",
-                      "September",
-                      "October",
-                      "November",
-                      "December",
-                    ]}
-                    selectionChanged={(item) => {
-                      setMonthsHarvests([]);
-                      setSelectedMonth(item);
-                      loadMonthsHarvests();
-                    }}
-                  />
-                </div>
-              </div>
-            )}
+        <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full">
+          <div class="w-full h-[300px] bg-white rounded-lg p-3 pb-6">
             {!loading() ? (
               monthsHarvests().length > 0 ? (
                 <Chart
@@ -471,7 +644,7 @@ const DashboardPage = () => {
               <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
             )}
           </div>
-          <div class="w-full h-[300px] md:h-full bg-white rounded-lg p-3">
+          <div class="w-full h-[300px] bg-white rounded-lg p-3">
             {!loading() ? (
               latestHarvests().length > 0 ? (
                 <div class="flex flex-col w-full h-full overflow-y-auto overflow-x-auto">
@@ -503,6 +676,60 @@ const DashboardPage = () => {
                   <div class="flex flex-col">
                     <div class="font-bold w-full text-4xl cookie">
                       Latest Harvests
+                    </div>
+                    <div class="font-medium text-xl">
+                      There is no data to display.
+                    </div>
+                  </div>
+                </div>
+              )
+            ) : (
+              <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
+            )}
+          </div>
+        </div>
+        <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full">
+          <div class="w-full h-[300px] bg-white rounded-lg p-3">
+            {!loading() ? (
+              waste().length > 1 ? (
+                <Chart
+                  id="monthlyWaste"
+                  options={{
+                    ...monthlyWasteOptions,
+                    series: waste(),
+                  }}
+                />
+              ) : (
+                <div class="flex flex-col w-full h-full items-center justify-center">
+                  <div class="flex flex-col">
+                    <div class="font-bold w-full text-4xl cookie">
+                      Monthly Waste
+                    </div>
+                    <div class="font-medium text-xl">
+                      There is no data to display.
+                    </div>
+                  </div>
+                </div>
+              )
+            ) : (
+              <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
+            )}
+          </div>
+          <div class="w-full h-[300px] bg-white rounded-lg p-3">
+            {!loading() ? (
+              training().length > 1 ? (
+                <Chart
+                  id="monthlyTraining"
+                  options={{
+                    ...monthlyTrainingOptions,
+                    series: training(),
+                  }}
+                />
+              ) : (
+                <div class="flex flex-col w-full h-full items-center justify-center">
+                  <div class="flex flex-col">
+                    <div class="font-bold w-full text-4xl cookie">
+                      Monthly Training
                     </div>
                     <div class="font-medium text-xl">
                       There is no data to display.

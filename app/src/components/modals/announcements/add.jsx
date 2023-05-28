@@ -96,7 +96,7 @@ const AddAnnouncementModal = ({ added = () => {}, closed = () => {} }) => {
               placeholder="Title"
               value={announcementTitle() || ""}
               onChange={(event) => setAnnouncementTitle(event.target.value)}
-              class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+              class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-200 rounded outline-none"
               required
             />
             <div class="text-neutral-400">Give your announcement a title.</div>
@@ -110,7 +110,7 @@ const AddAnnouncementModal = ({ added = () => {}, closed = () => {} }) => {
               placeholder="Message"
               value={announcementMessage() || ""}
               onChange={(event) => setAnnouncementMessage(event.target.value)}
-              class="px-3 py-2 w-full h-auto max-h-64 overflow-y-auto bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+              class="px-3 py-2 w-full h-auto max-h-64 overflow-y-auto bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-200 rounded outline-none"
               rows={6}
               required
             ></textarea>

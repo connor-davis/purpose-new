@@ -387,7 +387,7 @@ const AddSurveyModal = ({ added = () => {}, closed = () => {} }) => {
               placeholder="Message"
               value={announcementMessage() || ""}
               onChange={(event) => setAnnouncementMessage(event.target.value)}
-              class="px-3 py-2 w-full h-auto max-h-64 overflow-y-auto bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+              class="px-3 py-2 w-full h-auto max-h-64 overflow-y-auto bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-200 rounded outline-none"
               rows={6}
               required
             ></textarea>

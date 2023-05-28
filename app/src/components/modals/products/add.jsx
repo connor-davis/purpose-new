@@ -176,7 +176,7 @@ const AddProductModal = ({ added = () => {}, closed = () => {} }) => {
               placeholder="Product Name"
               value={productName() || ""}
               onChange={(event) => setProductName(event.target.value)}
-              class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+              class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-200 rounded outline-none"
               required
             />
             <div class="text-neutral-400">
@@ -193,7 +193,7 @@ const AddProductModal = ({ added = () => {}, closed = () => {} }) => {
               placeholder="Product Cost"
               value={productCost() || ""}
               onChange={(event) => setProductCost(event.target.value)}
-              class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+              class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-200 rounded outline-none"
               required
             />
             <div class="text-neutral-400">
@@ -210,7 +210,7 @@ const AddProductModal = ({ added = () => {}, closed = () => {} }) => {
               placeholder="Product Price"
               value={productPrice() || ""}
               onChange={(event) => setProductPrice(event.target.value)}
-              class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+              class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-200 rounded outline-none"
               required
             />
             <div class="text-neutral-400">

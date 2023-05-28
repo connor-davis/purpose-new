@@ -47,9 +47,19 @@ router.use(
   require('./products')
 );
 router.use(
+  '/waste',
+  passport.authenticate('jwt', { session: false }),
+  require('./waste')
+);
+router.use(
   '/harvests',
   passport.authenticate('jwt', { session: false }),
   require('./harvests')
+);
+router.use(
+  '/training',
+  passport.authenticate('jwt', { session: false }),
+  require('./training')
 );
 router.use(
   '/analytics',
@@ -85,6 +95,16 @@ router.use(
   '/export/products',
   passport.authenticate('jwt', { session: false }),
   require('./products/export')
+);
+router.use(
+  '/export/waste',
+  passport.authenticate('jwt', { session: false }),
+  require('./waste/export')
+);
+router.use(
+  '/export/training',
+  passport.authenticate('jwt', { session: false }),
+  require('./training/export')
 );
 router.use(
   '/export/sales',

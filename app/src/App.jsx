@@ -27,6 +27,8 @@ import apiUrl from "./apiUrl";
 import AdminExportPage from "./pages/admin/export.page";
 import ForgotPasswordPage from "./pages/authentication/forgotPassword.page";
 import ExportPage from "./pages/user/export.page";
+import WastePage from "./pages/user/waste.page";
+import TrainingPage from "./pages/user/training.page";
 
 const App = () => {
   const navigate = useNavigate("/");
@@ -183,12 +185,22 @@ const App = () => {
               {user.authenticated &&
                 user.data.userType !== "admin" &&
                 user.data.completedProfile && (
+                  <Route path="/waste" element={WastePage} />
+                )}
+              {user.authenticated &&
+                user.data.userType !== "admin" &&
+                user.data.completedProfile && (
                   <Route path="/sales" element={SalesPage} />
                 )}
               {user.authenticated &&
                 user.data.userType !== "admin" &&
                 user.data.completedProfile && (
                   <Route path="/harvests" element={HarvestsPage} />
+                )}
+              {user.authenticated &&
+                user.data.userType !== "admin" &&
+                user.data.completedProfile && (
+                  <Route path="/training" element={TrainingPage} />
                 )}
               {user.authenticated &&
                 user.data.userType !== "admin" &&

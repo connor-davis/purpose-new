@@ -171,7 +171,7 @@ const HarvestProduceModal = ({
                         />
                       </div>
                       <input
-                        class="px-3 min-w-[140px] py-2 w-full bg-neutral-200 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+                        class="px-3 min-w-[140px] py-2 w-full bg-neutral-200 text-black border-l border-t border-r border-b border-neutral-200 rounded outline-none"
                         value={produceItem.count}
                         onChange={(event) => {
                           setProduce(
@@ -191,7 +191,7 @@ const HarvestProduceModal = ({
                         placeholder="Number"
                       />
                       <input
-                        class="px-3 min-w-[140px] py-2 w-full bg-neutral-200 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+                        class="px-3 min-w-[140px] py-2 w-full bg-neutral-200 text-black border-l border-t border-r border-b border-neutral-200 rounded outline-none"
                         value={produceItem.weight}
                         onChange={(event) => {
                           setProduce(
@@ -211,7 +211,7 @@ const HarvestProduceModal = ({
                         placeholder="Weight"
                       />
                       <input
-                        class="px-3 min-w-[140px] py-2 w-full bg-neutral-200 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+                        class="px-3 min-w-[140px] py-2 w-full bg-neutral-200 text-black border-l border-t border-r border-b border-neutral-200 rounded outline-none"
                         value={produceItem.yield}
                         onChange={(event) => {
                           setProduce(

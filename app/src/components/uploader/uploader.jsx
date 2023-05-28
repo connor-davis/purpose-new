@@ -98,7 +98,7 @@ const Uploader = ({
 
           <div
             id="progress-bar"
-            class="w-[366px] h-[6px] bg-neutral-700 rounded"
+            class="w-[366px] h-[6px] bg-neutral-700 rounded self-center"
           >
             <div
               class="h-full bg-lime-400 rounded"

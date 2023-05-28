@@ -11,6 +11,8 @@ const exportUsers = require('./users');
 const exportProducts = require('./products');
 const exportSales = require('./sales');
 const exportHarvests = require('./harvests');
+const exportWaste = require("./waste");
+const exportTraining = require("./training");
 
 const exportAllData = async (request, response, next) => {
   const userId = request.params.userId || 'all';
@@ -331,4 +333,6 @@ module.exports = {
   exportProducts,
   exportSales,
   exportHarvests,
+  exportWaste,
+  exportTraining
 };

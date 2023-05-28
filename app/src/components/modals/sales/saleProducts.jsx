@@ -153,7 +153,7 @@ const SaleProductsModal = ({
                           <td class="p-3">R {product.price}</td>
                           <td class="p-3">
                             <input
-                              class="px-3 min-w-[140px] py-2 w-full bg-neutral-200 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+                              class="px-3 min-w-[140px] py-2 w-full bg-neutral-200 text-black border-l border-t border-r border-b border-neutral-200 rounded outline-none"
                               value={
                                 metadata.saleProducts
                                   ? metadata.saleProducts[product._id]

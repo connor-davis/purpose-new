@@ -220,16 +220,16 @@ router.get('/monthlyProfit/:userId', async (request, response) => {
           monthlyProfit[month] = monthlyProfit[month] + profit;
         else monthlyProfit[month] = profit;
 
-        monthlyProfit = Object.keys(monthlyProfit)
-          .sort()
-          .reduce((obj, key) => {
-            obj[key] = monthlyProfit[key];
-            return obj;
-          }, {});
-
         return sale;
       } else return sale;
     });
+
+    monthlyProfit = Object.keys(monthlyProfit)
+      .sort()
+      .reduce((obj, key) => {
+        obj[key] = monthlyProfit[key];
+        return obj;
+      }, {});
 
     return response.status(200).json({ monthlyProfit });
   } catch (error) {
@@ -452,19 +452,33 @@ router.get('/monthlyWaste/:userId', async (request, response) => {
         : {}
     );
 
-    let monthlyWaste = {
-      January: {},
-      February: {},
-      March: {},
-      April: {},
-      May: {},
-      June: {},
-      July: {},
-      August: {},
-      September: {},
-      October: {},
-      November: {},
-      December: {},
+    let monthlyFoodWaste = {
+      January: 0,
+      February: 0,
+      March: 0,
+      April: 0,
+      May: 0,
+      June: 0,
+      July: 0,
+      August: 0,
+      September: 0,
+      October: 0,
+      November: 0,
+      December: 0,
+    };
+    let monthlyOtherWaste = {
+      January: 0,
+      February: 0,
+      March: 0,
+      April: 0,
+      May: 0,
+      June: 0,
+      July: 0,
+      August: 0,
+      September: 0,
+      October: 0,
+      November: 0,
+      December: 0,
     };
 
     waste.map((waste) => {
@@ -476,26 +490,38 @@ router.get('/monthlyWaste/:userId', async (request, response) => {
           'MMMM'
         );
 
-        if (monthlyWaste[month]['kgs']) {
-          monthlyWaste[month]['kgs'] += parseFloat(waste.kgs);
-        } else {
-          monthlyWaste[month]['kgs'] = parseFloat(waste.kgs);
-          monthlyWaste[month]['wasteType'] = waste.wasteType;
+        switch (waste.wasteType) {
+          case 'Food Waste': {
+            monthlyFoodWaste[month] =
+              monthlyFoodWaste[month] + parseFloat(waste.kgs);
+
+            break;
+          }
+          default: {
+            monthlyOtherWaste[month] =
+              monthlyOtherWaste[month] + parseFloat(waste.kgs);
+
+            break;
+          }
         }
 
-        monthlyWaste = Object.keys(monthlyWaste)
-          .sort()
-          .reduce((obj, key) => {
-            obj[key] = monthlyWaste[key];
-            return obj;
-          }, {});
-
-        return sale;
-      } else return sale;
+        return waste;
+      } else return waste;
     });
 
-    return response.status(200).json({ monthlyWaste });
+    monthlyFoodWaste = Object.keys(monthlyFoodWaste).reduce((obj, key) => {
+      obj[key] = monthlyFoodWaste[key];
+      return obj;
+    }, {});
+    monthlyOtherWaste = Object.keys(monthlyOtherWaste).reduce((obj, key) => {
+      obj[key] = monthlyOtherWaste[key];
+      return obj;
+    }, {});
+
+    return response.status(200).json({ monthlyFoodWaste, monthlyOtherWaste });
   } catch (error) {
+    console.log(error);
+
     return response
       .status(500)
       .json({ message: 'Failed to retrieve monthly waste.', reason: error });
@@ -517,23 +543,81 @@ router.get('/monthlyTraining/:userId', async (request, response) => {
         : {}
     );
 
-    let monthlyTraining = {
-      January: {},
-      February: {},
-      March: {},
-      April: {},
-      May: {},
-      June: {},
-      July: {},
-      August: {},
-      September: {},
-      October: {},
-      November: {},
-      December: {},
+    let monthlyTownshipEconomyTraining = {
+      January: 0,
+      February: 0,
+      March: 0,
+      April: 0,
+      May: 0,
+      June: 0,
+      July: 0,
+      August: 0,
+      September: 0,
+      October: 0,
+      November: 0,
+      December: 0,
+    };
+    let monthlyEcdBusinessTraining = {
+      January: 0,
+      February: 0,
+      March: 0,
+      April: 0,
+      May: 0,
+      June: 0,
+      July: 0,
+      August: 0,
+      September: 0,
+      October: 0,
+      November: 0,
+      December: 0,
+    };
+    let monthlyEcdItTraining = {
+      January: 0,
+      February: 0,
+      March: 0,
+      April: 0,
+      May: 0,
+      June: 0,
+      July: 0,
+      August: 0,
+      September: 0,
+      October: 0,
+      November: 0,
+      December: 0,
+    };
+    let monthlyAgriTraining = {
+      January: 0,
+      February: 0,
+      March: 0,
+      April: 0,
+      May: 0,
+      June: 0,
+      July: 0,
+      August: 0,
+      September: 0,
+      October: 0,
+      November: 0,
+      December: 0,
+    };
+    let monthlyOtherTraining = {
+      January: 0,
+      February: 0,
+      March: 0,
+      April: 0,
+      May: 0,
+      June: 0,
+      July: 0,
+      August: 0,
+      September: 0,
+      October: 0,
+      November: 0,
+      December: 0,
     };
 
     training.map((training) => {
-      const trainingYear = getYear(parse(training.date, 'dd/MM/yyyy', Date.now()));
+      const trainingYear = getYear(
+        parse(training.date, 'dd/MM/yyyy', Date.now())
+      );
 
       if (trainingYear > yearMinusYear && trainingYear < yearPlusYear) {
         const month = format(
@@ -541,25 +625,42 @@ router.get('/monthlyTraining/:userId', async (request, response) => {
           'MMMM'
         );
 
-        if (monthlyTraining[month]['numberTrained']) {
-          monthlyTraining[month]['numberTrained'] += parseFloat(training.numberTrained);
-        } else {
-          monthlyTraining[month]['numberTrained'] = parseFloat(training.numberTrained);
-          monthlyTraining[month]['trainingType'] = training.trainingType;
+        switch (training.trainingType) {
+          case 'Township Economy': {
+            monthlyTownshipEconomyTraining[month] =
+              monthlyTownshipEconomyTraining[month] +
+              parseFloat(training.numberTrained);
+          }
+          case 'ECD Business': {
+            monthlyEcdBusinessTraining[month] =
+              monthlyEcdBusinessTraining[month] +
+              parseFloat(training.numberTrained);
+          }
+          case 'ECD IT': {
+            monthlyEcdItTraining[month] =
+              monthlyEcdItTraining[month] + parseFloat(training.numberTrained);
+          }
+          case 'Agri': {
+            monthlyAgriTraining[month] =
+              monthlyAgriTraining[month] + parseFloat(training.numberTrained);
+          }
+          case 'Other': {
+            monthlyOtherTraining[month] =
+              monthlyOtherTraining[month] + parseFloat(training.numberTrained);
+          }
         }
 
-        monthlyTraining = Object.keys(monthlyTraining)
-          .sort()
-          .reduce((obj, key) => {
-            obj[key] = monthlyTraining[key];
-            return obj;
-          }, {});
-
-        return sale;
-      } else return sale;
+        return training;
+      } else return training;
     });
 
-    return response.status(200).json({ monthlyTraining });
+    return response.status(200).json({
+      monthlyTownshipEconomyTraining,
+      monthlyEcdBusinessTraining,
+      monthlyEcdItTraining,
+      monthlyAgriTraining,
+      monthlyOtherTraining,
+    });
   } catch (error) {
     return response
       .status(500)

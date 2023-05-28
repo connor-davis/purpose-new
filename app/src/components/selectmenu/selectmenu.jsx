@@ -9,9 +9,9 @@ const SelectMenu = ({
   const [selectedItem, setSelectedItem] = createSignal(defaultItem);
 
   return (
-    <div class="relative">
+    <div class="relative w-full md:max-w-[200px]">
       {showDropper() && (
-        <div class="absolute flex flex-col space-y-2 w-full max-h-48 overflow-y-auto bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none z-50">
+        <div class="absolute flex flex-col space-y-2 w-full max-h-48 overflow-y-auto bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-200 rounded outline-none z-50">
           {items.map((item, index) => (
             <div
               class="cursor-pointer px-3 py-2 hover:bg-neutral-200 rounded"
@@ -30,7 +30,7 @@ const SelectMenu = ({
         onClick={() => {
           return setShowDropper(true);
         }}
-        class="flex items-center cursor-pointer space-x-2 px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+        class="flex items-center cursor-pointer space-x-2 px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-200 rounded outline-none"
       >
         <div class="w-full">
           {selectedItem() !== undefined

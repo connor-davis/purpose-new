@@ -145,7 +145,7 @@ const AddSaleModal = ({ added = () => {}, closed = () => {} }) => {
             <div class="">
               Sale Profit <span class="text-red-500">*</span>
             </div>
-            <div class="px-3 py-2 w-full bg-neutral-200 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none">
+            <div class="px-3 py-2 w-full bg-neutral-200 text-black border-l border-t border-r border-b border-neutral-200 rounded outline-none">
               R {profit() || 0}
             </div>
             <div class="text-neutral-400">You have made this much profit.</div>

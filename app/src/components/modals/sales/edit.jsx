@@ -184,7 +184,7 @@ const EditSaleModal = ({ data = {}, edited = () => {}, closed = () => {} }) => {
                 value={year() || ""}
                 min={0}
                 onChange={(event) => setYear(event.target.value)}
-                class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+                class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-200 rounded outline-none"
                 required
               />
               <div class="text-neutral-400">What year is the income for?</div>
@@ -236,7 +236,7 @@ const EditSaleModal = ({ data = {}, edited = () => {}, closed = () => {} }) => {
               <div class="">
                 Sale Profit <span class="text-red-500">*</span>
               </div>
-              <div class="px-3 py-2 w-full bg-neutral-200 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none">
+              <div class="px-3 py-2 w-full bg-neutral-200 text-black border-l border-t border-r border-b border-neutral-200 rounded outline-none">
                 R {profit() || 0}
               </div>
               <div class="text-neutral-400">
@@ -256,7 +256,7 @@ const EditSaleModal = ({ data = {}, edited = () => {}, closed = () => {} }) => {
                 value={income() || ""}
                 min={0}
                 onChange={(event) => setIncome(event.target.value)}
-                class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+                class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-200 rounded outline-none"
                 required
               />
               <div class="text-neutral-400">What amount was the income?</div>

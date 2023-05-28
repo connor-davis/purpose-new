@@ -1,3 +1,119 @@
+export const monthlyWasteOptions = {
+  series: [
+    {
+      name: "Food Waste",
+      data: [31, 40, 28, 51, 42, 109, 100, 0, 0, 0, 0, 0],
+    },
+    {
+      name: "Other",
+      data: [11, 32, 45, 32, 34, 52, 41, 0, 0, 0, 0, 0],
+    },
+  ],
+  title: {
+    text: "Monthly Waste",
+    style: {
+      fontSize: "26px",
+    },
+  },
+  chart: {
+    height: "100%",
+    type: "bar",
+  },
+  colors: ["#a3e635", "#dc2626", "#171717", "#d97706", "#2563eb"],
+  dataLabels: {
+    enabled: false,
+  },
+  stroke: {
+    curve: "smooth",
+  },
+  xaxis: {
+    type: "category",
+    categories: [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ],
+  },
+  tooltip: {
+    x: {
+      format: "dd/MM/yyyy",
+    },
+  },
+};
+
+export const monthlyTrainingOptions = {
+  series: [
+    {
+      name: "Township Economy",
+      data: [31, 40, 28, 51, 42, 109, 100, 0, 0, 0, 0, 0],
+    },
+    {
+      name: "ECD Business",
+      data: [31, 40, 28, 51, 42, 109, 100, 0, 0, 0, 0, 0],
+    },
+    {
+      name: "ECD IT",
+      data: [31, 40, 28, 51, 42, 109, 100, 0, 0, 0, 0, 0],
+    },
+    {
+      name: "Agri",
+      data: [31, 40, 28, 51, 42, 109, 100, 0, 0, 0, 0, 0],
+    },
+    {
+      name: "Other",
+      data: [11, 32, 45, 32, 34, 52, 41, 0, 0, 0, 0, 0],
+    },
+  ],
+  title: {
+    text: "Monthly Training",
+    style: {
+      fontSize: "26px",
+    },
+  },
+  chart: {
+    height: "100%",
+    type: "bar",
+  },
+  colors: ["#a3e635", "#dc2626", "#171717", "#d97706", "#fde047"],
+  dataLabels: {
+    enabled: false,
+  },
+  stroke: {
+    curve: "smooth",
+  },
+  xaxis: {
+    type: "category",
+    categories: [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ],
+  },
+  tooltip: {
+    x: {
+      format: "dd/MM/yyyy",
+    },
+  },
+};
+
 export const monthlySalesOptions = {
   series: [
     {

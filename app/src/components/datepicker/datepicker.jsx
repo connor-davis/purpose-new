@@ -13,10 +13,12 @@ import {
 } from "date-fns";
 import { createEffect, createSignal } from "solid-js";
 
-const DatePicker = ({ onChange = (date) => {} }) => {
+const DatePicker = ({ defaultDate = undefined, onChange = (date) => {} }) => {
   const [show, setShow] = createSignal(false);
 
-  let [today, setToday] = createSignal(startOfToday());
+  let [today, setToday] = createSignal(
+    defaultDate ? parse(defaultDate, "dd/MM/yyyy", Date.now()) : startOfToday()
+  );
   let [selectedDay, setSelectedDay] = createSignal(today());
   let [currentMonth, setCurrentMonth] = createSignal(
     format(today(), "MMMM yyyy")
@@ -65,7 +67,7 @@ const DatePicker = ({ onChange = (date) => {} }) => {
   return (
     <>
       {show() && (
-        <div class="absolute left-0 top-0 right-0 bottom-0 bg-black bg-opacity-25 flex flex-col items-center justify-center">
+        <div class="absolute left-0 top-0 right-0 bottom-0 bg-black bg-opacity-25 z-50 flex flex-col items-center justify-center">
           <div class="flex flex-col p-3 space-y-3 w-full md:w-auto bg-white rounded">
             <div class="flex items-center justify-between w-full">
               <div class="cookie text-2xl">Select Date</div>
