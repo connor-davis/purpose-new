@@ -588,12 +588,26 @@ const DashboardPage = () => {
                             <td class="flex items-center space-x-2 p-3 whitespace-nowrap">
                               {sale.date}
                             </td>
-                            <td class="p-3 whitespace-nowrap">
-                              {sale.products.length}
-                            </td>
-                            <td class="p-3 whitespace-nowrap">
-                              R {sale.profit}
-                            </td>
+                            {!sale.income && (
+                              <td class="p-3 whitespace-nowrap">
+                                {sale.products.length}
+                              </td>
+                            )}
+                            {!sale.income && (
+                              <td class="p-3 whitespace-nowrap">
+                                R {sale.profit}
+                              </td>
+                            )}
+                            {sale.income && (
+                              <td class="p-3 whitespace-nowrap">
+                                <strong>Income:</strong>
+                              </td>
+                            )}
+                            {sale.income && (
+                              <td class="p-3 whitespace-nowrap">
+                                R {sale.income}
+                              </td>
+                            )}
                           </tr>
                         )}
                       </For>
