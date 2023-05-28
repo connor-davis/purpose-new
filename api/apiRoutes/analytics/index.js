@@ -12,6 +12,8 @@ const {
   isSameMonth,
   parseISO,
 } = require('date-fns');
+const WasteModel = require('../../models/waste');
+const TrainingModel = require('../../models/training');
 
 router.get('/totalUsers', async (request, response) => {
   try {
@@ -432,6 +434,136 @@ router.get('/monthlyIncome/:userId', async (request, response) => {
     return response
       .status(500)
       .json({ message: 'Failed to retrieve monthly income.', reason: error });
+  }
+});
+
+router.get('/monthlyWaste/:userId', async (request, response) => {
+  const userId = request.params.userId || 'all';
+  const year = parseInt(request.query.year) || getYear(Date.now());
+  const yearMinusYear = year - 1;
+  const yearPlusYear = year + 1;
+
+  try {
+    const waste = await WasteModel.find(
+      userId !== 'all'
+        ? {
+            user: { $eq: userId },
+          }
+        : {}
+    );
+
+    let monthlyWaste = {
+      January: {},
+      February: {},
+      March: {},
+      April: {},
+      May: {},
+      June: {},
+      July: {},
+      August: {},
+      September: {},
+      October: {},
+      November: {},
+      December: {},
+    };
+
+    waste.map((waste) => {
+      const wasteYear = getYear(parse(waste.date, 'dd/MM/yyyy', Date.now()));
+
+      if (wasteYear > yearMinusYear && wasteYear < yearPlusYear) {
+        const month = format(
+          parse(waste.date, 'dd/MM/yyyy', Date.now()),
+          'MMMM'
+        );
+
+        if (monthlyWaste[month]['kgs']) {
+          monthlyWaste[month]['kgs'] += parseFloat(waste.kgs);
+        } else {
+          monthlyWaste[month]['kgs'] = parseFloat(waste.kgs);
+          monthlyWaste[month]['wasteType'] = waste.wasteType;
+        }
+
+        monthlyWaste = Object.keys(monthlyWaste)
+          .sort()
+          .reduce((obj, key) => {
+            obj[key] = monthlyWaste[key];
+            return obj;
+          }, {});
+
+        return sale;
+      } else return sale;
+    });
+
+    return response.status(200).json({ monthlyWaste });
+  } catch (error) {
+    return response
+      .status(500)
+      .json({ message: 'Failed to retrieve monthly waste.', reason: error });
+  }
+});
+
+router.get('/monthlyTraining/:userId', async (request, response) => {
+  const userId = request.params.userId || 'all';
+  const year = parseInt(request.query.year) || getYear(Date.now());
+  const yearMinusYear = year - 1;
+  const yearPlusYear = year + 1;
+
+  try {
+    const training = await TrainingModel.find(
+      userId !== 'all'
+        ? {
+            user: { $eq: userId },
+          }
+        : {}
+    );
+
+    let monthlyTraining = {
+      January: {},
+      February: {},
+      March: {},
+      April: {},
+      May: {},
+      June: {},
+      July: {},
+      August: {},
+      September: {},
+      October: {},
+      November: {},
+      December: {},
+    };
+
+    training.map((training) => {
+      const trainingYear = getYear(parse(training.date, 'dd/MM/yyyy', Date.now()));
+
+      if (trainingYear > yearMinusYear && trainingYear < yearPlusYear) {
+        const month = format(
+          parse(training.date, 'dd/MM/yyyy', Date.now()),
+          'MMMM'
+        );
+
+        if (monthlyTraining[month]['numberTrained']) {
+          monthlyTraining[month]['numberTrained'] += parseFloat(training.numberTrained);
+        } else {
+          monthlyTraining[month]['numberTrained'] = parseFloat(training.numberTrained);
+          monthlyTraining[month]['trainingType'] = training.trainingType;
+        }
+
+        monthlyTraining = Object.keys(monthlyTraining)
+          .sort()
+          .reduce((obj, key) => {
+            obj[key] = monthlyTraining[key];
+            return obj;
+          }, {});
+
+        return sale;
+      } else return sale;
+    });
+
+    return response.status(200).json({ monthlyTraining });
+  } catch (error) {
+    return response
+      .status(500)
+      .json({ message: 'Failed to retrieve monthly training.', reason: error });
   }
 });
 
