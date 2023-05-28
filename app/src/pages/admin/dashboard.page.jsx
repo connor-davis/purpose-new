@@ -6,11 +6,13 @@ import {
   agesOptions,
   monthlyIncomeOptions,
   monthlySalesOptions,
+  monthlyTrainingOptions,
+  monthlyWasteOptions,
   monthsHarvestsOptions,
-  userTypesOptions,
+  userTypesOptions
 } from "../../components/chart/chartOptions";
 import useState from "../../hooks/state";
-import { format, getYear } from "date-fns";
+import { format} from "date-fns";
 import SelectMenu from "../../components/selectmenu/selectmenu";
 
 const AdminDashboardPage = () => {
@@ -33,6 +35,31 @@ const AdminDashboardPage = () => {
   const [usersAges, setUsersAges] = createSignal([]);
 
   const [monthsHarvests, setMonthsHarvests] = createSignal([]);
+
+  const [waste, setWaste] = createSignal([]);
+  const [training, setTraining] = createSignal([]);
+
+  const now = new Date().getUTCFullYear();
+  const years = Array(now - (now - 30))
+    .fill("")
+    .map((v, idx) => now - idx);
+  const [selectedYear, setSelectedYear] = createSignal(
+    format(Date.now(), "yyyy")
+  );
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   const [selectedMonth, setSelectedMonth] = createSignal(
     format(Date.now(), "MMMM")
   );
@@ -50,6 +77,8 @@ const AdminDashboardPage = () => {
       await loadUsersAges();
       await loadMonthsHarvests();
       await loadUserTypes();
+      await loadWaste();
+      await loadTraining();
 
       setLoading(false);
     }, 400);
@@ -95,13 +124,16 @@ const AdminDashboardPage = () => {
 
     if (response.data) {
       return setTotalUsers(response.data.totalUsers);
-    } else return setLoading(false);
+    }
   };
 
   const loadFinanceTotals = async () => {
-    const response = await axios.get(apiUrl + "analytics/financeTotals/all", {
-      headers: { Authorization: "Bearer " + user.token },
-    });
+    const response = await axios.get(
+      apiUrl + "analytics/financeTotals/all?year=" + selectedYear(),
+      {
+        headers: { Authorization: "Bearer " + user.token },
+      }
+    );
 
     if (response.data) {
       setTotalProfit(response.data.totalProfit);
@@ -110,13 +142,16 @@ const AdminDashboardPage = () => {
       setTotalIncome(response.data.totalIncome);
 
       return true;
-    } else return setLoading(false);
+    }
   };
 
   const loadProfit = async () => {
-    const response = await axios.get(apiUrl + "analytics/monthlyProfit/all", {
-      headers: { Authorization: "Bearer " + user.token },
-    });
+    const response = await axios.get(
+      apiUrl + "analytics/monthlyProfit/all?year=" + selectedYear(),
+      {
+        headers: { Authorization: "Bearer " + user.token },
+      }
+    );
 
     if (response.data) {
       const months = sortByMonthName(Object.keys(response.data.monthlyProfit));
@@ -129,13 +164,16 @@ const AdminDashboardPage = () => {
       setProfit(data);
 
       return true;
-    } else return setLoading(false);
+    }
   };
 
   const loadExpenses = async () => {
-    const response = await axios.get(apiUrl + "analytics/monthlyExpenses/all", {
-      headers: { Authorization: "Bearer " + user.token },
-    });
+    const response = await axios.get(
+      apiUrl + "analytics/monthlyExpenses/all?year=" + selectedYear(),
+      {
+        headers: { Authorization: "Bearer " + user.token },
+      }
+    );
 
     if (response.data) {
       const months = sortByMonthName(
@@ -150,13 +188,16 @@ const AdminDashboardPage = () => {
       setExpenses(data);
 
       return true;
-    } else return setLoading(false);
+    }
   };
 
   const loadSales = async () => {
-    const response = await axios.get(apiUrl + "analytics/monthlySales/all", {
-      headers: { Authorization: "Bearer " + user.token },
-    });
+    const response = await axios.get(
+      apiUrl + "analytics/monthlySales/all?year=" + selectedYear(),
+      {
+        headers: { Authorization: "Bearer " + user.token },
+      }
+    );
 
     if (response.data) {
       const months = sortByMonthName(Object.keys(response.data.monthlySales));
@@ -169,13 +210,16 @@ const AdminDashboardPage = () => {
       setSales(data);
 
       return true;
-    } else return setLoading(false);
+    }
   };
 
   const loadIncome = async () => {
-    const response = await axios.get(apiUrl + "analytics/monthlyIncome/all", {
-      headers: { Authorization: "Bearer " + user.token },
-    });
+    const response = await axios.get(
+      apiUrl + "analytics/monthlyIncome/all?year=" + selectedYear(),
+      {
+        headers: { Authorization: "Bearer " + user.token },
+      }
+    );
 
     if (response.data) {
       const months = sortByMonthName(Object.keys(response.data.monthlyIncome));
@@ -188,7 +232,7 @@ const AdminDashboardPage = () => {
       setIncome(data);
 
       return true;
-    } else return setLoading(false);
+    }
   };
 
   const loadUsersAges = async () => {
@@ -199,7 +243,91 @@ const AdminDashboardPage = () => {
     if (response.data) {
       console.log(Object.values(response.data));
       return setUsersAges(Object.values(response.data));
-    } else setLoading(false);
+    }
+  };
+
+  const loadWaste = async () => {
+    const response = await axios.get(
+      apiUrl + "analytics/monthlyWaste/all" + "?year=" + selectedYear(),
+      { headers: { Authorization: "Bearer " + user.token } }
+    );
+
+    if (response.data) {
+      const months = sortByMonthName(
+        Object.keys(response.data.monthlyFoodWaste)
+      );
+      const foodWasteData = [];
+      const otherWasteData = [];
+
+      for (let i in months) {
+        foodWasteData.push(response.data.monthlyFoodWaste[months[i]]);
+        otherWasteData.push(response.data.monthlyOtherWaste[months[i]]);
+      }
+
+      return setWaste([
+        {
+          name: "Food Waste (kgs)",
+          data: foodWasteData,
+        },
+        {
+          name: "Other Waste (kgs)",
+          data: otherWasteData,
+        },
+      ]);
+    }
+  };
+
+  const loadTraining = async () => {
+    const response = await axios.get(
+      apiUrl + "analytics/monthlyTraining/all" + "?year=" + selectedYear(),
+      { headers: { Authorization: "Bearer " + user.token } }
+    );
+
+    if (response.data) {
+      const months = sortByMonthName(
+        Object.keys(response.data.monthlyTownshipEconomyTraining)
+      );
+      const townshipEconomyData = [];
+      const ecdBusinessData = [];
+      const ecdItData = [];
+      const agriData = [];
+      const otherData = [];
+
+      for (let i in months) {
+        townshipEconomyData.push(
+          response.data.monthlyTownshipEconomyTraining[months[i]]
+        );
+        ecdBusinessData.push(
+          response.data.monthlyEcdBusinessTraining[months[i]]
+        );
+        ecdItData.push(response.data.monthlyEcdItTraining[months[i]]);
+        agriData.push(response.data.monthlyAgriTraining[months[i]]);
+        otherData.push(response.data.monthlyOtherTraining[months[i]]);
+      }
+
+      return setTraining([
+        {
+          name: "Township Economy",
+          data: townshipEconomyData,
+        },
+        {
+          name: "ECD Business",
+          data: ecdBusinessData,
+        },
+        {
+          name: "ECD IT",
+          data: ecdItData,
+        },
+        {
+          name: "Agri",
+          data: agriData,
+        },
+        {
+          name: "Other",
+          data: otherData,
+        },
+      ]);
+    }
   };
 
   const loadMonthsHarvests = async () => {
@@ -209,7 +337,7 @@ const AdminDashboardPage = () => {
         "?month=" +
         selectedMonth() +
         "&year=" +
-        getYear(Date.now()),
+        selectedYear(),
       { headers: { Authorization: "Bearer " + user.token } }
     );
 
@@ -225,7 +353,7 @@ const AdminDashboardPage = () => {
           data: Object.values(response.data.produceYields),
         },
       ]);
-    } else setLoading(false);
+    }
   };
 
   const loadUserTypes = async () => {
@@ -235,11 +363,77 @@ const AdminDashboardPage = () => {
 
     if (response.data) {
       return setUserTypes(Object.values(response.data.userTypes));
-    } else setLoading(false);
+    }
   };
 
   return (
     <div class="flex flex-col space-y-3 p-3 pb-6 w-full h-full overflow-y-auto">
+      <div class="flex items-center justify-end space-x-3">
+        <SelectMenu
+          defaultItem={selectedMonth()}
+          items={months}
+          selectionChanged={async (month) => {
+            setLoading(true);
+
+            setTotalProfit(undefined);
+            setTotalExpenses(undefined);
+            setTotalSales(undefined);
+            setTotalIncome(undefined);
+            setProfit([]);
+            setExpenses([]);
+            setSales([]);
+            setIncome([]);
+            setMonthsHarvests([]);
+            setWaste([]);
+            setTraining([]);
+
+            setSelectedMonth(month);
+
+            await loadFinanceTotals();
+            await loadIncome();
+            await loadProfit();
+            await loadExpenses();
+            await loadSales();
+            await loadMonthsHarvests();
+            await loadWaste();
+            await loadTraining();
+
+            setLoading(false);
+          }}
+        />
+        <SelectMenu
+          defaultItem={selectedYear()}
+          items={years.map((year) => `${year}`)}
+          selectionChanged={async (year) => {
+            setLoading(true);
+
+            setTotalProfit(undefined);
+            setTotalExpenses(undefined);
+            setTotalSales(undefined);
+            setTotalIncome(undefined);
+            setProfit([]);
+            setExpenses([]);
+            setSales([]);
+            setIncome([]);
+            setMonthsHarvests([]);
+            setWaste([]);
+            setTraining([]);
+
+            setSelectedYear(year);
+
+            await loadFinanceTotals();
+            await loadIncome();
+            await loadProfit();
+            await loadExpenses();
+            await loadSales();
+            await loadMonthsHarvests();
+            await loadWaste();
+            await loadTraining();
+
+            setLoading(false);
+          }}
+        />
+      </div>
       <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full md:h-1/4">
         {!loading() ? (
           <div class="w-full md:w-1/5 h-full bg-lime-400 rounded-lg p-3">
@@ -323,8 +517,8 @@ const AdminDashboardPage = () => {
         )}
       </div>
       <div class="flex flex-col space-y-3 w-full h-full">
-        <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full md:h-1/2">
-          <div class="w-full h-[300px] md:h-full bg-white rounded-lg p-3">
+        <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full">
+          <div class="w-full h-[300px] bg-white rounded-lg p-3">
             {!loading() ? (
               profit().length > 1 &&
               expenses().length > 1 &&
@@ -356,7 +550,7 @@ const AdminDashboardPage = () => {
               <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
             )}
           </div>
-          <div class="w-full h-[300px] md:h-full bg-white rounded-lg p-3">
+          <div class="w-full h-[300px] bg-white rounded-lg p-3">
             {!loading() ? (
               profit().length > 1 &&
               expenses().length > 1 &&
@@ -384,7 +578,7 @@ const AdminDashboardPage = () => {
               <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
             )}
           </div>
-          <div class="w-full h-[500px] md:h-full bg-white rounded-lg p-3">
+          <div class="w-full h-[500px] md:h-[300px] bg-white rounded-lg p-3">
             {!loading() ? (
               usersAges().length > 0 ? (
                 <Chart
@@ -406,8 +600,8 @@ const AdminDashboardPage = () => {
             )}
           </div>
         </div>
-        <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full md:h-1/2">
-          <div class="w-full h-[300px] md:h-full bg-white rounded-lg p-3 pb-6">
+        <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full">
+          <div class="w-full h-[300px] bg-white rounded-lg p-3">
             {!loading() && (
               <div class="flex justify-end w-full h-auto">
                 <div class="min-w-[200px]">
@@ -461,7 +655,7 @@ const AdminDashboardPage = () => {
               <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
             )}
           </div>
-          <div class="w-full h-[500px] md:h-full bg-white rounded-lg p-3">
+          <div class="w-full h-[500px] md:h-[300px] bg-white rounded-lg p-3">
             {!loading() ? (
               userTypes().length > 0 ? (
                 <Chart
@@ -476,6 +670,60 @@ const AdminDashboardPage = () => {
                   <div class="flex flex-col">
                     <div class="font-bold w-full text-4xl cookie">
                       User Types
+                    </div>
+                    <div class="font-medium text-xl">
+                      There is no data to display.
+                    </div>
+                  </div>
+                </div>
+              )
+            ) : (
+              <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
+            )}
+          </div>
+        </div>
+        <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full">
+          <div class="w-full h-[300px] bg-white rounded-lg p-3">
+            {!loading() ? (
+              waste().length > 1 ? (
+                <Chart
+                  id="monthlyWaste"
+                  options={{
+                    ...monthlyWasteOptions,
+                    series: waste(),
+                  }}
+                />
+              ) : (
+                <div class="flex flex-col w-full h-full items-center justify-center">
+                  <div class="flex flex-col">
+                    <div class="font-bold w-full text-4xl cookie">
+                      Monthly Waste
+                    </div>
+                    <div class="font-medium text-xl">
+                      There is no data to display.
+                    </div>
+                  </div>
+                </div>
+              )
+            ) : (
+              <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
+            )}
+          </div>
+          <div class="w-full h-[300px] bg-white rounded-lg p-3">
+            {!loading() ? (
+              training().length > 1 ? (
+                <Chart
+                  id="monthlyTraining"
+                  options={{
+                    ...monthlyTrainingOptions,
+                    series: training(),
+                  }}
+                />
+              ) : (
+                <div class="flex flex-col w-full h-full items-center justify-center">
+                  <div class="flex flex-col">
+                    <div class="font-bold w-full text-4xl cookie">
+                      Monthly Training
                     </div>
                     <div class="font-medium text-xl">
                       There is no data to display.
