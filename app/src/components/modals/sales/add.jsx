@@ -123,8 +123,8 @@ const AddSaleModal = ({ added = () => {}, closed = () => {} }) => {
               class="flex items-center justify-center py-2 w-full bg-lime-400 hover:bg-lime-300 active:bg-lime-400 transition-all duration-300 ease-in-out text-black rounded cursor-pointer"
             >
               {products.length === 0
-                ? "Edit Sale Products"
-                : `${products.length} sale products`}
+                ? "Add Sale Products"
+                : `Edit ${products.length} sale products`}
             </div>
             <div class="text-neutral-400">What products were in this sale?</div>
           </div>

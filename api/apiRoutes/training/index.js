@@ -93,6 +93,7 @@ router.get('/:id', async (request, response) => {
   }
 });
 
+router.use('/attendees/search', require('./attendees'));
 router.use('/page', require('./paged'));
 router.use('/', require('./create'));
 router.use('/', require('./edit'));

@@ -19,6 +19,16 @@ const TrainingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    attendees: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: 'User',
+        },
+      ],
+      required: false,
+    },
   },
   { timestamps: true }
 );

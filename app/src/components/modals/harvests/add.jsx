@@ -119,8 +119,8 @@ const AddHarvestModal = ({ added = () => {}, closed = () => {} }) => {
               class="flex items-center justify-center py-2 w-full bg-lime-400 hover:bg-lime-300 active:bg-lime-400 transition-all duration-300 ease-in-out text-black rounded cursor-pointer"
             >
               {produce.length === 0
-                ? "Edit Harvest Produce"
-                : `${produce.length} harvest produce`}
+                ? "Add Harvest Produce"
+                : `Edit ${produce.length} harvest produce`}
             </div>
             <div class="text-neutral-400">
               What produce were in this harvest?
