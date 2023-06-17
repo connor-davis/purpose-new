@@ -25,9 +25,9 @@ router.get('/', async (request, response) => {
       request.user.userType !== 'admin'
         ? {}
         : { user: { $eq: request.user._id } }
-    );
+    ).populate("user");
     const salesData = sales
-      .map((sale) => sale.toJSON())
+      .map((sale) => sale.user.userGroup === request.user.userGroup && sale.toJSON())
       .sort((a, b) => {
         if (new Date(a.date) > new Date(b.date)) return -1;
         if (new Date(a.date) < new Date(b.date)) return 1;

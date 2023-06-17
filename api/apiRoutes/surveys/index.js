@@ -23,7 +23,7 @@ const SurveyModel = require('../../models/survey');
  */
 router.get('/', async (request, response) => {
   try {
-    const surveys = await AnnouncementModal.find();
+    const surveys = await SurveyModel.find({ userGroup: { $eq: request.user.userGroup }});
     const surveysData = surveys
       .map((survey) => survey.toJSON())
       .sort((a, b) => {

@@ -80,6 +80,7 @@ client.then(async () => {
       agreedToTerms: true,
       completedProfile: true,
       userType: 'admin',
+      userGroup: 'PUR1'
     });
 
     try {

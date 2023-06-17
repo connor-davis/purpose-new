@@ -52,16 +52,14 @@ router.get('/:page', async (request, response) => {
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
       .limit(limit);
     const harvestsData = harvests
-      .map((harvest) => harvest.toJSON())
+      .map((harvest) => harvest.user.userGroup === request.user.userGroup && harvest.toJSON())
       .sort((a, b) => {
         if (new Date(a.date) > new Date(b.date)) return -1;
         if (new Date(a.date) < new Date(b.date)) return 1;
 
         return 0;
       });
-    const totalHarvests = await HarvestModel.countDocuments(
-      !request.query.userId ? {} : { user: { $eq: request.query.userId } }
-    );
+    const totalHarvests = harvestsData.length;
     const totalPages = Math.ceil(totalHarvests / limit);
 
     return response

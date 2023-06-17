@@ -41,12 +41,15 @@ router.get('/:page', adminRoute, async (request, response) => {
   const limit = request.query.limit || 10;
 
   try {
-    const users = await UserModel.find({ userType: { $ne: 'admin' } })
+    console.log(request.user.userGroup);
+
+    const users = await UserModel.find({ userType: { $ne: 'admin' }, userGroup: { $eq: request.user.userGroup } })
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
       .limit(limit);
     const usersData = users.map((user) => userFormatter(user.toJSON()));
     const totalUsers = await UserModel.countDocuments({
       userType: { $ne: 'admin' },
+      userGroup: { $eq: request.user.userGroup }
     });
     const totalPages = Math.ceil(totalUsers / limit);
 
@@ -54,6 +57,8 @@ router.get('/:page', adminRoute, async (request, response) => {
       .status(200)
       .json({ data: usersData, totalUsers, totalPages });
   } catch (error) {
+    console.log(error);
+
     return response.status(500).json({
       message: 'Failed to retrieve paged users.',
       reason: error,

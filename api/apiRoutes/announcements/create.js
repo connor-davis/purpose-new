@@ -33,6 +33,7 @@ router.post('/', async (request, response) => {
   try {
     const newAnnouncement = new AnnouncementModal({
       ...body,
+      userGroup: request.user.userGroup
     });
 
     await newAnnouncement.save();

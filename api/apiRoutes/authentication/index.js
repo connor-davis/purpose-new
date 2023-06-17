@@ -313,6 +313,7 @@ router.post('/register', async (request, response) => {
       email: body.email,
       password: bcrypt.hashSync(body.password, 2048),
       agreedToTerms: body.agreedToTerms,
+      userGroup: body.userGroup
     };
 
     const token = jwt.sign(
@@ -335,6 +336,7 @@ router.post('/register', async (request, response) => {
         password: tdata.password,
         agreedToTerms: tdata.agreedToTerms,
         completedProfile: false,
+        userGroup: tdata.userGroup,
       });
 
       newUser.save();

@@ -23,9 +23,9 @@ const adminRoute = require('../../utils/adminRoute');
  */
 router.get('/', async (request, response) => {
   try {
-    const surveyResponses = await SurveyResponseModel.find();
+    const surveyResponses = await SurveyResponseModel.find({}).populate("user");
     const surveyResponsesData = surveyResponses
-      .map((surveyResponse) => surveyResponse.toJSON())
+      .map((surveyResponse) => surveyResponse.user.userGroup === request.user.userGroup && surveyResponse.toJSON())
       .sort((a, b) => {
         if (new Date(a.date) > new Date(b.date)) return -1;
         if (new Date(a.date) < new Date(b.date)) return 1;
@@ -73,8 +73,8 @@ router.get('/:id', adminRoute, async (request, response) => {
 
   try {
     const surveyResponses = await SurveyResponseModel.find({
-      surveyId: { $eq: id },
-    });
+      surveyId: { $eq: id }
+    }).populate("user");
 
     if (surveyResponses.length === 0)
       return response.status(404).json({
@@ -83,7 +83,7 @@ router.get('/:id', adminRoute, async (request, response) => {
       });
     else {
       const surveyResponsesData = surveyResponses.map((surveyResponse) =>
-        surveyResponse.toJSON()
+        surveyResponse.user.userGroup === request.user.userGroup && surveyResponse.toJSON()
       );
       return response.status(200).json(surveyResponsesData);
     }

@@ -24,7 +24,7 @@ router.get('/', async (request, response) => {
   const filterText = request.query.filter ? request.query.filter : '';
 
   try {
-    const usersFound = await UserModel.find({ userType: { $ne: 'admin' } });
+    const usersFound = await UserModel.find({ userType: { $ne: 'admin' }, userGroup: { $eq: request.user.userGroup } });
 
     if (!usersFound)
       return response.status(404).json({

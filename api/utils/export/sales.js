@@ -60,13 +60,15 @@ const exportSales = async (request, response, next) => {
     color: { argb: '#FFFFFF' },
   };
 
-  const sales = await SaleModel.find(
+  let sales = await SaleModel.find(
     userId !== 'all'
       ? {
           user: { $eq: userId },
         }
       : {}
-  ).populate('user', 'email');
+  ).populate('user');
+
+  if (userId === "all") sales = sales.filter((sale) => sale.user.userGroup === request.user.userGroup);
 
   sales.forEach((sale) => {
     salesSheet.addRow({

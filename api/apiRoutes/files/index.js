@@ -30,10 +30,21 @@ router.get(
         fs.mkdirSync(path.join(process.cwd(), 'files'));
       }
 
+      if (
+        !fs.existsSync(
+          path.join(process.cwd(), 'files', request.user.userGroup)
+        )
+      ) {
+        fs.mkdirSync(path.join(process.cwd(), 'files', request.user.userGroup));
+      }
+
       const files = fs
-        .readdirSync(path.join(process.cwd(), 'files'), {
-          withFileTypes: true,
-        })
+        .readdirSync(
+          path.join(process.cwd(), 'files', request.user.userGroup),
+          {
+            withFileTypes: true,
+          }
+        )
         .map((file) => {
           let filename = file.name;
           const filenamesplit = filename.split('.');
@@ -90,10 +101,21 @@ router.get(
         fs.mkdirSync(path.join(process.cwd(), 'files'));
       }
 
+      if (
+        !fs.existsSync(
+          path.join(process.cwd(), 'files', request.user.userGroup)
+        )
+      ) {
+        fs.mkdirSync(path.join(process.cwd(), 'files', request.user.userGroup));
+      }
+
       const files = fs
-        .readdirSync(path.join(process.cwd(), 'files'), {
-          withFileTypes: true,
-        })
+        .readdirSync(
+          path.join(process.cwd(), 'files', request.user.userGroup),
+          {
+            withFileTypes: true,
+          }
+        )
         .filter((file) => {
           let filename = file.name;
           const filenamesplit = filename.split('.');
@@ -148,13 +170,33 @@ router.get('/view/:filename', async (request, response) => {
     }
 
     if (
-      !fs.existsSync(path.join(process.cwd(), 'files', request.params.filename))
+      !fs.existsSync(path.join(process.cwd(), 'files', request.user.userGroup))
+    ) {
+      fs.mkdirSync(path.join(process.cwd(), 'files', request.user.userGroup));
+    }
+
+    if (
+      !fs.existsSync(
+        path.join(
+          process.cwd(),
+          'files',
+          request.user.userGroup,
+          request.params.filename
+        )
+      )
     )
       return response.status(404).json({ message: 'File not found.' });
     else {
       return response
         .status(200)
-        .sendFile(path.join(process.cwd(), 'files', request.params.filename));
+        .sendFile(
+          path.join(
+            process.cwd(),
+            'files',
+            request.user.userGroup,
+            request.params.filename
+          )
+        );
     }
   } catch (error) {
     return response.status(500).json({

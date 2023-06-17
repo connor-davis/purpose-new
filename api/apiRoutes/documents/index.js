@@ -30,10 +30,23 @@ router.get(
         fs.mkdirSync(path.join(process.cwd(), 'documents'));
       }
 
+      if (
+        !fs.existsSync(
+          path.join(process.cwd(), 'documents', request.user.userGroup)
+        )
+      ) {
+        fs.mkdirSync(
+          path.join(process.cwd(), 'documents', request.user.userGroup)
+        );
+      }
+
       const documents = fs
-        .readdirSync(path.join(process.cwd(), 'documents'), {
-          withFileTypes: true,
-        })
+        .readdirSync(
+          path.join(process.cwd(), 'documents', request.user.userGroup),
+          {
+            withFileTypes: true,
+          }
+        )
         .map((document) => {
           let documentname = document.name;
           const documentnamesplit = documentname.split('.');

@@ -35,14 +35,28 @@ const upload = multer({ dest: path.join(process.cwd(), 'temp', 'documents') });
  */
 router.post('/', upload.array('upfiles'), async (request, response) => {
   try {
-    if (!fs.existsSync(path.join(process.cwd(), 'documents')))
+    if (!fs.existsSync(path.join(process.cwd(), 'documents'))) {
       fs.mkdirSync(path.join(process.cwd(), 'documents'));
+    }
+
+    if (
+      !fs.existsSync(
+        path.join(process.cwd(), 'documents', request.user.userGroup)
+      )
+    ) {
+      fs.mkdirSync(
+        path.join(process.cwd(), 'documents', request.user.userGroup)
+      );
+    }
 
     request.files.forEach((file) => {
       const fileData = fs.readFileSync(file.path);
       const newname = request.user._id + '.' + file.originalname;
 
-      fs.writeFileSync(path.join(process.cwd(), 'documents', newname), fileData);
+      fs.writeFileSync(
+        path.join(process.cwd(), 'documents', request.user.userGroup, newname),
+        fileData
+      );
 
       fs.unlinkSync(file.path);
     });

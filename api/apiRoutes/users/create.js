@@ -7,7 +7,7 @@ const UserModel = require("../../models/user");
  * @openapi
  * /api/v2/users:
  *   post:
- *     name: Edit
+ *     name: Create
  *     security:
  *       - bearerAuth: []
  *     description: Create a user
@@ -31,7 +31,11 @@ router.post("/", async (request, response) => {
     const body = request.body;
     
     try {
-        const userFound = await UserModel.findOne({ email: { $eq: body.email }})
+        const mainUserFound = await UserModel.findOne({ userGroup: { $eq: body.userGroup }});
+
+        if (!mainUserFound) return response.status(500).json({ message: "Invalid user group. Please get the correct user group from your administrator." });
+
+        const userFound = await UserModel.findOne({ email: { $eq: body.email }});
 
         if (userFound) return response.status(500).json({ message: "Email already in use. Please use a different email." })
         else {

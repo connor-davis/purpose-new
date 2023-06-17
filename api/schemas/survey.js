@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 const SurveySchema = new mongoose.Schema(
   {
+    userGroup: {
+      type: String,
+      required: true,
+    },
     surveyDate: {
       type: String,
       required: true,

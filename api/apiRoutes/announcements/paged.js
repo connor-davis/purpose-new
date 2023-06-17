@@ -39,7 +39,7 @@ router.get('/:page', async (request, response) => {
   const limit = request.query.limit || 10;
 
   try {
-    const announcements = await AnnouncementModal.find({})
+    const announcements = await AnnouncementModal.find({ userGroup: { $eq: request.user.userGroup }})
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
       .limit(limit);
     const announcementsData = announcements
@@ -52,7 +52,7 @@ router.get('/:page', async (request, response) => {
 
         return 0;
       });
-    const totalAnnouncements = await AnnouncementModal.countDocuments();
+    const totalAnnouncements = announcementsData.length;
     const totalPages = Math.ceil(totalAnnouncements / limit);
 
     return response

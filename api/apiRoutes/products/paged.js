@@ -50,11 +50,9 @@ router.get('/:page', async (request, response) => {
       !request.query.userId ? {} : { user: { $eq: request.query.userId } }
     )
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
-      .limit(limit);
-    const productsData = products.map((product) => product.toJSON());
-    const totalProducts = await ProductModel.countDocuments(
-      !request.query.userId ? {} : { user: { $eq: request.query.userId } }
-    );
+      .limit(limit).populate("user");
+    const productsData = products.map((product) => product.user.userGroup === request.user.userGroup && product.toJSON());
+    const totalProducts = productsData.length;
     const totalPages = Math.ceil(totalProducts / limit);
 
     return response

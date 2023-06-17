@@ -31,10 +31,23 @@ router.get(
         fs.mkdirSync(path.join(process.cwd(), 'archives'));
       }
 
+      if (
+        !fs.existsSync(
+          path.join(process.cwd(), 'archives', request.user.userGroup)
+        )
+      ) {
+        fs.mkdirSync(
+          path.join(process.cwd(), 'archives', request.user.userGroup)
+        );
+      }
+
       const archives = fs
-        .readdirSync(path.join(process.cwd(), 'archives'), {
-          withFileTypes: true,
-        })
+        .readdirSync(
+          path.join(process.cwd(), 'archives', request.user.userGroup),
+          {
+            withFileTypes: true,
+          }
+        )
         .map((archive) => {
           console.log(archive);
 

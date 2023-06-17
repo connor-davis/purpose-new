@@ -50,18 +50,16 @@ router.get('/:page', async (request, response) => {
       !request.query.userId ? {} : { user: { $eq: request.query.userId } }
     )
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
-      .limit(limit);
+      .limit(limit).populate("user");
     const salesData = sales
-      .map((sale) => sale.toJSON())
+      .map((sale) => sale.user.userGroup === request.user.userGroup && sale.toJSON())
       .sort((a, b) => {
         if (new Date(a.date) > new Date(b.date)) return -1;
         if (new Date(a.date) < new Date(b.date)) return 1;
 
         return 0;
       });
-    const totalSales = await SaleModel.countDocuments(
-      !request.query.userId ? {} : { user: { $eq: request.query.userId } }
-    );
+    const totalSales = salesData.length;
     const totalPages = Math.ceil(totalSales / limit);
 
     return response

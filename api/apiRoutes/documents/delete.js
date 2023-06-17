@@ -31,12 +31,28 @@ router.delete('/:documentName', async (request, response) => {
   const documentName = request.params.documentName;
 
   try {
-    if (!fs.existsSync(path.join(process.cwd(), 'documents', documentName)))
+    if (
+      !fs.existsSync(
+        path.join(
+          process.cwd(),
+          'documents',
+          request.user.userGroup,
+          documentName
+        )
+      )
+    )
       return response
         .status(404)
         .json({ message: 'Document not found.', error: 'document-not-found' });
     else {
-      fs.unlinkSync(path.join(process.cwd(), 'documents', documentName));
+      fs.unlinkSync(
+        path.join(
+          process.cwd(),
+          'documents',
+          request.user.userGroup,
+          documentName
+        )
+      );
 
       return response.status(200).send('Ok');
     }

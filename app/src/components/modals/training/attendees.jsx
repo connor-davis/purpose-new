@@ -47,7 +47,7 @@ const TrainingAttendeesModal = ({
 
   return (
     <div class="absolute bg-neutral-900 bg-opacity-50 left-0 top-0 right-0 bottom-0 flex flex-col items-center justify-center animate-fade-in z-50">
-      <div class="flex flex-col w-full md:w-3/5 h-full overflow-y-auto  space-y-3 bg-neutral-900 border-l border-t border-r border-b border-neutral-700 rounded p-2">
+      <div class="flex flex-col w-full md:w-3/5 h-full space-y-3 bg-neutral-900 border-l border-t border-r border-b border-neutral-700 rounded p-2">
         <div class="flex items-center justify-between w-full">
           <div class="cookie text-white text-2xl">Add Training Attendees</div>
           <div
@@ -83,7 +83,7 @@ const TrainingAttendeesModal = ({
           </div>
         )}
 
-        <div class="flex flex-col w-full h-full">
+        <div class="flex flex-col w-full h-full overflow-hidden">
           <div class="flex flex-col space-y-3 text-black bg-white w-full h-full overflow-hidden rounded p-3">
             <div class="flex items-center space-x-3 w-full">
               <input
@@ -181,12 +181,14 @@ const TrainingAttendeesModal = ({
                             </div>
                           </td>
                           <td class="flex items-center space-x-2 p-3">
-                            <div class="flex items-center h-9">
-                              <img
-                                src={apiUrl + "files/view/" + attendee.image}
-                                class="w-10 h-10 rounded"
-                              />
-                            </div>
+                            {attendee.image !== ("" || undefined || null) && (
+                              <div class="flex items-center h-9">
+                                <img
+                                  src={apiUrl + "files/view/" + attendee.image}
+                                  class="w-10 h-10 rounded"
+                                />
+                              </div>
+                            )}
                             <div class="flex items-center h-9">
                               {attendee.firstName}
                             </div>

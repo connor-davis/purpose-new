@@ -36,8 +36,15 @@ const upload = multer({ dest: path.join(process.cwd(), 'temp', 'files') });
 router.post('/', upload.array('upfiles'), async (request, response) => {
   console.log(request.user);
   try {
-    if (!fs.existsSync(path.join(process.cwd(), 'files')))
+    if (!fs.existsSync(path.join(process.cwd(), 'files'))) {
       fs.mkdirSync(path.join(process.cwd(), 'files'));
+    }
+
+    if (
+      !fs.existsSync(path.join(process.cwd(), 'files', request.user.userGroup))
+    ) {
+      fs.mkdirSync(path.join(process.cwd(), 'files', request.user.userGroup));
+    }
 
     const filenames = [];
 
@@ -45,14 +52,17 @@ router.post('/', upload.array('upfiles'), async (request, response) => {
       const fileData = fs.readFileSync(file.path);
       const newname = request.user._id + '.' + file.originalname;
 
-      fs.writeFileSync(path.join(process.cwd(), 'files', newname), fileData);
+      fs.writeFileSync(
+        path.join(process.cwd(), 'files', request.user.userGroup, newname),
+        fileData
+      );
 
       fs.unlinkSync(file.path);
 
       filenames.push(newname);
     });
 
-    return response.status(200).json({filenames});
+    return response.status(200).json({ filenames });
   } catch (error) {
     return response
       .status(500)

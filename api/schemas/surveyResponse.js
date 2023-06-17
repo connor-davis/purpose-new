@@ -4,10 +4,12 @@ const SurveyResponseSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     surveyId: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "Survey",
       required: true,
     },
     date: {

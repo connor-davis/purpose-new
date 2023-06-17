@@ -57,13 +57,15 @@ const exportProducts = async (request, response, next) => {
     color: { argb: '#FFFFFF' },
   };
 
-  const products = await ProductModel.find(
+  let products = await ProductModel.find(
     userId !== 'all'
       ? {
           user: { $eq: userId },
         }
       : {}
-  ).populate('user', 'email');
+  ).populate('user');
+
+  if (userId === "all") products = products.filter((product) => product.user.userGroup === request.user.userGroup);
 
   products.forEach((product) => {
     productsSheet.addRow({

@@ -50,18 +50,16 @@ router.get('/:page', async (request, response) => {
       !request.query.userId ? {} : { user: { $eq: request.query.userId } }
     )
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
-      .limit(limit);
+      .limit(limit).populate("user");
     const trainingData = training
-      .map((training) => training.toJSON())
+      .map((training) => training.user.userGroup === request.user.userGroup && training.toJSON())
       .sort((a, b) => {
         if (new Date(a.date) > new Date(b.date)) return -1;
         if (new Date(a.date) < new Date(b.date)) return 1;
 
         return 0;
       });
-    const totalTraining = await TrainingModel.countDocuments(
-      !request.query.userId ? {} : { user: { $eq: request.query.userId } }
-    );
+    const totalTraining = trainingData.length;
     const totalPages = Math.ceil(totalTraining / limit);
 
     return response

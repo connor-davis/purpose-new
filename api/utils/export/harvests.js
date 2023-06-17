@@ -56,13 +56,15 @@ const exportHarvests = async (request, response, next) => {
     color: { argb: '#FFFFFF' },
   };
 
-  const harvests = await HarvestModel.find(
+  let harvests = await HarvestModel.find(
     userId !== 'all'
       ? {
           user: { $eq: userId },
         }
       : {}
-  ).populate('user', 'email');
+  ).populate('user');
+
+  if (userId === "all") harvests = harvests.filter((harvest) => harvest.user.userGroup === request.user.userGroup);
 
   harvests.forEach((harvest) => {
     harvestsSheet.addRow({

@@ -28,7 +28,6 @@ const exportAllData = async (request, response, next) => {
   workbook.modified = new Date();
 
   // Users
-
   if (userId === 'all') {
     let usersSheet = workbook.addWorksheet('Users', {
       headerFooter: { firstHeader: 'Email' },
@@ -105,7 +104,9 @@ const exportAllData = async (request, response, next) => {
       color: { argb: '#FFFFFF' },
     };
 
-    const users = await UserModel.find({ userType: { $ne: 'admin' } });
+    let users = await UserModel.find({ userType: { $ne: 'admin' } });
+
+    users = users.filter((user) => user.userGroup === request.user.userGroup);
 
     users.forEach((user) => {
       usersSheet.addRow(user);
@@ -242,13 +243,15 @@ const exportAllData = async (request, response, next) => {
 
   // Products
 
-  const products = await ProductModel.find(
+  let products = await ProductModel.find(
     userId !== 'all'
       ? {
           user: { $eq: userId },
         }
       : {}
-  ).populate('user', 'email');
+  ).populate('user');
+
+  if (userId === "all") products = products.filter((product) => product.user.userGroup === request.user.userGroup);
 
   products.forEach((product) =>
     productsSheet.addRow({
@@ -261,13 +264,15 @@ const exportAllData = async (request, response, next) => {
 
   // Sales
 
-  const sales = await SaleModel.find(
+  let sales = await SaleModel.find(
     userId !== 'all'
       ? {
           user: { $eq: userId },
         }
       : {}
-  ).populate('user', 'email');
+  ).populate('user');
+
+  if (userId === "all") sales = sales.filter((sale) => sale.user.userGroup === request.user.userGroup);
 
   sales.forEach(async (sale) =>
     salesSheet.addRow({
@@ -281,13 +286,15 @@ const exportAllData = async (request, response, next) => {
 
   // Harvests
 
-  const harvests = await HarvestModel.find(
+  let harvests = await HarvestModel.find(
     userId !== 'all'
       ? {
           user: { $eq: userId },
         }
       : {}
-  ).populate('user', 'email');
+  ).populate('user');
+
+  if (userId === "all") harvests = harvests.filter((harvest) => harvest.user.userGroup === request.user.userGroup);
 
   harvests.forEach((harvest) =>
     harvestsSheet.addRow({

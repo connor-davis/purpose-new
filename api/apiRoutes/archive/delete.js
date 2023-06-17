@@ -32,12 +32,28 @@ router.delete('/:archiveName', adminRoute, async (request, response) => {
   const archiveName = request.params.archiveName;
 
   try {
-    if (!fs.existsSync(path.join(process.cwd(), 'archives', archiveName)))
+    if (
+      !fs.existsSync(
+        path.join(
+          process.cwd(),
+          'archives',
+          request.user.userGroup,
+          archiveName
+        )
+      )
+    )
       return response
         .status(404)
         .json({ message: 'Archive not found.', error: 'archive-not-found' });
     else {
-      fs.unlinkSync(path.join(process.cwd(), 'archives', archiveName));
+      fs.unlinkSync(
+        path.join(
+          process.cwd(),
+          'archives',
+          request.user.userGroup,
+          archiveName
+        )
+      );
 
       return response.status(200).send('Ok');
     }

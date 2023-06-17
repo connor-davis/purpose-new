@@ -33,6 +33,7 @@ router.post('/', async (request, response) => {
   try {
     const newSurvey = new SurveyModel({
       ...body,
+      userGroup: request.user.userGroup
     });
 
     await newSurvey.save();

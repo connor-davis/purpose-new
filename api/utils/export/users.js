@@ -95,7 +95,7 @@ const exportUsers = async (request, response, next) => {
     color: { argb: '#FFFFFF' },
   };
 
-  const users = await UserModel.find({ userType: { $ne: 'admin' } });
+  const users = await UserModel.find({ userType: { $ne: 'admin' }, userGroup: { $eq: request.user.userGroup } });
 
   users.forEach((user) => usersSheet.addRow(userFormatter(user.toJSON())));
 

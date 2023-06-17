@@ -33,7 +33,7 @@ router.post('/', async (request, response) => {
   try {
     const newSurvey = new SurveyResponseModel({
       ...body,
-      user: request.user._id,
+      user: request.user._id
     });
 
     await newSurvey.save();

@@ -14,6 +14,10 @@ const AnnouncementSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    userGroup: {
+      type: String,
+      required: true,
+    }
   },
   { timestamps: true }
 );

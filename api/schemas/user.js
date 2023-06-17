@@ -27,6 +27,10 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    userGroup: {
+      type: String,
+      required: true
+    },
     latitude: {
       type: Number,
       required: false,

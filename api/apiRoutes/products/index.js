@@ -21,8 +21,8 @@ const ProductModel = require('../../models/product');
  */
 router.get('/', async (request, response) => {
   try {
-    const products = await ProductModel.find(request.user.userType !== "admin" ? {} : { user: { $eq: request.user._id } });
-    const productsData = products.map((product) => product.toJSON());
+    const products = await ProductModel.find(request.user.userType !== "admin" ? {} : { user: { $eq: request.user._id } }).populate("user");
+    const productsData = products.map((product) => product.user.userGroup === request.user.userGroup && product.toJSON());
 
     return response.status(200).json(productsData);
   } catch (error) {

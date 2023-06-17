@@ -19,6 +19,7 @@ const RegisterPage = () => {
   const [password, setPassword] = createSignal(undefined);
   const [confirmPassword, setConfirmPassword] = createSignal(undefined);
   const [agreedToTerms, setAgreedToTerms] = createSignal(false);
+  const [userGroup, setUserGroup] = createSignal(false);
 
   const [passwordStrengthMeter, setPasswordStrengthMeter] = createSignal({});
   const [showTermsAndConditions, setShowTermsAndConditions] =
@@ -50,6 +51,7 @@ const RegisterPage = () => {
       email: email(),
       password: password(),
       agreedToTerms: agreedToTerms(),
+      userGroup: userGroup(),
     });
 
     if (response.data.error) return setErrorMessage(response.data.message);
@@ -161,6 +163,15 @@ const RegisterPage = () => {
               placeholder="Confirm your password"
               value={confirmPassword() || ""}
               onChange={(event) => setConfirmPassword(event.target.value)}
+            />
+          </div>
+          <div class="flex flex-col items-center justify-center space-y-2 w-full">
+            <input
+              type="text"
+              class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+              placeholder="User Group Code"
+              value={userGroup() || ""}
+              onChange={(event) => setUserGroup(event.target.value)}
             />
           </div>
         </div>

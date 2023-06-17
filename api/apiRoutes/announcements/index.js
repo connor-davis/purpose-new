@@ -22,7 +22,7 @@ const passport = require('passport');
  */
 router.get('/', async (request, response) => {
   try {
-    const announcements = await AnnouncementModal.find();
+    const announcements = await AnnouncementModal.find({ userGroup: { $eq: request.user.userGroup }});
     const announcementsData = announcements
       .map((announcement) => announcement.toJSON())
       .sort((a, b) => {
@@ -73,7 +73,7 @@ router.get('/:id', async (request, response) => {
   const id = request.params.id;
 
   try {
-    const announcement = await AnnouncementModal.findOne({ _id: { $eq: id } });
+    const announcement = await AnnouncementModal.findOne({ _id: { $eq: id }, userGroup: { $eq: request.user.userGroup } });
 
     if (!announcement)
       return response.status(404).json({

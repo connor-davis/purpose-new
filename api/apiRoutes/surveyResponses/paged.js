@@ -41,16 +41,16 @@ router.get('/:page', async (request, response) => {
   try {
     const surveyResponses = await SurveyResponseModel.find({})
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
-      .limit(limit);
+      .limit(limit).populate("user");
     const surveyResponsesData = surveyResponses
-      .map((surveyResponse) => surveyResponse.toJSON())
+      .map((surveyResponse) => surveyResponse.user.userGroup === request.user.userGroup && surveyResponse.toJSON())
       .sort((a, b) => {
         if (new Date(a.date) > new Date(b.date)) return -1;
         if (new Date(a.date) < new Date(b.date)) return 1;
 
         return 0;
       });
-    const totalSurveyResponses = await SurveyResponseModel.countDocuments();
+    const totalSurveyResponses = surveyResponsesData.length;
     const totalPages = Math.ceil(totalSurveyResponses / limit);
 
     return response

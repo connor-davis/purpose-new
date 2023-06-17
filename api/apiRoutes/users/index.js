@@ -31,7 +31,7 @@ router.get(
   adminRoute,
   async (request, response) => {
     try {
-      const users = await UserModel.find({ userType: { $ne: 'admin' } });
+      const users = await UserModel.find({ userType: { $ne: 'admin' }, userGroup: { $eq: request.user.userGroup } });
       const usersData = users.map((user) => userFormatter(user.toJSON()));
 
       return response.status(200).json(usersData);
@@ -126,6 +126,7 @@ router.get(
       const user = await UserModel.findOne({
         _id: { $eq: userId },
         userType: { $ne: 'admin' },
+        userGroup: { $eq: request.user.userGroup }
       });
 
       if (!user)
