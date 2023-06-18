@@ -75,7 +75,7 @@ const DocumentsPage = () => {
           optionClicked={(option) => {
             if (option === "Yes") {
               deleteDocument(
-                showDelete().user + "." + showDelete().name
+                showDelete().user + "." + showDelete().userGroup + "." + showDelete().name
               );
               setShowDelete(undefined);
             } else setShowDelete(undefined);

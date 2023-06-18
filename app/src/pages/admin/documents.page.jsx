@@ -67,7 +67,7 @@ const AdminDocumentsPage = () => {
           ]}
           optionClicked={(option) => {
             if (option === "Yes") {
-              deleteDocument(showDelete().user + "." + showDelete().name);
+              deleteDocument(showDelete().user + "." + showDelete().userGroup + "." + showDelete().name);
               setShowDelete(undefined);
             } else setShowDelete(undefined);
           }}
@@ -111,6 +111,8 @@ const AdminDocumentsPage = () => {
                       apiUrl +
                       "documents/view/" +
                       document.user +
+                      "." +
+                      document.userGroup +
                       "." +
                       document.name
                     }
