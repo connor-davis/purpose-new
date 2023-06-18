@@ -39,22 +39,12 @@ router.post('/', upload.array('upfiles'), async (request, response) => {
       fs.mkdirSync(path.join(process.cwd(), 'documents'));
     }
 
-    if (
-      !fs.existsSync(
-        path.join(process.cwd(), 'documents', request.user.userGroup)
-      )
-    ) {
-      fs.mkdirSync(
-        path.join(process.cwd(), 'documents', request.user.userGroup)
-      );
-    }
-
     request.files.forEach((file) => {
       const fileData = fs.readFileSync(file.path);
-      const newname = request.user._id + '.' + file.originalname;
+      const newname = request.user._id + "." + request.user.userGroup + '.' + file.originalname;
 
       fs.writeFileSync(
-        path.join(process.cwd(), 'documents', request.user.userGroup, newname),
+        path.join(process.cwd(), 'documents', newname),
         fileData
       );
 

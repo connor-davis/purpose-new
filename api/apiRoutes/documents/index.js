@@ -30,19 +30,9 @@ router.get(
         fs.mkdirSync(path.join(process.cwd(), 'documents'));
       }
 
-      if (
-        !fs.existsSync(
-          path.join(process.cwd(), 'documents', request.user.userGroup)
-        )
-      ) {
-        fs.mkdirSync(
-          path.join(process.cwd(), 'documents', request.user.userGroup)
-        );
-      }
-
       const documents = fs
         .readdirSync(
-          path.join(process.cwd(), 'documents', request.user.userGroup),
+          path.join(process.cwd(), 'documents'),
           {
             withFileTypes: true,
           }
@@ -103,19 +93,9 @@ router.get(
         fs.mkdirSync(path.join(process.cwd(), 'documents'));
       }
 
-      if (
-        !fs.existsSync(
-          path.join(process.cwd(), 'documents', request.user.userGroup)
-        )
-      ) {
-        fs.mkdirSync(
-          path.join(process.cwd(), 'documents', request.user.userGroup)
-        );
-      }
-
       const documents = fs
         .readdirSync(
-          path.join(process.cwd(), 'documents', request.user.userGroup),
+          path.join(process.cwd(), 'documents'),
           {
             withFileTypes: true,
           }
@@ -170,22 +150,8 @@ router.get(
  */
 router.get('/view/:filename', async (request, response) => {
   try {
-    console.log(
-      request.user
-    );
-
     if (!fs.existsSync(path.join(process.cwd(), 'documents'))) {
       fs.mkdirSync(path.join(process.cwd(), 'documents'));
-    }
-
-    if (
-      !fs.existsSync(
-        path.join(process.cwd(), 'documents', request.user.userGroup)
-      )
-    ) {
-      fs.mkdirSync(
-        path.join(process.cwd(), 'documents', request.user.userGroup)
-      );
     }
 
     if (
@@ -193,7 +159,6 @@ router.get('/view/:filename', async (request, response) => {
         path.join(
           process.cwd(),
           'documents',
-          request.user.userGroup,
           request.params.filename
         )
       )
@@ -206,7 +171,6 @@ router.get('/view/:filename', async (request, response) => {
           path.join(
             process.cwd(),
             'documents',
-            request.user.userGroup,
             request.params.filename
           )
         );
