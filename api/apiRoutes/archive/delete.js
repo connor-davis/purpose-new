@@ -37,7 +37,6 @@ router.delete('/:archiveName', adminRoute, async (request, response) => {
         path.join(
           process.cwd(),
           'archives',
-          request.user.userGroup,
           archiveName
         )
       )
@@ -50,7 +49,6 @@ router.delete('/:archiveName', adminRoute, async (request, response) => {
         path.join(
           process.cwd(),
           'archives',
-          request.user.userGroup,
           archiveName
         )
       );

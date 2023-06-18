@@ -36,7 +36,6 @@ router.delete('/:documentName', async (request, response) => {
         path.join(
           process.cwd(),
           'documents',
-          request.user.userGroup,
           documentName
         )
       )
@@ -49,7 +48,6 @@ router.delete('/:documentName', async (request, response) => {
         path.join(
           process.cwd(),
           'documents',
-          request.user.userGroup,
           documentName
         )
       );
