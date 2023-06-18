@@ -66,7 +66,7 @@ router.get('/:page', async (request, response) => {
 
         return {
           name: archivename,
-          userGroup: archivenamesplit[1],
+          userGroup: archivenamesplit[0],
           isFile: archive.isFile(),
         };
       });
