@@ -721,7 +721,7 @@ router.get('/financeTotals/:userId', async (request, response) => {
             user: { $eq: userId },
           }
         : {}
-    );
+    ).populate("user");
 
     if (userId === "all") sales = sales.filter((sale) => sale.user.userGroup === request.user.userGroup);
 
