@@ -157,6 +157,8 @@ router.get(
  */
 router.get('/view/:filename', async (request, response) => {
   try {
+    console.log(process.cwd(), 'documents', request.user.userGroup, request.params.filename);
+
     if (!fs.existsSync(path.join(process.cwd(), 'documents'))) {
       fs.mkdirSync(path.join(process.cwd(), 'documents'));
     }
