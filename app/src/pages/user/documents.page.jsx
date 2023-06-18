@@ -124,6 +124,8 @@ const DocumentsPage = () => {
                       "documents/view/" +
                       document.user +
                       "." +
+                      document.userGroup +
+                      "." +
                       document.name
                     }
                     target="_blank"

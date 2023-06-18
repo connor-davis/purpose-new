@@ -70,7 +70,7 @@ const ArchivePage = () => {
                 <div class="flex items-center space-x-2">
                   <a
                     class="hidden group-hover:flex group-hover:animate-fade-in p-2 rounded-full hover:bg-lime-200 cursor-pointer"
-                    href={apiUrl + "archives/view/" + archive.name}
+                    href={apiUrl + "archives/view/"+ archive.userGroup + "." + archive.name}
                     target="_blank"
                   >
                     <svg
