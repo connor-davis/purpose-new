@@ -98,9 +98,13 @@ router.get('/view/:filename', async (request, response) => {
       fs.mkdirSync(path.join(process.cwd(), 'archives'));
     }
 
+    if (!fs.existsSync(path.join(process.cwd(), 'archives', request.user.userGroup))) {
+      fs.mkdirSync(path.join(process.cwd(), 'archives', request.user.userGroup));
+    }
+
     if (
       !fs.existsSync(
-        path.join(process.cwd(), 'archives', request.params.filename)
+        path.join(process.cwd(), 'archives', request.user.userGroup, request.params.filename)
       )
     )
       return response.status(404).json({ message: 'Archive not found.' });
@@ -108,7 +112,7 @@ router.get('/view/:filename', async (request, response) => {
       return response
         .status(200)
         .sendFile(
-          path.join(process.cwd(), 'archives', request.params.filename)
+          path.join(process.cwd(), 'archives', request.user.userGroup, request.params.filename)
         );
     }
   } catch (error) {

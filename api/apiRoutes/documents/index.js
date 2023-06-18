@@ -101,8 +101,12 @@ router.get(
         fs.mkdirSync(path.join(process.cwd(), 'documents'));
       }
 
+      if (!fs.existsSync(path.join(process.cwd(), 'documents', request.user.userGroup))) {
+        fs.mkdirSync(path.join(process.cwd(), 'documents', request.user.userGroup));
+      }
+
       const documents = fs
-        .readdirSync(path.join(process.cwd(), 'documents'), {
+        .readdirSync(path.join(process.cwd(), 'documents', request.user.userGroup), {
           withFileTypes: true,
         })
         .filter((document) => {
@@ -157,9 +161,13 @@ router.get('/view/:filename', async (request, response) => {
       fs.mkdirSync(path.join(process.cwd(), 'documents'));
     }
 
+    if (!fs.existsSync(path.join(process.cwd(), 'documents', request.user.userGroup))) {
+      fs.mkdirSync(path.join(process.cwd(), 'documents', request.user.userGroup));
+    }
+
     if (
       !fs.existsSync(
-        path.join(process.cwd(), 'documents', request.params.filename)
+        path.join(process.cwd(), 'documents', request.user.userGroup, request.params.filename)
       )
     )
       return response.status(404).json({ message: 'Document not found.' });
@@ -167,7 +175,7 @@ router.get('/view/:filename', async (request, response) => {
       return response
         .status(200)
         .sendFile(
-          path.join(process.cwd(), 'documents', request.params.filename)
+          path.join(process.cwd(), 'documents', request.user.userGroup, request.params.filename)
         );
     }
   } catch (error) {
