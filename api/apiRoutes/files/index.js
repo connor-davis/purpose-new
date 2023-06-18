@@ -30,17 +30,9 @@ router.get(
         fs.mkdirSync(path.join(process.cwd(), 'files'));
       }
 
-      if (
-        !fs.existsSync(
-          path.join(process.cwd(), 'files', request.user.userGroup)
-        )
-      ) {
-        fs.mkdirSync(path.join(process.cwd(), 'files', request.user.userGroup));
-      }
-
       const files = fs
         .readdirSync(
-          path.join(process.cwd(), 'files', request.user.userGroup),
+          path.join(process.cwd(), 'files'),
           {
             withFileTypes: true,
           }
@@ -101,17 +93,9 @@ router.get(
         fs.mkdirSync(path.join(process.cwd(), 'files'));
       }
 
-      if (
-        !fs.existsSync(
-          path.join(process.cwd(), 'files', request.user.userGroup)
-        )
-      ) {
-        fs.mkdirSync(path.join(process.cwd(), 'files', request.user.userGroup));
-      }
-
       const files = fs
         .readdirSync(
-          path.join(process.cwd(), 'files', request.user.userGroup),
+          path.join(process.cwd(), 'files'),
           {
             withFileTypes: true,
           }
@@ -170,17 +154,10 @@ router.get('/view/:filename', async (request, response) => {
     }
 
     if (
-      !fs.existsSync(path.join(process.cwd(), 'files', request.user.userGroup))
-    ) {
-      fs.mkdirSync(path.join(process.cwd(), 'files', request.user.userGroup));
-    }
-
-    if (
       !fs.existsSync(
         path.join(
           process.cwd(),
           'files',
-          request.user.userGroup,
           request.params.filename
         )
       )
@@ -193,7 +170,6 @@ router.get('/view/:filename', async (request, response) => {
           path.join(
             process.cwd(),
             'files',
-            request.user.userGroup,
             request.params.filename
           )
         );
