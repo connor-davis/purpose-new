@@ -58,7 +58,7 @@ router.get('/:page', async (request, response) => {
           withFileTypes: true,
         }
       )
-      .filter((file) => file.name.split(".")[1] === request.user.userGroup)
+      .filter((file) => file.name.split(".")[0] === request.user.userGroup)
       .map((archive) => {
         let archivename = archive.name;
         const archivenamesplit = archivename.split('.');
