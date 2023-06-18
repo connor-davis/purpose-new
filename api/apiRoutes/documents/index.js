@@ -61,6 +61,8 @@ router.get(
 
       return response.status(200).json(documents);
     } catch (error) {
+      console.log(error);
+      
       return response
         .status(500)
         .json({ message: 'Failed to retrieve documents.', reason: error });
@@ -101,14 +103,23 @@ router.get(
         fs.mkdirSync(path.join(process.cwd(), 'documents'));
       }
 
-      if (!fs.existsSync(path.join(process.cwd(), 'documents', request.user.userGroup))) {
-        fs.mkdirSync(path.join(process.cwd(), 'documents', request.user.userGroup));
+      if (
+        !fs.existsSync(
+          path.join(process.cwd(), 'documents', request.user.userGroup)
+        )
+      ) {
+        fs.mkdirSync(
+          path.join(process.cwd(), 'documents', request.user.userGroup)
+        );
       }
 
       const documents = fs
-        .readdirSync(path.join(process.cwd(), 'documents', request.user.userGroup), {
-          withFileTypes: true,
-        })
+        .readdirSync(
+          path.join(process.cwd(), 'documents', request.user.userGroup),
+          {
+            withFileTypes: true,
+          }
+        )
         .filter((document) => {
           let documentname = document.name;
           const documentnamesplit = documentname.split('.');
@@ -124,6 +135,8 @@ router.get(
 
       return response.status(200).json(documents);
     } catch (error) {
+      console.log(error);
+
       return response
         .status(500)
         .json({ message: 'Failed to retrieve documents.', reason: error });
@@ -157,19 +170,35 @@ router.get(
  */
 router.get('/view/:filename', async (request, response) => {
   try {
-    console.log(process.cwd(), 'documents', request.user.userGroup, request.params.filename);
+    console.log(
+      process.cwd(),
+      'documents',
+      request.user.userGroup,
+      request.params.filename
+    );
 
     if (!fs.existsSync(path.join(process.cwd(), 'documents'))) {
       fs.mkdirSync(path.join(process.cwd(), 'documents'));
     }
 
-    if (!fs.existsSync(path.join(process.cwd(), 'documents', request.user.userGroup))) {
-      fs.mkdirSync(path.join(process.cwd(), 'documents', request.user.userGroup));
+    if (
+      !fs.existsSync(
+        path.join(process.cwd(), 'documents', request.user.userGroup)
+      )
+    ) {
+      fs.mkdirSync(
+        path.join(process.cwd(), 'documents', request.user.userGroup)
+      );
     }
 
     if (
       !fs.existsSync(
-        path.join(process.cwd(), 'documents', request.user.userGroup, request.params.filename)
+        path.join(
+          process.cwd(),
+          'documents',
+          request.user.userGroup,
+          request.params.filename
+        )
       )
     )
       return response.status(404).json({ message: 'Document not found.' });
@@ -177,10 +206,17 @@ router.get('/view/:filename', async (request, response) => {
       return response
         .status(200)
         .sendFile(
-          path.join(process.cwd(), 'documents', request.user.userGroup, request.params.filename)
+          path.join(
+            process.cwd(),
+            'documents',
+            request.user.userGroup,
+            request.params.filename
+          )
         );
     }
   } catch (error) {
+    console.log(error);
+
     return response.status(500).json({
       message: 'Failed to retrieve document with file name',
       reason: error,
