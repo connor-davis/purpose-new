@@ -46,7 +46,7 @@ router.post(
 
       request.files.forEach((file) => {
         const fileData = fs.readFileSync(file.path);
-        const newname = file.originalname;
+        const newname = request.user.userGroup + "." + file.originalname;
 
         fs.writeFileSync(
           path.join(process.cwd(), 'archives', newname),
