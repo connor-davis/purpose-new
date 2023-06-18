@@ -61,9 +61,12 @@ router.get('/:page', async (request, response) => {
       .filter((file) => file.name.split(".")[1] === request.user.userGroup)
       .map((archive) => {
         let archivename = archive.name;
+        const archivenamesplit = archivename.split('.');
+        archivename = archivename.replace(archivenamesplit[0] + '.', '');
 
         return {
           name: archivename,
+          userGroup: archivenamesplit[1],
           isFile: archive.isFile(),
         };
       });

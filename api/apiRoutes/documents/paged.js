@@ -59,21 +59,18 @@ router.get('/:page', async (request, response) => {
         }
       )
       .filter((file) => {
-        console.log(file.name.split(".")[1] === request.user.userGroup);
-        console.log(file.name.split(".")[1]);
-        console.log(request.user.userGroup);
-
-
         return file.name.split(".")[1] === request.user.userGroup;
       })
       .map((document) => {
         let documentname = document.name;
         const documentnamesplit = documentname.split('.');
         documentname = documentname.replace(documentnamesplit[0] + '.', '');
+        documentname = documentname.replace(documentnamesplit[1] + '.', '');
 
         return {
           name: documentname,
           user: documentnamesplit[0],
+          userGroup: documentnamesplit[1],
           isFile: document.isFile(),
         };
       })
