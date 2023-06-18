@@ -62,7 +62,7 @@ router.get(
       return response.status(200).json(documents);
     } catch (error) {
       console.log(error);
-      
+
       return response
         .status(500)
         .json({ message: 'Failed to retrieve documents.', reason: error });
@@ -171,10 +171,7 @@ router.get(
 router.get('/view/:filename', async (request, response) => {
   try {
     console.log(
-      process.cwd(),
-      'documents',
-      request.user.userGroup,
-      request.params.filename
+      request.user
     );
 
     if (!fs.existsSync(path.join(process.cwd(), 'documents'))) {
