@@ -377,8 +377,8 @@ const AdminDashboardPage = () => {
     });
 
     if (response.data) {
-      setNumberOfChildren(response.data.totalChildren);
-      setNumberOfDependents(response.data.totalDependents);
+      setNumberOfChildren(response.data.totalChildren || 0);
+      setNumberOfDependents(response.data.totalDependents || 0);
 
       return;
     }

@@ -34,8 +34,8 @@ router.get("/usersChildrenAndDependents", async (request, response) => {
   try {
     const users = await UserModel.find({ userType: { $ne: "admin" }});
 
-    const totalChildren = users.map((user) => user.numberOfChildren).reduce((previous, current) => previous + current, 0);
-    const totalDependents = users.map((user) => user.numberOfDependents).reduce((previous, current) => previous + current, 0);
+    const totalChildren = users.map((user) => parseFloat(user.numberOfChildren)).reduce((previous, current) => previous + current, 0);
+    const totalDependents = users.map((user) => parseFloat(user.numberOfDependents)).reduce((previous, current) => previous + current, 0);
 
     return response.status(200).json({ totalChildren, totalDependents });
   } catch (error)
