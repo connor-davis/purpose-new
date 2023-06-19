@@ -37,6 +37,8 @@ router.get("/usersChildrenAndDependents", async (request, response) => {
     const totalChildren = users.map((user) => parseFloat(user.numberOfChildren)).reduce((previous, current) => previous + current, 0);
     const totalDependents = users.map((user) => parseFloat(user.numberOfDependents)).reduce((previous, current) => previous + current, 0);
 
+    console.log(users.map((user) => user.numberOfChildren))
+
     return response.status(200).json({ totalChildren, totalDependents });
   } catch (error)
   {
