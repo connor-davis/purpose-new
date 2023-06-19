@@ -79,6 +79,10 @@ const UserSchema = new mongoose.Schema(
       type: Number,
       required: false,
     },
+    numberOfDependents: {
+      type: Number,
+      required: false,
+    },
     businessRegistered: {
       type: Boolean,
       required: false,

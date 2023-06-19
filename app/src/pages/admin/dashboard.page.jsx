@@ -9,6 +9,7 @@ import {
   monthlyTrainingOptions,
   monthlyWasteOptions,
   monthsHarvestsOptions,
+  userChildrenAndDependentsOptions,
   userTypesOptions
 } from "../../components/chart/chartOptions";
 import useState from "../../hooks/state";
@@ -38,6 +39,9 @@ const AdminDashboardPage = () => {
 
   const [waste, setWaste] = createSignal([]);
   const [training, setTraining] = createSignal([]);
+
+  const [numberOfChildren, setNumberOfChildren] = createSignal(0);
+  const [numberOfDependents, setNumberOfDependents] = createSignal(0);
 
   const now = new Date().getUTCFullYear();
   const years = Array(now - (now - 30))
@@ -77,6 +81,7 @@ const AdminDashboardPage = () => {
       await loadUsersAges();
       await loadMonthsHarvests();
       await loadUserTypes();
+      await loadChildrenAndDependents();
       await loadWaste();
       await loadTraining();
 
@@ -363,6 +368,19 @@ const AdminDashboardPage = () => {
 
     if (response.data) {
       return setUserTypes(Object.values(response.data.userTypes));
+    }
+  };
+
+  const loadChildrenAndDependents = async () => {
+    const response = await axios.get(apiUrl + "analytics/usersChildrenAndDependents", {
+      headers: { Authorization: "Bearer " + user.token },
+    });
+
+    if (response.data) {
+      setNumberOfChildren(response.data.totalChildren);
+      setNumberOfDependents(response.data.totalDependents);
+
+      return;
     }
   };
 
@@ -731,6 +749,19 @@ const AdminDashboardPage = () => {
                   </div>
                 </div>
               )
+            ) : (
+              <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
+            )}
+          </div>
+          <div class="w-full h-[500px] md:h-[300px] bg-white rounded-lg p-3">
+            {!loading() ? (
+              <Chart
+                id="usersChildrenAndDependents"
+                options={{
+                  ...userChildrenAndDependentsOptions,
+                  series: [numberOfChildren(), numberOfDependents()],
+                }}
+              />
             ) : (
               <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
             )}

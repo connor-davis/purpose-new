@@ -354,3 +354,35 @@ export const userTypesOptions = {
     "Other",
   ],
 };
+
+export const userChildrenAndDependentsOptions = {
+  series: [20, 10],
+  title: {
+    text: "Children & Dependents",
+    style: {
+      fontSize: "26px",
+    },
+  },
+  chart: {
+    height: "100%",
+    type: "pie",
+  },
+  responsive: [
+    {
+      breakpoint: 1000,
+      options: {
+        chart: {
+          width: "100%",
+          heigh: "100%",
+        },
+        legend: {
+          position: "bottom",
+        },
+      },
+    },
+  ],
+  labels: [
+    "Children",
+    "Dependents"
+  ],
+};

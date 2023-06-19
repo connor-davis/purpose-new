@@ -30,6 +30,22 @@ router.get('/totalUsers', async (request, response) => {
   }
 });
 
+router.get("/usersChildrenAndDependents", async (request, response) => {
+  try {
+    const users = await UserModel.find({ userType: { $ne: "admin" }});
+
+    const totalChildren = users.map((user) => user.numberOfChildren).reduce((previous, current) => previous + current, 0);
+    const totalDependents = users.map((user) => user.numberOfDependents).reduce((previous, current) => previous + current, 0);
+
+    return response.status(200).json({ totalChildren, totalDependents });
+  } catch (error)
+  {
+    console.log(error);
+
+    return response.status(500).json({ message: "Failed to retrieve users children.", reason: error });
+  }
+});
+
 router.get('/usersAges', async (request, response) => {
   try {
     const zeroToTen =

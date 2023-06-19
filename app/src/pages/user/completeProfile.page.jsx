@@ -31,6 +31,8 @@ const CompleteProfilePage = () => {
     createSignal(undefined);
   const [businessNumberOfChildren, setBusinessNumberOfChildren] =
     createSignal(undefined);
+  const [businessNumberOfDependents, setBusinessNumberOfDependents] =
+    createSignal(undefined);
 
   const [website, setWebsite] = createSignal(undefined);
   const [facebookPage, setFacebookPage] = createSignal(undefined);
@@ -89,6 +91,7 @@ const CompleteProfilePage = () => {
               userType: businessType(),
               numberOfChildren: businessNumberOfChildren() || null,
               businessNumberOfEmployees: businessNumberOfEmployees(),
+              numberOfDependents: businessNumberOfDependents(),
               positionAtEcd: businessPositionAtEcd() || null,
               businessRegistrationNumber: businessRegistrationNumber() || null,
               websiteUrl: website() || null,
@@ -339,6 +342,20 @@ const CompleteProfilePage = () => {
                 />
               </div>
             )}
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Number Of Dependents <span class="text-red-500">*</span>
+              </div>
+              <input
+                class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+                type="number"
+                placeholder="Number Of Dependents"
+                value={businessNumberOfDependents() || ""}
+                onChange={(event) =>
+                  setBusinessNumberOfDependents(event.target.value)
+                }
+              />
+            </div>
             <div class="flex items-center justify-center space-x-2 w-full">
               <span
                 class="cursor-pointer"
