@@ -32,7 +32,7 @@ router.get('/totalUsers', async (request, response) => {
 
 router.get("/usersChildrenAndDependents", async (request, response) => {
   try {
-    const users = await UserModel.find({ userType: { $ne: "admin" }});
+    const users = await UserModel.find({ userType: { $ne: "admin" }, userGroup: { $eq: request.user.userGroup }});
 
     const totalChildren = users.map((user) => parseFloat(user.numberOfChildren || 0)).reduce((previous, current) => previous + current, 0);
     const totalDependents = users.map((user) => parseFloat(user.numberOfDependents || 0)).reduce((previous, current) => previous + current, 0);
