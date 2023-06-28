@@ -59,6 +59,8 @@ router.get('/:page', async (request, response) => {
       .status(200)
       .json({ data: announcementsData, totalAnnouncements, totalPages });
   } catch (error) {
+    console.log(error);
+    
     return response.status(500).json({
       message: 'Failed to retrieve paged announcements.',
       reason: error,
