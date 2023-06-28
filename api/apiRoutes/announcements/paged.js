@@ -38,8 +38,6 @@ router.get('/:page', async (request, response) => {
   const page = request.params.page;
   const limit = request.query.limit || 10;
 
-  console.log(request.user);
-
   try {
     const announcements = await AnnouncementModal.find({ userGroup: { $eq: request.user.userGroup }})
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)

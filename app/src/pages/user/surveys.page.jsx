@@ -27,7 +27,7 @@ const SurveysPage = () => {
 
     setTimeout(async () => {
       const response = await axios.get(
-        apiUrl + "surveys/page/" + currentPage() + "?limit=10&userId=",
+        apiUrl + "surveys/page/" + currentPage() + "?limit=10",
         { headers: { Authorization: "Bearer " + user.token } }
       );
 

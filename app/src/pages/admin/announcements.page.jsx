@@ -30,7 +30,7 @@ const AdminAnnouncementsPage = () => {
 
     setTimeout(async () => {
       const response = await axios.get(
-        apiUrl + "announcements/page/" + currentPage() + "?limit=10&userId=",
+        apiUrl + "announcements/page/" + currentPage() + "?limit=10",
         { headers: { Authorization: "Bearer " + user.token } }
       );
 

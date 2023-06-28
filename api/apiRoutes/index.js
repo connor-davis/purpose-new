@@ -69,7 +69,11 @@ router.use(
 router.use('/documents', require('./documents'));
 router.use('/archives', require('./archive'));
 router.use('/files', require('./files'));
-router.use('/announcements', require('./announcements'));
+router.use(
+  '/announcements',
+  passport.authenticate('jwt', { session: false }),
+  require('./announcements')
+);
 router.use(
   '/surveys/responses',
   passport.authenticate('jwt', { session: false }),
