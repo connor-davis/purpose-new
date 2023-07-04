@@ -29,7 +29,7 @@ const UserSchema = new mongoose.Schema(
     },
     userGroup: {
       type: String,
-      required: true
+      required: true,
     },
     latitude: {
       type: Number,
@@ -94,6 +94,82 @@ const UserSchema = new mongoose.Schema(
     },
     businessNumberOfEmployees: {
       type: Number,
+      required: false,
+    },
+    numberOfSchoolKids: {
+      type: Number,
+      required: false,
+    },
+    numberOfStaff: {
+      type: Number,
+      required: false,
+    },
+    hasGardener: {
+      type: String,
+      required: false,
+    },
+    numberOfClassrooms: {
+      type: Number,
+      required: false,
+    },
+    landOwner: {
+      type: String,
+      required: false,
+    },
+    hasGardenInProgress: {
+      type: String,
+      required: false,
+    },
+    isGrowingCrops: {
+      type: String,
+      required: false,
+    },
+    gardenSize: {
+      type: Number,
+      required: false,
+    },
+    numberOfToilets: {
+      type: Number,
+      required: false,
+    },
+    isFirstAidTrained: {
+      type: String,
+      required: false,
+    },
+    isFireExtinguisherAvailable: {
+      type: String,
+      required: false,
+    },
+    hasInternetAccess: {
+      type: String,
+      required: false,
+    },
+    hasFirstAidOnSite: {
+      type: String,
+      required: false,
+    },
+    numberOfFridges: {
+      type: Number,
+      required: false,
+    },
+    numberOfWaterTanks: {
+      type: Number,
+      required: false,
+    },
+    foodFrom: {
+      type: String,
+      required: false,
+    },
+    hasWorkingLightsAndElectricity: {
+      type: String,
+      required: false,
+    },
+    hasRunningWater: {
+      type: String,
+      required: false,
+    },
+    hasStoveOrOven: {
+      type: String,
       required: false,
     },
     websiteUrl: {

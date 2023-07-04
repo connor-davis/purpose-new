@@ -16,8 +16,8 @@ const CompleteProfilePage = () => {
   const [lastName, setLastName] = createSignal(undefined);
   const [idNumber, setIdNumber] = createSignal(undefined);
   const [age, setAge] = createSignal(undefined);
-  const [gender, setGender] = createSignal("male");
-  const [ethnicity, setEthnicity] = createSignal("white");
+  const [gender, setGender] = createSignal(undefined);
+  const [ethnicity, setEthnicity] = createSignal(undefined);
 
   const [businessName, setBusinessName] = createSignal(undefined);
   const [businessType, setBusinessType] = createSignal(undefined);
@@ -33,6 +33,28 @@ const CompleteProfilePage = () => {
     createSignal(undefined);
   const [businessNumberOfDependents, setBusinessNumberOfDependents] =
     createSignal(undefined);
+
+  const [numberOfSchoolKids, setNumberOfSchoolKids] = createSignal(undefined);
+  const [numberOfStaff, setNumberOfStaff] = createSignal(undefined);
+  const [hasGardener, setHasGardener] = createSignal(undefined);
+  const [numberOfClassrooms, setNumberOfClassrooms] = createSignal(undefined);
+  const [landOwner, setLandOwner] = createSignal(undefined);
+  const [hasGardenInProgress, setHasGardenInProgress] = createSignal(undefined);
+  const [isGrowingCrops, setIsGrowingCrops] = createSignal(undefined);
+  const [gardenSize, setGardenSize] = createSignal(undefined);
+  const [numberOfToilets, setNumberOfToilets] = createSignal(undefined);
+  const [isFirstAidTrained, setIsFirstAidTrained] = createSignal(undefined);
+  const [isFireExtinguisherAvailable, setIsFireExtinguisherAvailable] =
+    createSignal(undefined);
+  const [hasInternetAccess, setHasInternetAccess] = createSignal(undefined);
+  const [hasFirstAidOnSite, setHasFirstAidOnSite] = createSignal(undefined);
+  const [numberOfFridges, setNumberOfFridges] = createSignal(undefined);
+  const [numberOfWaterTanks, setNumberOfWaterTanks] = createSignal(undefined);
+  const [foodFrom, setFoodFrom] = createSignal(undefined);
+  const [hasWorkingLightsAndElectricity, setHasWorkingLightsAndElectricity] =
+    createSignal(undefined);
+  const [hasRunningWater, setHasRunningWater] = createSignal(undefined);
+  const [hasStoveOrOven, setHasStoveOrOven] = createSignal(undefined);
 
   const [website, setWebsite] = createSignal(undefined);
   const [facebookPage, setFacebookPage] = createSignal(undefined);
@@ -69,7 +91,13 @@ const CompleteProfilePage = () => {
         const form = event.target;
 
         if (form.reportValidity()) {
-          if (stage() < 10) {
+          if (stage() === 4 && businessType() !== "school garden") {
+            setStage(stage() + 3);
+
+            setTimeout(() => {
+              setStage(stage() + 1);
+            }, 1500);
+          } else if (stage() < 12) {
             setStage(stage() + 1);
 
             setTimeout(() => {
@@ -94,6 +122,27 @@ const CompleteProfilePage = () => {
               numberOfDependents: businessNumberOfDependents(),
               positionAtEcd: businessPositionAtEcd() || null,
               businessRegistrationNumber: businessRegistrationNumber() || null,
+              numberOfSchoolKids: numberOfSchoolKids() || null,
+              numberOfStaff: numberOfStaff() || null,
+              hasGardener: hasGardener() || null,
+              numberOfClassrooms: numberOfClassrooms() || null,
+              landOwner: landOwner() || null,
+              hasGardenInProgress: hasGardenInProgress() || null,
+              isGrowingCrops: isGrowingCrops() || null,
+              gardenSize: gardenSize() || null,
+              numberOfToilets: numberOfToilets() || null,
+              isFirstAidTrained: isFirstAidTrained() || null,
+              isFireExtinguisherAvailable:
+                isFireExtinguisherAvailable() || null,
+              hasInternetAccess: hasInternetAccess() || null,
+              hasFirstAidOnSite: hasFirstAidOnSite() || null,
+              numberOfFridges: numberOfFridges() || null,
+              numberOfWaterTanks: numberOfWaterTanks() || null,
+              foodFrom: foodFrom() || null,
+              hasWorkingLightsAndElectricity:
+                hasWorkingLightsAndElectricity() || null,
+              hasRunningWater: hasRunningWater() || null,
+              hasStoveOrOven: hasStoveOrOven() || null,
               websiteUrl: website() || null,
               facebookPageUrl: facebookPage() || null,
               instagramUrl: instagram() || null,
@@ -150,7 +199,7 @@ const CompleteProfilePage = () => {
       }}
       class="flex flex-col w-full h-full p-5 space-y-3 items-center justify-center"
     >
-      <div class="flex flex-col w-full md:w-[408px] bg-neutral-100 rounded p-3">
+      <div class="flex flex-col w-full md:w-[408px] bg-neutral-100 rounded p-3 overflow-y-auto">
         {stage() === 0 && (
           <div class="flex flex-col items-center space-y-5 text-center">
             <img src={LogoLarge} class="h-48" />
@@ -284,6 +333,7 @@ const CompleteProfilePage = () => {
                   "Salon",
                   "Consulting",
                   "Construction",
+                  "School Garden",
                   "Other",
                 ]}
                 selectionChanged={(item) => {
@@ -343,9 +393,7 @@ const CompleteProfilePage = () => {
               </div>
             )}
             <div class="flex flex-col w-full space-y-1">
-              <div class="flex w-full">
-                Number Of Dependents
-              </div>
+              <div class="flex w-full">Number Of Dependents</div>
               <input
                 class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
                 type="number"
@@ -451,10 +499,261 @@ const CompleteProfilePage = () => {
         {stage() === 5 && (
           <div class="flex flex-col items-center space-y-5 text-center">
             <img src={LogoLarge} class="h-48" />
-            <div class="animate-fade-in">Let's get your handles.</div>
+            <div class="animate-fade-in">
+              Let's get your school garden details.
+            </div>
           </div>
         )}
         {stage() === 6 && (
+          <div class="flex flex-col items-center space-y-3 text-center animate-fade-in overflow-y-auto">
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Number of School Kids <span class="text-red-500">*</span>
+              </div>
+              <input
+                class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+                type="number"
+                placeholder="Number of School Kids"
+                value={numberOfSchoolKids() || ""}
+                step={1}
+                min={1}
+                required
+                onChange={(event) =>
+                  setNumberOfSchoolKids(parseInt(event.target.value) || 0)
+                }
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Number of Staff/Teachers <span class="text-red-500">*</span>
+              </div>
+              <input
+                class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+                type="number"
+                placeholder="Number of Staff/Teachers"
+                value={numberOfStaff() || ""}
+                step={1}
+                min={1}
+                required
+                onChange={(event) =>
+                  setNumberOfStaff(parseInt(event.target.value) || 0)
+                }
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Do you have a gardener? <span class="text-red-500">*</span>
+              </div>
+              <SelectMenu
+                items={["yes", "no"]}
+                selectionChanged={(item) => setHasGardener(item)}
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Number of Classrooms <span class="text-red-500">*</span>
+              </div>
+              <input
+                class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+                type="number"
+                placeholder="Number of Classrooms"
+                value={numberOfClassrooms() || ""}
+                step={1}
+                min={1}
+                required
+                onChange={(event) =>
+                  setNumberOfClassrooms(parseInt(event.target.value) || 0)
+                }
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Who owns the land? <span class="text-red-500">*</span>
+              </div>
+              <SelectMenu
+                items={["Government", "Me"]}
+                selectionChanged={(item) => setLandOwner(item.toLowerCase())}
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Is there a garden in progress?{" "}
+                <span class="text-red-500">*</span>
+              </div>
+              <SelectMenu
+                items={["yes", "no"]}
+                selectionChanged={(item) => setHasGardenInProgress(item)}
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Are crops being grown? <span class="text-red-500">*</span>
+              </div>
+              <SelectMenu
+                items={["yes", "no"]}
+                selectionChanged={(item) => setIsGrowingCrops(item)}
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                What is the size of the garden?{" "}
+                <span class="text-red-500">*</span>
+              </div>
+              <input
+                class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+                type="number"
+                placeholder="What is the size of the garden?"
+                value={gardenSize() || ""}
+                step={1}
+                min={1}
+                required
+                onChange={(event) =>
+                  setGardenSize(parseInt(event.target.value) || 0)
+                }
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                How many toilets are there on the property?{" "}
+                <span class="text-red-500">*</span>
+              </div>
+              <input
+                class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+                type="number"
+                placeholder="How many toilets are there on the property?"
+                value={numberOfToilets() || ""}
+                step={1}
+                min={1}
+                required
+                onChange={(event) =>
+                  setNumberOfToilets(parseInt(event.target.value) || 0)
+                }
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Is a staff member trained in First Aid?{" "}
+                <span class="text-red-500">*</span>
+              </div>
+              <SelectMenu
+                items={["yes", "no"]}
+                selectionChanged={(item) => setIsFirstAidTrained(item)}
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Is there a fire extinguisher on the property?{" "}
+                <span class="text-red-500">*</span>
+              </div>
+              <SelectMenu
+                items={["yes", "no"]}
+                selectionChanged={(item) =>
+                  setIsFireExtinguisherAvailable(item)
+                }
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Do you have internet access? <span class="text-red-500">*</span>
+              </div>
+              <SelectMenu
+                items={["yes", "no"]}
+                selectionChanged={(item) => setHasInternetAccess(item)}
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Do you have first aid on the property?{" "}
+                <span class="text-red-500">*</span>
+              </div>
+              <SelectMenu
+                items={["yes", "no"]}
+                selectionChanged={(item) => setHasFirstAidOnSite(item)}
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Number of Fridges <span class="text-red-500">*</span>
+              </div>
+              <input
+                class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+                type="number"
+                placeholder="Number of Fridges"
+                value={numberOfFridges() || ""}
+                step={1}
+                min={1}
+                required
+                onChange={(event) =>
+                  setNumberOfFridges(parseInt(event.target.value) || 0)
+                }
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Number of Water Tanks <span class="text-red-500">*</span>
+              </div>
+              <input
+                class="px-3 py-2 w-full bg-neutral-100 text-black border-l border-t border-r border-b border-neutral-400 rounded outline-none"
+                type="number"
+                placeholder="Number of Water Tanks"
+                value={numberOfWaterTanks() || ""}
+                step={1}
+                min={1}
+                required
+                onChange={(event) =>
+                  setNumberOfWaterTanks(parseInt(event.target.value) || 0)
+                }
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Where do you get your food from?{" "}
+                <span class="text-red-500">*</span>
+              </div>
+              <SelectMenu
+                items={["Government", "Donations", "Me", "Other"]}
+                selectionChanged={(item) => setFoodFrom(item.toLowerCase())}
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Do you have working electricity and lights?{" "}
+                <span class="text-red-500">*</span>
+              </div>
+              <SelectMenu
+                items={["yes", "no"]}
+                selectionChanged={(item) =>
+                  setHasWorkingLightsAndElectricity(item)
+                }
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Do you have running water? <span class="text-red-500">*</span>
+              </div>
+              <SelectMenu
+                items={["yes", "no"]}
+                selectionChanged={(item) => setHasRunningWater(item)}
+              />
+            </div>
+            <div class="flex flex-col w-full space-y-1">
+              <div class="flex w-full">
+                Do you have a stove or oven? <span class="text-red-500">*</span>
+              </div>
+              <SelectMenu
+                items={["yes", "no"]}
+                selectionChanged={(item) => setHasStoveOrOven(item)}
+              />
+            </div>
+          </div>
+        )}
+        {stage() === 7 && (
+          <div class="flex flex-col items-center space-y-5 text-center">
+            <img src={LogoLarge} class="h-48" />
+            <div class="animate-fade-in">Let's get your handles.</div>
+          </div>
+        )}
+        {stage() === 8 && (
           <div class="flex flex-col items-center space-y-3 text-center animate-fade-in">
             <div class="flex flex-col w-full space-y-1">
               <div class="flex w-full">Website</div>
@@ -498,13 +797,13 @@ const CompleteProfilePage = () => {
             </div>
           </div>
         )}
-        {stage() === 7 && (
+        {stage() === 9 && (
           <div class="flex flex-col items-center space-y-5 text-center">
             <img src={LogoLarge} class="h-48" />
             <div class="animate-fade-in">Let's get your bank details.</div>
           </div>
         )}
-        {stage() === 8 && (
+        {stage() === 10 && (
           <div class="flex flex-col items-center space-y-3 text-center animate-fade-in">
             <div class="flex flex-col w-full space-y-1">
               <div class="flex w-full">
@@ -547,13 +846,13 @@ const CompleteProfilePage = () => {
             </div>
           </div>
         )}
-        {stage() === 9 && (
+        {stage() === 11 && (
           <div class="flex flex-col items-center space-y-5 text-center">
             <img src={LogoLarge} class="h-48" />
             <div class="animate-fade-in">Let's get your location details.</div>
           </div>
         )}
-        {stage() === 10 && (
+        {stage() === 12 && (
           <div class="flex flex-col items-center space-y-3 text-center animate-fade-in">
             <div class="flex flex-col w-full space-y-1">
               <div class="flex w-full">
@@ -642,7 +941,7 @@ const CompleteProfilePage = () => {
             </div>
           </div>
         )}
-        {stage() === 11 && (
+        {stage() === 13 && (
           <div class="flex flex-col items-center space-y-5 text-center">
             <img src={LogoLarge} class="h-48" />
             <div class="animate-fade-in">
@@ -656,7 +955,15 @@ const CompleteProfilePage = () => {
         <div class="flex items-center w-full md:w-96 bg-neutral-900 border-l border-t border-r border-b border-neutral-700 rounded">
           {stage() > 2 && (
             <div
-              onClick={() => setStage(stage() - 2)}
+              onClick={() => {
+                if (businessType() === "school garden") {
+                  setStage(stage() - 2);
+                } else if (stage() === 8) {
+                  setStage(stage() - 4);
+                } else {
+                  setStage(stage() - 2);
+                }
+              }}
               class="flex items-center justify-center p-3 w-full text-white hover:text-red-200 transition-all duration-300 ease-in-out cursor-pointer animate-fade-in"
             >
               Back
@@ -665,12 +972,12 @@ const CompleteProfilePage = () => {
           {stage() > 2 && (
             <div class="h-full w-[2px] bg-neutral-700 animate-fade-in"></div>
           )}
-          {stage() > 1 && stage() < 10 && (
+          {stage() > 1 && stage() < 12 && (
             <button class="flex items-center justify-center p-3 w-full text-white hover:text-lime-200 transition-all duration-300 ease-in-out cursor-pointer animate-fade-in">
               Next
             </button>
           )}
-          {stage() === 10 && (
+          {stage() === 12 && (
             <button class="flex items-center justify-center p-3 w-full text-white hover:text-lime-200 transition-all duration-300 ease-in-out cursor-pointer animate-fade-in">
               Finish
             </button>

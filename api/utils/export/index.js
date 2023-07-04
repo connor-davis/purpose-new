@@ -11,8 +11,8 @@ const exportUsers = require('./users');
 const exportProducts = require('./products');
 const exportSales = require('./sales');
 const exportHarvests = require('./harvests');
-const exportWaste = require("./waste");
-const exportTraining = require("./training");
+const exportWaste = require('./waste');
+const exportTraining = require('./training');
 
 const exportAllData = async (request, response, next) => {
   const userId = request.params.userId || 'all';
@@ -57,6 +57,31 @@ const exportAllData = async (request, response, next) => {
         header: 'Number Of Employees',
         key: 'businessNumberOfEmployees',
       },
+      { header: 'Number of School Kids', key: 'numberOfSchoolKids' },
+      { header: 'Number of Staff/Teachers', key: 'numberOfStaff' },
+      { header: 'Has Gardener', key: 'hasGardener' },
+      { header: 'Number Of Classrooms', key: 'numberOfClassrooms' },
+      { header: 'Land Owner', key: 'landOwner' },
+      { header: 'Garden In Progress', key: 'hasGardenInProgress' },
+      { header: 'Growing Crops', key: 'isGrowingCrops' },
+      { header: 'Garden Size', key: 'gardenSize' },
+      { header: 'Number of Toilets', key: 'numberOfToilets' },
+      { header: 'First Aid Trained', key: 'isFirstAidTrained' },
+      {
+        header: 'Fire Extinguisher Available',
+        key: 'isFireExtinguisherAvailable',
+      },
+      { header: 'Has Internet Access', key: 'hasInternetAccess' },
+      { header: 'Has First Aid on Site', key: 'hasFirstAidOnSite' },
+      { header: 'Number of Fridges', key: 'numberOfFridges' },
+      { header: 'Number of Water Tanks', key: 'numberOfWaterTanks' },
+      { header: 'Food From', key: 'foodFrom' },
+      {
+        header: 'Working Lights and Electricity',
+        key: 'hasWorkingLightsAndElectricity',
+      },
+      { header: 'Has Running Water', key: 'hasRunningWater' },
+      { header: 'Has Stove or Oven', key: 'hasStoveOrOven' },
       { header: 'Website', key: 'websiteUrl' },
       { header: 'Facebook Page', key: 'facebookPageUrl' },
       { header: 'Instagram Page', key: 'instagramPageUrl' },
@@ -251,7 +276,10 @@ const exportAllData = async (request, response, next) => {
       : {}
   ).populate('user');
 
-  if (userId === "all") products = products.filter((product) => product.user.userGroup === request.user.userGroup);
+  if (userId === 'all')
+    products = products.filter(
+      (product) => product.user.userGroup === request.user.userGroup
+    );
 
   products.forEach((product) =>
     productsSheet.addRow({
@@ -272,7 +300,10 @@ const exportAllData = async (request, response, next) => {
       : {}
   ).populate('user');
 
-  if (userId === "all") sales = sales.filter((sale) => sale.user.userGroup === request.user.userGroup);
+  if (userId === 'all')
+    sales = sales.filter(
+      (sale) => sale.user.userGroup === request.user.userGroup
+    );
 
   sales.forEach(async (sale) =>
     salesSheet.addRow({
@@ -294,7 +325,10 @@ const exportAllData = async (request, response, next) => {
       : {}
   ).populate('user');
 
-  if (userId === "all") harvests = harvests.filter((harvest) => harvest.user.userGroup === request.user.userGroup);
+  if (userId === 'all')
+    harvests = harvests.filter(
+      (harvest) => harvest.user.userGroup === request.user.userGroup
+    );
 
   harvests.forEach((harvest) =>
     harvestsSheet.addRow({
@@ -341,5 +375,5 @@ module.exports = {
   exportSales,
   exportHarvests,
   exportWaste,
-  exportTraining
+  exportTraining,
 };
