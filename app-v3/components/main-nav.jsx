@@ -6,10 +6,8 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
-  sideNavigationMenuTriggerStyle,
+  sideNavigationMenuTriggerStyle
 } from "./ui/navigation-menu";
-import { cn } from "@/lib/utils";
 
 const MainNavigation = () => {
   return (
