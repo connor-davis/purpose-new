@@ -43,13 +43,16 @@ router.get('/:page', adminRoute, async (request, response) => {
   try {
     console.log(request.user.userGroup);
 
-    const users = await UserModel.find({ userType: { $ne: 'admin' }, userGroup: { $eq: request.user.userGroup } })
+    const users = await UserModel.find({
+      userType: { $ne: 'admin' },
+      userGroup: { $eq: request.user.userGroup },
+    })
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
       .limit(limit);
     const usersData = users.map((user) => userFormatter(user.toJSON()));
     const totalUsers = await UserModel.countDocuments({
       userType: { $ne: 'admin' },
-      userGroup: { $eq: request.user.userGroup }
+      userGroup: { $eq: request.user.userGroup },
     });
     const totalPages = Math.ceil(totalUsers / limit);
 

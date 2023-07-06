@@ -6,6 +6,7 @@ import {
   monthlyTrainingOptions,
   monthlyWasteOptions,
   monthsHarvestsOptions,
+  monthsSeedlingOptions,
 } from "../../components/chart/chartOptions";
 import axios from "axios";
 import apiUrl from "../../apiUrl";
@@ -61,6 +62,7 @@ const DashboardPage = () => {
   const [latestSales, setLatestSales] = createSignal([]);
 
   const [monthsHarvests, setMonthsHarvests] = createSignal([]);
+  const [monthsSeedlings, setMonthsSeedlings] = createSignal([]);
 
   const [latestHarvests, setLatestHarvests] = createSignal([]);
 
@@ -75,6 +77,7 @@ const DashboardPage = () => {
       await loadIncome();
       await loadLatestSales();
       await loadMonthsHarvests();
+      await loadMonthsSeedlings();
       await loadLatestHarvests();
       await loadWaste();
       await loadTraining();
@@ -280,6 +283,25 @@ const DashboardPage = () => {
     } else setLoading(false);
   };
 
+  const loadMonthsSeedlings = async () => {
+    const response = await axios.get(
+      apiUrl +
+        "analytics/monthsSeedlings/" +
+        user.data._id +
+        "?month=" +
+        selectedMonth() +
+        "&year=" +
+        selectedYear(),
+      { headers: { Authorization: "Bearer " + user.token } }
+    );
+
+    if (response.data) {
+      return setMonthsSeedlings([
+        { name: "Planted", data: Object.values(response.data.seedlingCounts) },
+      ]);
+    } else setLoading(false);
+  };
+
   const loadWaste = async () => {
     const response = await axios.get(
       apiUrl +
@@ -399,6 +421,7 @@ const DashboardPage = () => {
             setSales([]);
             setIncome([]);
             setMonthsHarvests([]);
+            setMonthsSeedlings([]);
             setWaste([]);
             setTraining([]);
 
@@ -410,6 +433,7 @@ const DashboardPage = () => {
             await loadExpenses();
             await loadSales();
             await loadMonthsHarvests();
+            await loadMonthsSeedlings();
             await loadWaste();
             await loadTraining();
           }}
@@ -427,6 +451,7 @@ const DashboardPage = () => {
             setSales([]);
             setIncome([]);
             setMonthsHarvests([]);
+            setMonthsSeedlings([]);
             setWaste([]);
             setTraining([]);
 
@@ -438,6 +463,7 @@ const DashboardPage = () => {
             await loadExpenses();
             await loadSales();
             await loadMonthsHarvests();
+            await loadMonthsSeedlings();
             await loadWaste();
             await loadTraining();
           }}
@@ -690,6 +716,32 @@ const DashboardPage = () => {
                   <div class="flex flex-col">
                     <div class="font-bold w-full text-4xl cookie">
                       Latest Harvests
+                    </div>
+                    <div class="font-medium text-xl">
+                      There is no data to display.
+                    </div>
+                  </div>
+                </div>
+              )
+            ) : (
+              <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
+            )}
+          </div>
+          <div class="w-full h-[300px] bg-white rounded-lg p-3 pb-6">
+            {!loading() ? (
+              monthsSeedlings().length > 0 ? (
+                <Chart
+                  id="monthlySeedlings"
+                  options={{
+                    ...monthsSeedlingOptions,
+                    series: monthsSeedlings(),
+                  }}
+                />
+              ) : (
+                <div class="flex flex-col w-full h-full items-center justify-center">
+                  <div class="flex flex-col">
+                    <div class="font-bold w-full text-4xl cookie">
+                      Monthly Seedlings
                     </div>
                     <div class="font-medium text-xl">
                       There is no data to display.

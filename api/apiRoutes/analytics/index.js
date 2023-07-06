@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 const UserModel = require('../../models/user');
+const GrowBedModel = require('../../models/growBed');
 const SaleModel = require('../../models/sale');
 const ProductModel = require('../../models/product');
 const HarvestModel = require('../../models/harvest');
@@ -15,11 +16,27 @@ const {
 const WasteModel = require('../../models/waste');
 const TrainingModel = require('../../models/training');
 
+router.get('/totalGrowBeds', async (request, response) => {
+  try {
+    const growBeds = await GrowBedModel.find().populate('user');
+    const totalGrowBeds = growBeds
+      .filter((growBed) => growBed.user.userGroup === request.user.userGroup)
+      .map((growBed) => growBed.growBedsCount)
+      .reduce((prev, num) => prev + num, 0);
+
+    return response.status(200).json({ totalGrowBeds });
+  } catch (error) {
+    return response
+      .status(500)
+      .json({ message: 'Failed to retrieve total grow beds.', reason: error });
+  }
+});
+
 router.get('/totalUsers', async (request, response) => {
   try {
     const totalUsers = await UserModel.countDocuments({
       userType: { $ne: 'admin' },
-      userGroup: { $eq: request.user.userGroup }
+      userGroup: { $eq: request.user.userGroup },
     });
 
     return response.status(200).json({ totalUsers });
@@ -30,21 +47,53 @@ router.get('/totalUsers', async (request, response) => {
   }
 });
 
-router.get("/usersChildrenAndDependents", async (request, response) => {
+router.get('/usersChildrenAndDependents', async (request, response) => {
   try {
-    const users = await UserModel.find({ userType: { $ne: "admin" }, userGroup: { $eq: request.user.userGroup }});
+    const users = await UserModel.find({
+      userType: { $ne: 'admin' },
+      userGroup: { $eq: request.user.userGroup },
+    });
 
-    const totalChildren = users.map((user) => parseFloat(user.numberOfChildren || 0)).reduce((previous, current) => previous + current, 0);
-    const totalDependents = users.map((user) => parseFloat(user.numberOfDependents || 0)).reduce((previous, current) => previous + current, 0);
+    const totalChildren = users
+      .map((user) => parseFloat(user.numberOfChildren || 0))
+      .reduce((previous, current) => previous + current, 0);
+    const totalDependents = users
+      .map((user) => parseFloat(user.numberOfDependents || 0))
+      .reduce((previous, current) => previous + current, 0);
 
-    console.log(users.map((user) => user.numberOfChildren || 0))
+    console.log(users.map((user) => user.numberOfChildren || 0));
 
     return response.status(200).json({ totalChildren, totalDependents });
-  } catch (error)
-  {
+  } catch (error) {
     console.log(error);
 
-    return response.status(500).json({ message: "Failed to retrieve users children.", reason: error });
+    return response
+      .status(500)
+      .json({ message: 'Failed to retrieve users children.', reason: error });
+  }
+});
+
+router.get('/schoolKidsAndStaff', async (request, response) => {
+  try {
+    const users = await UserModel.find({
+      userType: { $ne: 'admin' },
+      userGroup: { $eq: request.user.userGroup },
+    });
+
+    const totalSchoolKids = users
+      .map((user) => parseFloat(user.numberOfSchoolKids || 0))
+      .reduce((previous, current) => previous + current, 0);
+    const totalStaff = users
+      .map((user) => parseFloat(user.numberOfStaff || 0))
+      .reduce((previous, current) => previous + current, 0);
+
+    return response.status(200).json({ totalSchoolKids, totalStaff });
+  } catch (error) {
+    console.log(error);
+
+    return response
+      .status(500)
+      .json({ message: 'Failed to retrieve users children.', reason: error });
   }
 });
 
@@ -171,9 +220,11 @@ router.get('/totalSales', async (request, response) => {
   try {
     const totalSales = await SaleModel.countDocuments({
       income: { $eq: undefined },
-    }).populate("user");
+    }).populate('user');
 
-    const data = totalSales.filter((sale) => sale.user.userGroup === request.user.userGroup);
+    const data = totalSales.filter(
+      (sale) => sale.user.userGroup === request.user.userGroup
+    );
 
     return response.status(200).json({ totalSales: data });
   } catch (error) {
@@ -185,9 +236,11 @@ router.get('/totalSales', async (request, response) => {
 
 router.get('/totalHarvests', async (request, response) => {
   try {
-    const totalHarvests = await HarvestModel.countDocuments().populate("user");
+    const totalHarvests = await HarvestModel.countDocuments().populate('user');
 
-    const data = totalHarvests.filter((harvest) => harvest.user.userGroup === request.user.userGroup);
+    const data = totalHarvests.filter(
+      (harvest) => harvest.user.userGroup === request.user.userGroup
+    );
 
     return response.status(200).json({ totalHarvests: data });
   } catch (error) {
@@ -199,9 +252,11 @@ router.get('/totalHarvests', async (request, response) => {
 
 router.get('/totalProducts', async (request, response) => {
   try {
-    const totalProducts = await ProductModel.countDocuments().populate("user");
+    const totalProducts = await ProductModel.countDocuments().populate('user');
 
-    const data = totalProduct.filter((product) => product.user.userGroup === request.user.userGroup);
+    const data = totalProduct.filter(
+      (product) => product.user.userGroup === request.user.userGroup
+    );
 
     return response.status(200).json({ totalProducts: data });
   } catch (error) {
@@ -224,12 +279,15 @@ router.get('/monthlyProfit/:userId', async (request, response) => {
             user: { $eq: userId },
             income: { $eq: undefined },
           }
-        : { 
+        : {
             income: { $eq: undefined },
-          },
-    ).populate("user");
+          }
+    ).populate('user');
 
-    if (userId === "all") sales = sales.filter((sale) => sale.user.userGroup === request.user.userGroup);
+    if (userId === 'all')
+      sales = sales.filter(
+        (sale) => sale.user.userGroup === request.user.userGroup
+      );
 
     let monthlyProfit = {
       January: 0,
@@ -292,12 +350,15 @@ router.get('/monthlyExpenses/:userId', async (request, response) => {
             user: { $eq: userId },
             income: { $eq: undefined },
           }
-        : { 
+        : {
             income: { $eq: undefined },
           }
-    ).populate("user");
+    ).populate('user');
 
-    if (userId === "all") sales = sales.filter((sale) => sale.user.userGroup === request.user.userGroup);
+    if (userId === 'all')
+      sales = sales.filter(
+        (sale) => sale.user.userGroup === request.user.userGroup
+      );
 
     let monthlyExpenses = {
       January: 0,
@@ -362,12 +423,15 @@ router.get('/monthlySales/:userId', async (request, response) => {
             user: { $eq: userId },
             income: { $eq: undefined },
           }
-        : { 
+        : {
             income: { $eq: undefined },
           }
     );
 
-    if (userId === "all") sales = sales.filter((sale) => sale.user.userGroup === request.user.userGroup);
+    if (userId === 'all')
+      sales = sales.filter(
+        (sale) => sale.user.userGroup === request.user.userGroup
+      );
 
     let monthlySales = {
       January: 0,
@@ -435,9 +499,12 @@ router.get('/monthlyIncome/:userId', async (request, response) => {
         : {
             income: { $ne: undefined },
           }
-    ).populate("user");
+    ).populate('user');
 
-    if (userId === "all") sales = sales.filter((sale) => sale.user.userGroup === request.user.userGroup);
+    if (userId === 'all')
+      sales = sales.filter(
+        (sale) => sale.user.userGroup === request.user.userGroup
+      );
 
     let monthlyIncome = {
       January: 0,
@@ -489,6 +556,73 @@ router.get('/monthlyIncome/:userId', async (request, response) => {
   }
 });
 
+router.get('/monthsSeedlings/:userId', async (request, response) => {
+  const userId = request.params.userId || 'all';
+  const month = request.query.month || format(Date.now(), 'MMMM');
+  const year = parseInt(request.query.year) || getYear(Date.now());
+  const yearMinusYear = year - 1;
+  const yearPlusYear = year + 1;
+
+  try {
+    let growBeds = await GrowBedModel.find(
+      userId !== 'all'
+        ? {
+            user: { $eq: userId },
+          }
+        : {}
+    ).populate('user');
+
+    if (userId === 'all')
+      growBeds = growBeds.filter(
+        (growBed) => growBed.user.userGroup === request.user.userGroup
+      );
+
+    let seedlingCounts = {
+      Beans: 0,
+      Beetroot: 0,
+      Peppers: 0,
+      Broccoli: 0,
+      Cabbage: 0,
+      Carrots: 0,
+      Cauliflower: 0,
+      Corn: 0,
+      Garlic: 0,
+      Pepper: 0,
+      Lettuce: 0,
+      Onion: 0,
+      'Spring onion': 0,
+      Peas: 0,
+      Potatoes: 0,
+      Spinach: 0,
+      Tomatoes: 0,
+      Chillis: 0,
+      Other: 0,
+    };
+
+    growBeds.map((growBed) => {
+      const growBedYear = getYear(
+        parse(growBed.date, 'dd/MM/yyyy', Date.now())
+      );
+
+      if (growBedYear > yearMinusYear && growBedYear < yearPlusYear) {
+        if (
+          month ===
+          format(parse(growBed.date, 'dd/MM/yyyy', Date.now()), 'MMMM')
+        )
+          seedlingCounts[growBed.seedling] =
+            seedlingCounts[growBed.seedling] + growBed.seedlingCount;
+      }
+    });
+
+    return response.status(200).json({ seedlingCounts });
+  } catch (error) {
+    console.log(error);
+    return response
+      .status(500)
+      .json({ message: 'Failed to retrieve monthly harvests.', reason: error });
+  }
+});
+
 router.get('/monthlyWaste/:userId', async (request, response) => {
   const userId = request.params.userId || 'all';
   const year = parseInt(request.query.year) || getYear(Date.now());
@@ -501,11 +635,13 @@ router.get('/monthlyWaste/:userId', async (request, response) => {
         ? {
             user: { $eq: userId },
           }
-        : {
-          }
-    ).populate("user");
+        : {}
+    ).populate('user');
 
-    if (userId === "all") waste = waste.filter((waste) => waste.user.userGroup === request.user.userGroup);
+    if (userId === 'all')
+      waste = waste.filter(
+        (waste) => waste.user.userGroup === request.user.userGroup
+      );
 
     let monthlyFoodWaste = {
       January: 0,
@@ -595,11 +731,13 @@ router.get('/monthlyTraining/:userId', async (request, response) => {
         ? {
             user: { $eq: userId },
           }
-        : {
-          }
-    ).populate("user");
+        : {}
+    ).populate('user');
 
-    if (userId === "all") training = training.filter((training) => training.user.userGroup === request.user.userGroup);
+    if (userId === 'all')
+      training = training.filter(
+        (training) => training.user.userGroup === request.user.userGroup
+      );
 
     let monthlyTownshipEconomyTraining = {
       January: 0,
@@ -739,9 +877,12 @@ router.get('/financeTotals/:userId', async (request, response) => {
             user: { $eq: userId },
           }
         : {}
-    ).populate("user");
+    ).populate('user');
 
-    if (userId === "all") sales = sales.filter((sale) => sale.user.userGroup === request.user.userGroup);
+    if (userId === 'all')
+      sales = sales.filter(
+        (sale) => sale.user.userGroup === request.user.userGroup
+      );
 
     const totalProfit = sales
       .map(
@@ -810,9 +951,12 @@ router.get('/monthsHarvests/:userId', async (request, response) => {
             user: { $eq: userId },
           }
         : {}
-    ).populate("user");
+    ).populate('user');
 
-    if (userId === "all") harvests = harvests.filter((harvest) => harvest.user.userGroup === request.user.userGroup);
+    if (userId === 'all')
+      harvests = harvests.filter(
+        (harvest) => harvest.user.userGroup === request.user.userGroup
+      );
 
     let produceWeights = {
       Beans: 0,
@@ -937,9 +1081,13 @@ router.get('/latestSales/:userId', async (request, response) => {
         : {}
     )
       .sort({ createdAt: -1 })
-      .limit(5).populate("user");
+      .limit(5)
+      .populate('user');
 
-    if (userId === "all") latestSales = latestSales.filter((sale) => sale.user.userGroup === request.user.userGroup);
+    if (userId === 'all')
+      latestSales = latestSales.filter(
+        (sale) => sale.user.userGroup === request.user.userGroup
+      );
 
     return response.status(200).json({ latestSales });
   } catch (error) {
@@ -961,9 +1109,13 @@ router.get('/latestHarvests/:userId', async (request, response) => {
         : {}
     )
       .sort({ createdAt: -1 })
-      .limit(5).populate("user");
+      .limit(5)
+      .populate('user');
 
-    if (userId === "all") latestHarvests = latestHarvests.filter((harvest) => harvest.user.userGroup === request.user.userGroup);
+    if (userId === 'all')
+      latestHarvests = latestHarvests.filter(
+        (harvest) => harvest.user.userGroup === request.user.userGroup
+      );
 
     return response.status(200).json({ latestHarvests });
   } catch (error) {

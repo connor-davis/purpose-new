@@ -29,6 +29,7 @@ import ForgotPasswordPage from "./pages/authentication/forgotPassword.page";
 import ExportPage from "./pages/user/export.page";
 import WastePage from "./pages/user/waste.page";
 import TrainingPage from "./pages/user/training.page";
+import GrowBedsPage from "./pages/user/growbeds.page";
 
 const App = () => {
   const navigate = useNavigate("/");
@@ -196,6 +197,11 @@ const App = () => {
                 user.data.userType !== "admin" &&
                 user.data.completedProfile && (
                   <Route path="/harvests" element={HarvestsPage} />
+                )}
+              {user.authenticated &&
+                user.data.userType !== "admin" &&
+                user.data.completedProfile && (
+                  <Route path="/grow-beds" element={GrowBedsPage} />
                 )}
               {user.authenticated &&
                 user.data.userType !== "admin" &&

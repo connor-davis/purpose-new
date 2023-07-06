@@ -40,7 +40,9 @@ router.get('/:page', async (request, response) => {
   const limit = request.query.limit || 10;
 
   try {
-    const surveys = await SurveyModel.find({ userGroup: { $eq: request.user.userGroup }})
+    const surveys = await SurveyModel.find({
+      userGroup: { $eq: request.user.userGroup },
+    })
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
       .limit(limit);
     const surveysData = surveys
@@ -51,7 +53,9 @@ router.get('/:page', async (request, response) => {
 
         return 0;
       });
-    const totalSurveys = await SurveyModel.countDocuments({ userGroup: { $eq: request.user.userGroup }});
+    const totalSurveys = await SurveyModel.countDocuments({
+      userGroup: { $eq: request.user.userGroup },
+    });
     const totalPages = Math.ceil(totalSurveys / limit);
 
     return response

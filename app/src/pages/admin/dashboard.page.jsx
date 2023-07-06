@@ -9,11 +9,13 @@ import {
   monthlyTrainingOptions,
   monthlyWasteOptions,
   monthsHarvestsOptions,
+  monthsSeedlingOptions,
+  schoolKidsAndStaffOptions,
   userChildrenAndDependentsOptions,
-  userTypesOptions
+  userTypesOptions,
 } from "../../components/chart/chartOptions";
 import useState from "../../hooks/state";
-import { format} from "date-fns";
+import { format } from "date-fns";
 import SelectMenu from "../../components/selectmenu/selectmenu";
 
 const AdminDashboardPage = () => {
@@ -21,6 +23,7 @@ const AdminDashboardPage = () => {
 
   const [loading, setLoading] = createSignal(true);
 
+  const [totalGrowBeds, setTotalGrowBeds] = createSignal(0);
   const [totalUsers, setTotalUsers] = createSignal(0);
 
   const [totalProfit, setTotalProfit] = createSignal(0);
@@ -37,11 +40,16 @@ const AdminDashboardPage = () => {
 
   const [monthsHarvests, setMonthsHarvests] = createSignal([]);
 
+  const [monthsSeedlings, setMonthsSeedlings] = createSignal([]);
+
   const [waste, setWaste] = createSignal([]);
   const [training, setTraining] = createSignal([]);
 
   const [numberOfChildren, setNumberOfChildren] = createSignal(0);
   const [numberOfDependents, setNumberOfDependents] = createSignal(0);
+
+  const [numberOfSchoolKids, setNumberOfSchoolKids] = createSignal(0);
+  const [numberOfStaff, setNumberOfStaff] = createSignal(0);
 
   const now = new Date().getUTCFullYear();
   const years = Array(now - (now - 30))
@@ -72,6 +80,7 @@ const AdminDashboardPage = () => {
 
   onMount(() => {
     setTimeout(async () => {
+      await loadTotalGrowBeds();
       await loadTotalUsers();
       await loadFinanceTotals();
       await loadProfit();
@@ -82,8 +91,10 @@ const AdminDashboardPage = () => {
       await loadMonthsHarvests();
       await loadUserTypes();
       await loadChildrenAndDependents();
+      await loadMonthsSeedlings();
       await loadWaste();
       await loadTraining();
+      await loadSchoolKidsAndStaff();
 
       setLoading(false);
     }, 400);
@@ -122,13 +133,23 @@ const AdminDashboardPage = () => {
     return safeCopyMonthNames;
   }
 
+  const loadTotalGrowBeds = async () => {
+    const response = await axios.get(apiUrl + "analytics/totalGrowBeds", {
+      headers: { Authorization: "Bearer " + user.token },
+    });
+
+    if (response.data) {
+      return setTotalGrowBeds(response.data.totalGrowBeds || 0);
+    }
+  };
+
   const loadTotalUsers = async () => {
     const response = await axios.get(apiUrl + "analytics/totalUsers", {
       headers: { Authorization: "Bearer " + user.token },
     });
 
     if (response.data) {
-      return setTotalUsers(response.data.totalUsers);
+      return setTotalUsers(response.data.totalUsers || 0);
     }
   };
 
@@ -248,6 +269,24 @@ const AdminDashboardPage = () => {
     if (response.data) {
       console.log(Object.values(response.data));
       return setUsersAges(Object.values(response.data));
+    }
+  };
+
+  const loadMonthsSeedlings = async () => {
+    const response = await axios.get(
+      apiUrl +
+        "analytics/monthsSeedlings/all" +
+        "?month=" +
+        selectedMonth() +
+        "&year=" +
+        selectedYear(),
+      { headers: { Authorization: "Bearer " + user.token } }
+    );
+
+    if (response.data) {
+      return setMonthsSeedlings([
+        { name: "Planted", data: Object.values(response.data.seedlingCounts) },
+      ]);
     }
   };
 
@@ -372,13 +411,29 @@ const AdminDashboardPage = () => {
   };
 
   const loadChildrenAndDependents = async () => {
-    const response = await axios.get(apiUrl + "analytics/usersChildrenAndDependents", {
-      headers: { Authorization: "Bearer " + user.token },
-    });
+    const response = await axios.get(
+      apiUrl + "analytics/usersChildrenAndDependents",
+      {
+        headers: { Authorization: "Bearer " + user.token },
+      }
+    );
 
     if (response.data) {
       setNumberOfChildren(response.data.totalChildren || 0);
       setNumberOfDependents(response.data.totalDependents || 0);
+
+      return;
+    }
+  };
+
+  const loadSchoolKidsAndStaff = async () => {
+    const response = await axios.get(apiUrl + "analytics/schoolKidsAndStaff", {
+      headers: { Authorization: "Bearer " + user.token },
+    });
+
+    if (response.data) {
+      setNumberOfSchoolKids(response.data.totalSchoolKids || 0);
+      setNumberOfStaff(response.data.totalStaff || 0);
 
       return;
     }
@@ -402,6 +457,7 @@ const AdminDashboardPage = () => {
             setSales([]);
             setIncome([]);
             setMonthsHarvests([]);
+            setMonthsSeedlings([]);
             setWaste([]);
             setTraining([]);
 
@@ -413,6 +469,7 @@ const AdminDashboardPage = () => {
             await loadExpenses();
             await loadSales();
             await loadMonthsHarvests();
+            await loadMonthsSeedlings();
             await loadWaste();
             await loadTraining();
 
@@ -434,6 +491,7 @@ const AdminDashboardPage = () => {
             setSales([]);
             setIncome([]);
             setMonthsHarvests([]);
+            setMonthsSeedlings([]);
             setWaste([]);
             setTraining([]);
 
@@ -445,6 +503,7 @@ const AdminDashboardPage = () => {
             await loadExpenses();
             await loadSales();
             await loadMonthsHarvests();
+            await loadMonthsSeedlings();
             await loadWaste();
             await loadTraining();
 
@@ -509,6 +568,22 @@ const AdminDashboardPage = () => {
                   Total Income
                 </div>
                 <div class="font-medium md:text-xl">R {totalIncome()}</div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div class="w-full md:w-1/5 h-full bg-white rounded-lg p-3">
+            <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
+          </div>
+        )}
+        {!loading() ? (
+          <div class="w-full md:w-1/5 h-full bg-lime-400 rounded-lg p-3">
+            <div class="flex flex-col w-full h-full md:items-center justify-center">
+              <div class="flex flex-col">
+                <div class="font-bold w-full text-2xl md:text-4xl cookie">
+                  Total Grow Beds
+                </div>
+                <div class="font-medium md:text-xl">{totalGrowBeds()}</div>
               </div>
             </div>
           </div>
@@ -760,6 +835,75 @@ const AdminDashboardPage = () => {
                 options={{
                   ...userChildrenAndDependentsOptions,
                   series: [numberOfChildren(), numberOfDependents()],
+                }}
+              />
+            ) : (
+              <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
+            )}
+          </div>
+        </div>
+        <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full">
+          <div class="w-full h-[300px] bg-white rounded-lg p-3">
+            {!loading() && (
+              <div class="flex justify-end w-full h-auto">
+                <div class="min-w-[200px]">
+                  <SelectMenu
+                    defaultItem={selectedMonth()}
+                    items={[
+                      "January",
+                      "February",
+                      "March",
+                      "April",
+                      "May",
+                      "June",
+                      "July",
+                      "August",
+                      "September",
+                      "October",
+                      "November",
+                      "December",
+                    ]}
+                    selectionChanged={(item) => {
+                      setMonthsSeedlings([]);
+                      setSelectedMonth(item);
+                      loadMonthsSeedlings();
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+            {!loading() ? (
+              monthsSeedlings().length > 0 ? (
+                <Chart
+                  id="monthlySeedlings"
+                  options={{
+                    ...monthsSeedlingOptions,
+                    series: monthsSeedlings(),
+                  }}
+                />
+              ) : (
+                <div class="flex flex-col w-full h-full items-center justify-center">
+                  <div class="flex flex-col">
+                    <div class="font-bold w-full text-4xl cookie">
+                      Monthly Seedlings
+                    </div>
+                    <div class="font-medium text-xl">
+                      There is no data to display.
+                    </div>
+                  </div>
+                </div>
+              )
+            ) : (
+              <div class="flex flex-col w-full h-full rounded bg-neutral-200 animate-pulse transition-all duration-300 ease-in-out"></div>
+            )}
+          </div>
+          <div class="w-full h-[500px] md:h-[300px] bg-white rounded-lg p-3">
+            {!loading() ? (
+              <Chart
+                id="schoolKidsAndStaff"
+                options={{
+                  ...schoolKidsAndStaffOptions,
+                  series: [numberOfSchoolKids(), numberOfStaff()],
                 }}
               />
             ) : (

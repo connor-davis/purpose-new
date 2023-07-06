@@ -85,10 +85,16 @@ const UserProfileModal = ({ data = {}, closed = () => {} }) => {
         )}
 
         <div class="flex flex-col items-center space-y-3 bg-white text-black rounded p-3">
+          {data && data.featuredImage && (
+            <img
+              src={apiUrl + "files/view/" + data.featuredImage}
+              class="w-full h-64 rounded object-cover"
+            />
+          )}
           {data && data.image ? (
             <img
               src={apiUrl + "files/view/" + data.image}
-              class="w-32 h-32 rounded-full"
+              class="w-32 h-32 rounded-full object-cover"
             />
           ) : (
             data.firstName &&

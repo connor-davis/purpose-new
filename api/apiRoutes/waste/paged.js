@@ -50,7 +50,8 @@ router.get('/:page', async (request, response) => {
       !request.query.userId ? {} : { user: { $eq: request.query.userId } }
     )
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
-      .limit(limit);
+      .limit(limit)
+      .populate('user');
     const wasteData = waste
       .map((waste) => waste.toJSON())
       .sort((a, b) => {

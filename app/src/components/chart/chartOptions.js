@@ -258,6 +258,35 @@ export const agesOptions = {
   ],
 };
 
+export const schoolKidsAndStaffOptions = {
+  series: [31, 5],
+  title: {
+    text: "School Kids & Staff",
+    style: {
+      fontSize: "26px",
+    },
+  },
+  chart: {
+    height: "100%",
+    type: "pie",
+  },
+  responsive: [
+    {
+      breakpoint: 1000,
+      options: {
+        chart: {
+          width: "100%",
+          heigh: "100%",
+        },
+        legend: {
+          position: "bottom",
+        },
+      },
+    },
+  ],
+  labels: ["School Kids", "Staff"],
+};
+
 export const monthsHarvestsOptions = {
   series: [
     {
@@ -273,6 +302,60 @@ export const monthsHarvestsOptions = {
   chart: {
     height: "100%",
     type: "area",
+  },
+  colors: ["#a3e635", "#dc2626", "#171717"],
+  dataLabels: {
+    enabled: false,
+  },
+  stroke: {
+    curve: "smooth",
+  },
+  xaxis: {
+    type: "category",
+    categories: [
+      "Beans",
+      "Beetroot",
+      "Peppers",
+      "Broccoli",
+      "Cabbage",
+      "Carrots",
+      "Cauliflower",
+      "Corn",
+      "Garlic",
+      "Pepper",
+      "Lettuce",
+      "Onion",
+      "Spring onion",
+      "Peas",
+      "Potatoes",
+      "Spinach",
+      "Tomatoes",
+      "Chillis",
+      "Other",
+    ],
+  },
+  tooltip: {
+    x: {
+      format: "dd/MM/yyyy",
+    },
+  },
+};
+
+export const monthsSeedlingOptions = {
+  series: [
+    {
+      data: [31, 40, 28, 51, 42, 109, 100, 0, 0, 0, 0, 0],
+    },
+  ],
+  title: {
+    text: "Months Seedlings",
+    style: {
+      fontSize: "26px",
+    },
+  },
+  chart: {
+    height: "100%",
+    type: "bar",
   },
   colors: ["#a3e635", "#dc2626", "#171717"],
   dataLabels: {
@@ -351,6 +434,7 @@ export const userTypesOptions = {
     "Salon",
     "Consulting",
     "Construction",
+    "School Garden",
     "Other",
   ],
 };
@@ -381,8 +465,5 @@ export const userChildrenAndDependentsOptions = {
       },
     },
   ],
-  labels: [
-    "Children",
-    "Dependents"
-  ],
+  labels: ["Children", "Dependents"],
 };

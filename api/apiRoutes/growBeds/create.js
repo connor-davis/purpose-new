@@ -2,6 +2,7 @@ const { Router } = require('express');
 const router = Router();
 const bcrypt = require('bcrypt');
 const HarvestModel = require('../../models/harvest');
+const GrowBedModel = require('../../models/growBed');
 
 /**
  * @openapi
@@ -40,8 +41,10 @@ router.post('/', async (request, response) => {
 
     return response.status(200).send('Ok');
   } catch (error) {
+    console.log(error);
+
     return response.status(500).json({
-      message: 'Failed to create harvests.',
+      message: 'Failed to create grow bed.',
       reason: error,
     });
   }

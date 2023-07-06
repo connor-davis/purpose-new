@@ -11,6 +11,7 @@ const ProfilePage = () => {
   const [loading, setLoading] = createSignal(true);
 
   const [editingImage, setEditingImage] = createSignal(false);
+  const [editingFeaturedImage, setEditingFeaturedImage] = createSignal(false);
   const [editingBasic, setEditingBasic] = createSignal(false);
   const [editingBusiness, setEditingBusiness] = createSignal(false);
   const [editingHandles, setEditingHandles] = createSignal(false);
@@ -20,6 +21,7 @@ const ProfilePage = () => {
   const [basic, setBasic] = createStore(
     {
       image: undefined,
+      featuredImage: undefined,
       firstName: undefined,
       lastName: undefined,
       idNumber: undefined,
@@ -87,6 +89,7 @@ const ProfilePage = () => {
       setUser({ data: response.data });
       setBasic({
         image: response.data.image,
+        featuredImage: response.data.featuredImage,
         firstName: response.data.firstName,
         lastName: response.data.lastName,
         idNumber: response.data.idNumber,
@@ -165,6 +168,50 @@ const ProfilePage = () => {
             setEditingImage(false);
           } else {
             setEditingImage(false);
+            fetchProfile();
+          }
+        }
+      })();
+    });
+  };
+
+  const updateFeaturedImage = () => {
+    const inputEl = document.createElement("input");
+
+    inputEl.type = "file";
+    inputEl.multiple = false;
+    inputEl.accept = "image/jpeg, image/png, image/jpg";
+
+    inputEl.click();
+
+    inputEl.addEventListener("change", (event) => {
+      const image = event.target.files[0];
+
+      (async () => {
+        let form = new FormData();
+
+        form.append("upfiles", image, image.name);
+
+        const response = await axios.post(apiUrl + "files/upload", form, {
+          headers: {
+            Authorization: "Bearer " + user.token,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        if (response.data.error) {
+          setEditingFeaturedImage(false);
+        } else {
+          const editResponse = await axios.put(
+            apiUrl + "users",
+            { _id: user.data._id, featuredImage: response.data.filenames[0] },
+            { headers: { Authorization: "Bearer " + user.token } }
+          );
+
+          if (editResponse.data.error) {
+            setEditingFeaturedImage(false);
+          } else {
+            setEditingFeaturedImage(false);
             fetchProfile();
           }
         }
@@ -345,12 +392,13 @@ const ProfilePage = () => {
         ) : (
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 w-full h-full overflow-y-auto lg:overflow-hidden">
             <div class="flex flex-col w-full h-full border-l border-t border-r border-b border-neutral-300 rounded lg:overflow-hidden">
+              <div class="cookie text-2xl p-3">Profile Image</div>
               <div class="flex flex-col w-full h-full items-center justify-center p-3 overflow-y-auto">
                 {!editingImage() ? (
                   user.data && user.data.image ? (
                     <img
                       src={apiUrl + "files/view/" + user.data.image}
-                      class="w-32 h-32 rounded-full"
+                      class="w-32 h-32 rounded-full object-cover"
                     />
                   ) : (
                     basic.firstName &&
@@ -399,6 +447,87 @@ const ProfilePage = () => {
                 ) : (
                   <div
                     onClick={() => setEditingImage(!editingImage())}
+                    class="flex items-center justify-center space-x-2 p-3 hover:bg-lime-200 cursor-pointer"
+                  >
+                    <div>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-4 h-4"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                        />
+                      </svg>
+                    </div>
+                    <p>Edit</p>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div class="flex flex-col w-full h-full border-l border-t border-r border-b border-neutral-300 rounded lg:overflow-hidden">
+              <div class="cookie text-2xl p-3">Featured Image</div>
+              <div class="flex flex-col w-full h-full items-center justify-center space-y-3 p-3 overflow-y-auto">
+                <div class="flex flex-col w-full h-full overflow-y-auto">
+                  {!editingFeaturedImage() ? (
+                    user.data && user.data.featuredImage ? (
+                      <img
+                        src={apiUrl + "files/view/" + user.data.featuredImage}
+                        class="w-full h-auto rounded object-cover"
+                      />
+                    ) : (
+                      <div class="flex flex-col items-center justify-center w-32 h-32 rounded-full bg-lime-200 cookie text-4xl">
+                        None
+                      </div>
+                    )
+                  ) : (
+                    <div
+                      onClick={() => updateFeaturedImage()}
+                      class="flex flex-col items-center justify-center self-center w-32 h-32 rounded-full bg-neutral-200 cursor-pointer cookie text-4xl"
+                    >
+                      Click
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div class="flex flex-col w-full border-t border-neutral-300">
+                {editingFeaturedImage() ? (
+                  <div class="flex items-center w-full">
+                    <div
+                      onClick={() =>
+                        setEditingFeaturedImage(!editingFeaturedImage())
+                      }
+                      class="flex items-center justify-center w-full space-x-2 p-3 hover:bg-red-200 cursor-pointer"
+                    >
+                      <div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="w-6 h-6"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </div>
+                      <p>Cancel</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    onClick={() =>
+                      setEditingFeaturedImage(!editingFeaturedImage())
+                    }
                     class="flex items-center justify-center space-x-2 p-3 hover:bg-lime-200 cursor-pointer"
                   >
                     <div>

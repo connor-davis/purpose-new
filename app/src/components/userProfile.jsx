@@ -55,7 +55,7 @@ const UserProfile = ({ userId, darkBg = false }) => {
               {userProfile && userProfile.image ? (
                 <img
                   src={apiUrl + "files/view/" + userProfile.image}
-                  class="w-10 h-10 rounded-full"
+                  class="w-10 h-10 rounded-full object-cover"
                 />
               ) : (
                 userProfile.firstName &&
