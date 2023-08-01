@@ -51,6 +51,7 @@ router.get(
 
       return response.status(200).json(archives);
     } catch (error) {
+      console.log(error);
       return response
         .status(500)
         .json({ message: 'Failed to retrieve archives.', reason: error });
@@ -102,6 +103,7 @@ router.get('/view/:filename', async (request, response) => {
         );
     }
   } catch (error) {
+      console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve archive with file name',
       reason: error,

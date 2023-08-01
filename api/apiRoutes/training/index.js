@@ -38,6 +38,7 @@ router.get('/', async (request, response) => {
 
     return response.status(200).json(trainingData);
   } catch (error) {
+      console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve training.',
       reason: error,
@@ -86,6 +87,7 @@ router.get('/:id', async (request, response) => {
       return response.status(200).json(wasteData);
     }
   } catch (error) {
+      console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve the waste.',
       reason: error,

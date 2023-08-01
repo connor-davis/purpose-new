@@ -37,6 +37,7 @@ router.get('/', async (request, response) => {
 
     return response.status(200).json(salesData);
   } catch (error) {
+      console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve sales.',
       reason: error,
@@ -85,6 +86,7 @@ router.get('/:id', async (request, response) => {
       return response.status(200).json(saleData);
     }
   } catch (error) {
+      console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve the sale.',
       reason: error,

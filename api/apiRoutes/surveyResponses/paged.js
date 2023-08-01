@@ -57,6 +57,7 @@ router.get('/:page', async (request, response) => {
       .status(200)
       .json({ data: surveyResponsesData, totalSurveyResponses, totalPages });
   } catch (error) {
+      console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve paged survey responses.',
       reason: error,

@@ -50,8 +50,12 @@ router.get('/:page', async (request, response) => {
       !request.query.userId ? {} : { user: { $eq: request.query.userId } }
     )
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
-      .limit(limit).populate("user");
-    const productsData = products.map((product) => product.user.userGroup === request.user.userGroup && product.toJSON());
+      .limit(limit)
+      .populate('user');
+    const productsData = products.map(
+      (product) =>
+        product.user.userGroup === request.user.userGroup && product.toJSON()
+    );
     const totalProducts = productsData.length;
     const totalPages = Math.ceil(totalProducts / limit);
 
@@ -59,10 +63,10 @@ router.get('/:page', async (request, response) => {
       .status(200)
       .json({ data: productsData, totalProducts, totalPages });
   } catch (error) {
+    console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve paged products.',
       reason: error,
-      
     });
   }
 });

@@ -60,6 +60,7 @@ router.get('/:page', adminRoute, async (request, response) => {
       .status(200)
       .json({ data: usersData, totalUsers, totalPages });
   } catch (error) {
+      console.log(error);
     console.log(error);
 
     return response.status(500).json({

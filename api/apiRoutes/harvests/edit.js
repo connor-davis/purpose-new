@@ -1,6 +1,6 @@
-const { Router } = require("express");
+const { Router } = require('express');
 const router = Router();
-const HarvestModel = require("../../models/harvest");
+const HarvestModel = require('../../models/harvest');
 
 /**
  * @openapi
@@ -30,16 +30,19 @@ const HarvestModel = require("../../models/harvest");
  *       500:
  *         description: Failure returns the message, reason and error code
  */
-router.put("/", async (request, response) => {
-    const body = request.body;
-    
-    try {
-        await HarvestModel.updateOne({ _id: { $eq: body._id }}, body);
+router.put('/', async (request, response) => {
+  const body = request.body;
 
-        return response.status(200).send("Ok");
-    } catch (error) {
-        return response.status(500).json({ message: "Failed to edit harvest data.", reason: error });
-    }
+  try {
+    await HarvestModel.updateOne({ _id: { $eq: body._id } }, body);
+
+    return response.status(200).send('Ok');
+  } catch (error) {
+    console.log(error);
+    return response
+      .status(500)
+      .json({ message: 'Failed to edit harvest data.', reason: error });
+  }
 });
 
 module.exports = router;

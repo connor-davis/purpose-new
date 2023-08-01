@@ -21,17 +21,23 @@ const ProductModel = require('../../models/product');
  */
 router.get('/', async (request, response) => {
   try {
-    const products = await ProductModel.find(request.user.userType !== "admin" ? {} : { user: { $eq: request.user._id } }).populate("user");
-    const productsData = products.map((product) => product.user.userGroup === request.user.userGroup && product.toJSON());
+    const products = await ProductModel.find(
+      request.user.userType !== 'admin'
+        ? {}
+        : { user: { $eq: request.user._id } }
+    ).populate('user');
+    const productsData = products.map(
+      (product) =>
+        product.user.userGroup === request.user.userGroup && product.toJSON()
+    );
 
     return response.status(200).json(productsData);
   } catch (error) {
-    return response
-      .status(500)
-      .json({
-        message: 'Failed to retrieve products.',
-        reason: error,
-      });
+    console.log(error);
+    return response.status(500).json({
+      message: 'Failed to retrieve products.',
+      reason: error,
+    });
   }
 });
 
@@ -66,16 +72,17 @@ router.get('/:id', async (request, response) => {
 
   try {
     const product = await ProductModel.findOne({ _id: { $eq: id } });
-    
+
     if (!product)
       return response
         .status(404)
         .json({ message: 'Product not found.', error: 'product-not-found' });
     else {
-        const productData = product.toJSON()
-        return response.status(200).json(productData);
+      const productData = product.toJSON();
+      return response.status(200).json(productData);
     }
   } catch (error) {
+    console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve the product.',
       reason: error,
@@ -84,8 +91,8 @@ router.get('/:id', async (request, response) => {
 });
 
 router.use('/page', require('./paged'));
-router.use("/", require("./create"));
-router.use("/", require("./edit"));
-router.use("/", require("./delete"));
+router.use('/', require('./create'));
+router.use('/', require('./edit'));
+router.use('/', require('./delete'));
 
 module.exports = router;

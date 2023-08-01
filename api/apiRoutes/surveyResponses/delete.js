@@ -34,6 +34,7 @@ router.delete('/:id', async (request, response) => {
 
     return response.status(200).send('Ok');
   } catch (error) {
+      console.log(error);
     return response.status(500).json({
       message: 'Failed to delete survey response.',
       reason: error,

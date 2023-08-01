@@ -26,6 +26,7 @@ router.get('/totalGrowBeds', async (request, response) => {
 
     return response.status(200).json({ totalGrowBeds });
   } catch (error) {
+      console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve total grow beds.', reason: error });
@@ -41,6 +42,7 @@ router.get('/totalUsers', async (request, response) => {
 
     return response.status(200).json({ totalUsers });
   } catch (error) {
+      console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve total users.', reason: error });
@@ -65,6 +67,7 @@ router.get('/usersChildrenAndDependents', async (request, response) => {
 
     return response.status(200).json({ totalChildren, totalDependents });
   } catch (error) {
+      console.log(error);
     console.log(error);
 
     return response
@@ -89,6 +92,7 @@ router.get('/schoolKidsAndStaff', async (request, response) => {
 
     return response.status(200).json({ totalSchoolKids, totalStaff });
   } catch (error) {
+      console.log(error);
     console.log(error);
 
     return response
@@ -173,6 +177,7 @@ router.get('/usersAges', async (request, response) => {
       ninetyOneToOneHundred,
     });
   } catch (error) {
+      console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve users ages.', reason: error });
@@ -210,6 +215,7 @@ router.get('/userTypes', async (request, response) => {
 
     return response.status(200).json({ userTypes });
   } catch (error) {
+      console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve user types.', reason: error });
@@ -228,6 +234,7 @@ router.get('/totalSales', async (request, response) => {
 
     return response.status(200).json({ totalSales: data });
   } catch (error) {
+      console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve total sales.', reason: error });
@@ -244,6 +251,7 @@ router.get('/totalHarvests', async (request, response) => {
 
     return response.status(200).json({ totalHarvests: data });
   } catch (error) {
+      console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve total harvests.', reason: error });
@@ -260,6 +268,7 @@ router.get('/totalProducts', async (request, response) => {
 
     return response.status(200).json({ totalProducts: data });
   } catch (error) {
+      console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve total products.', reason: error });
@@ -331,6 +340,7 @@ router.get('/monthlyProfit/:userId', async (request, response) => {
 
     return response.status(200).json({ monthlyProfit });
   } catch (error) {
+      console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve monthly profit.', reason: error });
@@ -404,6 +414,7 @@ router.get('/monthlyExpenses/:userId', async (request, response) => {
 
     return response.status(200).json({ monthlyExpenses });
   } catch (error) {
+      console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve monthly expenses.', reason: error });
@@ -477,6 +488,7 @@ router.get('/monthlySales/:userId', async (request, response) => {
 
     return response.status(200).json({ monthlySales });
   } catch (error) {
+      console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve monthly sales.', reason: error });
@@ -550,6 +562,7 @@ router.get('/monthlyIncome/:userId', async (request, response) => {
 
     return response.status(200).json({ monthlyIncome });
   } catch (error) {
+      console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve monthly income.', reason: error });
@@ -616,6 +629,7 @@ router.get('/monthsSeedlings/:userId', async (request, response) => {
 
     return response.status(200).json({ seedlingCounts });
   } catch (error) {
+      console.log(error);
     console.log(error);
     return response
       .status(500)
@@ -711,6 +725,7 @@ router.get('/monthlyWaste/:userId', async (request, response) => {
 
     return response.status(200).json({ monthlyFoodWaste, monthlyOtherWaste });
   } catch (error) {
+      console.log(error);
     console.log(error);
 
     return response
@@ -858,6 +873,7 @@ router.get('/monthlyTraining/:userId', async (request, response) => {
       monthlyOtherTraining,
     });
   } catch (error) {
+      console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve monthly training.', reason: error });
@@ -931,6 +947,7 @@ router.get('/financeTotals/:userId', async (request, response) => {
       .status(200)
       .json({ totalProfit, totalExpenses, totalSales, totalIncome });
   } catch (error) {
+      console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve monthly sales.', reason: error });
@@ -1062,6 +1079,7 @@ router.get('/monthsHarvests/:userId', async (request, response) => {
       .status(200)
       .json({ produceWeights, produceYields, produceCounts });
   } catch (error) {
+      console.log(error);
     console.log(error);
     return response
       .status(500)
@@ -1091,6 +1109,7 @@ router.get('/latestSales/:userId', async (request, response) => {
 
     return response.status(200).json({ latestSales });
   } catch (error) {
+      console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve monthly harvests.', reason: error });
@@ -1119,6 +1138,7 @@ router.get('/latestHarvests/:userId', async (request, response) => {
 
     return response.status(200).json({ latestHarvests });
   } catch (error) {
+      console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve monthly harvests.', reason: error });

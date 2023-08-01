@@ -38,6 +38,7 @@ router.get('/', async (request, response) => {
 
     return response.status(200).json(growBedsData);
   } catch (error) {
+      console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve grow beds.',
       reason: error,
@@ -86,6 +87,7 @@ router.get('/:id', async (request, response) => {
       return response.status(200).json(growBedData);
     }
   } catch (error) {
+      console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve the grow bed.',
       reason: error,

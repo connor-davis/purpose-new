@@ -33,20 +33,18 @@ router.post('/', async (request, response) => {
   try {
     const newSale = new SaleModel({
       ...body,
-      user: request.user._id
+      user: request.user._id,
     });
 
     await newSale.save();
 
     return response.status(200).send('Ok');
   } catch (error) {
-    return response
-      .status(500)
-      .json({
-        message: 'Failed to create sale.',
-        reason: error,
-
-      });
+    console.log(error);
+    return response.status(500).json({
+      message: 'Failed to create sale.',
+      reason: error,
+    });
   }
 });
 

@@ -25,9 +25,12 @@ router.get('/', async (request, response) => {
       request.user.userType !== 'admin'
         ? {}
         : { user: { $eq: request.user._id } }
-    ).populate("user");
+    ).populate('user');
     const harvestsData = harvests
-      .map((harvest) => harvest.user.userGroup === request.user.userGroup && harvest.toJSON())
+      .map(
+        (harvest) =>
+          harvest.user.userGroup === request.user.userGroup && harvest.toJSON()
+      )
       .sort((a, b) => {
         if (new Date(a.date) > new Date(b.date)) return -1;
         if (new Date(a.date) < new Date(b.date)) return 1;
@@ -37,6 +40,7 @@ router.get('/', async (request, response) => {
 
     return response.status(200).json(harvestsData);
   } catch (error) {
+    console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve harvests.',
       reason: error,
@@ -85,6 +89,7 @@ router.get('/:id', async (request, response) => {
       return response.status(200).json(harvestData);
     }
   } catch (error) {
+    console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve the harvest.',
       reason: error,

@@ -36,6 +36,7 @@ router.get(
 
       return response.status(200).json(usersData);
     } catch (error) {
+      console.log(error);
       return response.status(500).json({
         message: 'Failed to retrieve users.',
         reason: error,
@@ -81,6 +82,7 @@ router.get(
         return response.status(200).json(userData);
       }
     } catch (error) {
+      console.log(error);
       return response.status(500).json({
         message: 'Failed to retrieve the user.',
         reason: error,
@@ -138,6 +140,7 @@ router.get(
         return response.status(200).json(userData);
       }
     } catch (error) {
+      console.log(error);
       return response.status(500).json({
         message: 'Failed to retrieve the user.',
         reason: error,

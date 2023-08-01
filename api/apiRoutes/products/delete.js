@@ -32,14 +32,13 @@ router.delete('/:id', async (request, response) => {
   try {
     await ProductModel.deleteOne({ _id: { $eq: id } });
 
-    return response.status(200).send("Ok");
+    return response.status(200).send('Ok');
   } catch (error) {
-    return response
-      .status(500)
-      .json({
-        message: 'Failed to delete product.',
-        reason: error,
-      });
+    console.log(error);
+    return response.status(500).json({
+      message: 'Failed to delete product.',
+      reason: error,
+    });
   }
 });
 

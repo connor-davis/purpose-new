@@ -35,6 +35,7 @@ router.get('/', async (request, response) => {
 
     return response.status(200).json(surveyResponsesData);
   } catch (error) {
+      console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve survey responses.',
       reason: error,
@@ -88,6 +89,7 @@ router.get('/:id', adminRoute, async (request, response) => {
       return response.status(200).json(surveyResponsesData);
     }
   } catch (error) {
+      console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve the survey response.',
       reason: error,

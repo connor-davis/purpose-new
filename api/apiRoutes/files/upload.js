@@ -58,6 +58,7 @@ router.post('/', upload.array('upfiles'), async (request, response) => {
 
     return response.status(200).json({ filenames });
   } catch (error) {
+      console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to upload the file.', reason: error });

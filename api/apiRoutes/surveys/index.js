@@ -35,6 +35,7 @@ router.get('/', async (request, response) => {
 
     return response.status(200).json(surveysData);
   } catch (error) {
+      console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve surveys.',
       reason: error,
@@ -84,6 +85,7 @@ router.get('/:id', async (request, response) => {
       return response.status(200).json(surveyData);
     }
   } catch (error) {
+      console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve the survey.',
       reason: error,

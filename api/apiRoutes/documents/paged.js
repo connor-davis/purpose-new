@@ -91,6 +91,7 @@ router.get('/:page', async (request, response) => {
       .status(200)
       .json({ data: documentsData, totalDocuments, totalPages });
   } catch (error) {
+      console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve paged documents.', reason: error });
