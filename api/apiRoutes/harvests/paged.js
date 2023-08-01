@@ -63,10 +63,8 @@ router.get('/:page', async (request, response) => {
 
         return 0;
       });
-    const totalHarvests = harvestsData.length;
+    const totalHarvests = await HarvestModel.countDocuments();
     const totalPages = Math.ceil(totalHarvests / limit);
-
-    console.log(harvestsData, totalHarvests, totalPages);
 
     return response
       .status(200)
