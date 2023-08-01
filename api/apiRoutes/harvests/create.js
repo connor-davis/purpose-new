@@ -31,12 +31,12 @@ router.post('/', async (request, response) => {
   const body = request.body;
 
   try {
-    const newGrowBed = new GrowBedModel({
+    const newHarvest = new HarvestModel({
       ...body,
       user: request.user._id,
     });
 
-    await newGrowBed.save();
+    await newHarvest.save();
 
     return response.status(200).send('Ok');
   } catch (error) {
