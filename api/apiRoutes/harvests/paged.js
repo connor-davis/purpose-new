@@ -46,6 +46,12 @@ router.get('/:page', async (request, response) => {
   const limit = request.query.limit || 10;
 
   try {
+    const harvestsT = await HarvestModel.find(
+      !request.query.userId ? {} : { user: { $eq: request.query.userId } }
+    ).populate('user');
+
+    console.log(harvestsT);
+
     const harvests = await HarvestModel.find(
       !request.query.userId ? {} : { user: { $eq: request.query.userId } }
     )
