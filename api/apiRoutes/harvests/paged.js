@@ -46,12 +46,6 @@ router.get('/:page', async (request, response) => {
   const limit = request.query.limit || 10;
 
   try {
-    const harvestsT = await HarvestModel.find(
-      !request.query.userId ? {} : { user: { $eq: request.query.userId } }
-    ).populate('user');
-
-    console.log(harvestsT);
-
     const harvests = await HarvestModel.find(
       !request.query.userId ? {} : { user: { $eq: request.query.userId } }
     )
@@ -71,6 +65,8 @@ router.get('/:page', async (request, response) => {
       });
     const totalHarvests = harvestsData.length;
     const totalPages = Math.ceil(totalHarvests / limit);
+
+    console.log(harvestsData, totalHarvests, totalPages);
 
     return response
       .status(200)
