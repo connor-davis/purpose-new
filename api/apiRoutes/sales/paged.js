@@ -50,23 +50,29 @@ router.get('/:page', async (request, response) => {
       !request.query.userId ? {} : { user: { $eq: request.query.userId } }
     )
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
-      .limit(limit).populate("user");
+      .limit(limit)
+      .populate('user');
     const salesData = sales
-      .map((sale) => sale.user.userGroup === request.user.userGroup && sale.toJSON())
+      .map(
+        (sale) =>
+          sale.user.userGroup === request.user.userGroup && sale.toJSON()
+      )
       .sort((a, b) => {
         if (new Date(a.date) > new Date(b.date)) return -1;
         if (new Date(a.date) < new Date(b.date)) return 1;
 
         return 0;
       });
-    const totalSales = salesData.length;
+    const totalSales = await SaleModel.countDocuments(
+      !request.query.userId ? {} : { user: { $eq: request.query.userId } }
+    );
     const totalPages = Math.ceil(totalSales / limit);
 
     return response
       .status(200)
       .json({ data: salesData, totalSales, totalPages });
   } catch (error) {
-      console.log(error);
+    console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve paged sales.',
       reason: error,

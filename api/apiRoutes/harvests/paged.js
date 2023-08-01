@@ -63,7 +63,9 @@ router.get('/:page', async (request, response) => {
 
         return 0;
       });
-    const totalHarvests = await HarvestModel.countDocuments();
+    const totalHarvests = await HarvestModel.countDocuments(
+      !request.query.userId ? {} : { user: { $eq: request.query.userId } }
+    );
     const totalPages = Math.ceil(totalHarvests / limit);
 
     return response

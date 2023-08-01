@@ -64,14 +64,15 @@ router.get('/:page', async (request, response) => {
 
         return 0;
       });
-    const totalGrowBeds = growBedsData.length;
+    const totalGrowBeds = await GrowBedModel.countDocuments(
+      !request.query.userId ? {} : { user: { $eq: request.query.userId } }
+    );
     const totalPages = Math.ceil(totalGrowBeds / limit);
 
     return response
       .status(200)
       .json({ data: growBedsData, totalGrowBeds, totalPages });
   } catch (error) {
-      console.log(error);
     console.log(error);
 
     return response.status(500).json({

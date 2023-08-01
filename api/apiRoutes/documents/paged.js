@@ -52,14 +52,11 @@ router.get('/:page', async (request, response) => {
     }
 
     const documents = fs
-      .readdirSync(
-        path.join(process.cwd(), 'documents'),
-        {
-          withFileTypes: true,
-        }
-      )
+      .readdirSync(path.join(process.cwd(), 'documents'), {
+        withFileTypes: true,
+      })
       .filter((file) => {
-        return file.name.split(".")[1] === request.user.userGroup;
+        return file.name.split('.')[1] === request.user.userGroup;
       })
       .map((document) => {
         let documentname = document.name;
@@ -91,7 +88,7 @@ router.get('/:page', async (request, response) => {
       .status(200)
       .json({ data: documentsData, totalDocuments, totalPages });
   } catch (error) {
-      console.log(error);
+    console.log(error);
     return response
       .status(500)
       .json({ message: 'Failed to retrieve paged documents.', reason: error });

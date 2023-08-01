@@ -56,7 +56,9 @@ router.get('/:page', async (request, response) => {
       (product) =>
         product.user.userGroup === request.user.userGroup && product.toJSON()
     );
-    const totalProducts = productsData.length;
+    const totalProducts = await ProductModel.countDocuments(
+      !request.query.userId ? {} : { user: { $eq: request.query.userId } }
+    );
     const totalPages = Math.ceil(totalProducts / limit);
 
     return response

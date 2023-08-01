@@ -41,23 +41,30 @@ router.get('/:page', async (request, response) => {
   try {
     const surveyResponses = await SurveyResponseModel.find({})
       .skip((page - 1) * limit > 0 ? (page - 1) * limit : 0)
-      .limit(limit).populate("user");
+      .limit(limit)
+      .populate('user');
     const surveyResponsesData = surveyResponses
-      .map((surveyResponse) => surveyResponse.user.userGroup === request.user.userGroup && surveyResponse.toJSON())
+      .map(
+        (surveyResponse) =>
+          surveyResponse.user.userGroup === request.user.userGroup &&
+          surveyResponse.toJSON()
+      )
       .sort((a, b) => {
         if (new Date(a.date) > new Date(b.date)) return -1;
         if (new Date(a.date) < new Date(b.date)) return 1;
 
         return 0;
       });
-    const totalSurveyResponses = surveyResponsesData.length;
+    const totalSurveyResponses = await SurveyResponseModel.countDocuments({
+      userGroup: { $eq: request.user.userGroup },
+    });
     const totalPages = Math.ceil(totalSurveyResponses / limit);
 
     return response
       .status(200)
       .json({ data: surveyResponsesData, totalSurveyResponses, totalPages });
   } catch (error) {
-      console.log(error);
+    console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve paged survey responses.',
       reason: error,

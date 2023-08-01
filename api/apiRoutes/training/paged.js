@@ -64,14 +64,16 @@ router.get('/:page', async (request, response) => {
 
         return 0;
       });
-    const totalTraining = trainingData.length;
+    const totalTraining = await TrainingModel.countDocuments(
+      !request.query.userId ? {} : { user: { $eq: request.query.userId } }
+    );
     const totalPages = Math.ceil(totalTraining / limit);
 
     return response
       .status(200)
       .json({ data: trainingData, totalTraining, totalPages });
   } catch (error) {
-      console.log(error);
+    console.log(error);
     return response.status(500).json({
       message: 'Failed to retrieve paged training.',
       reason: error,
